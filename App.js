@@ -2,6 +2,8 @@ import React from 'react';
 import Gallery from './js/dataManager.js';
 import { Image, TouchableOpacity, AsyncStorage, StyleSheet, Text, Button, View } from 'react-native';
 
+console.log(Gallery());
+
 const Question = (props) => {
   return (
     <Button
@@ -40,7 +42,6 @@ const MainView = () => {
 
   return (
     <View style={{ flex: 1 }}>
-        <Gallery />
         {listItems}
         <View style={{ position:'absolute', bottom:0, height:"10%", width:"100%"}}>
             <View style={{   flex: 1, flexDirection: "row"}}>
