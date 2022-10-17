@@ -1,8 +1,6 @@
 import React from 'react';
-import { dataManager } from './js/dataManager.js';
+import Gallery from './js/dataManager.js';
 import { Image, TouchableOpacity, AsyncStorage, StyleSheet, Text, Button, View } from 'react-native';
-
-//dataManager = new dataManager();
 
 const Question = (props) => {
   return (
@@ -26,7 +24,7 @@ return (
 const MainView = () => {
     const arrayNames = [
       {name: 'How many times did you sleep today?', key:"1"},
-      {name: 'Abby', key:"2"},
+      {name: 'Abb', key:"2"},
       {name: 'heyo', key:"3"},
       {name: 'heo', key:"4"}
     ];
@@ -34,8 +32,15 @@ const MainView = () => {
     const listItems = arrayNames.map((d) => <Question title={d.name} key_app={d.key}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
 
+//message;
+//let test = new dataManagerIDK.default();
+//let lDataManager = new test();
+//  let lDataManager = new dataManagerClass();// = new dataManager();
+
+
   return (
     <View style={{ flex: 1 }}>
+        <Gallery />
         {listItems}
         <View style={{ position:'absolute', bottom:0, height:"10%", width:"100%"}}>
             <View style={{   flex: 1, flexDirection: "row"}}>
