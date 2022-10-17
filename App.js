@@ -1,8 +1,11 @@
 import React from 'react';
-import Gallery from './js/dataManager.js';
+import DataManager from './js/dataManager.js';
 import { Image, TouchableOpacity, AsyncStorage, StyleSheet, Text, Button, View } from 'react-native';
 
-console.log(Gallery());
+
+//
+let lDataManager = new DataManager("horse");
+console.log(lDataManager.describeAnimalType());
 
 const Question = (props) => {
   return (
