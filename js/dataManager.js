@@ -2,11 +2,10 @@
 import { Text } from 'react-native';
 
 export default class DataManager {
-                 constructor(aAnimalType) {
-                   this.animalType = aAnimalType;
+    constructor() {
 
-                   this.describeAnimalType = function() {
-                       return "this is a " + this.animalType;
-                   }
-                 }
-               }
+       this.addQuestion = function(aQuestionText, aQuestionType, aOptions) {
+           return "this is a " + this.animalType;
+       }
+    }
+}
