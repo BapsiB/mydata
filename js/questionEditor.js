@@ -1,8 +1,9 @@
-import { Text, TextInput } from 'react-native';
+import React from 'react';
+import { Text, TextInput, StyleSheet, View } from 'react-native';
 
-export default QuestionEditor = (props) => {
+const QuestionEditor = (props) => {
 
-  const [text, onChangeText] = React.useState("Useless Text");
+  const [text, onChangeText] = React.useState("");
 
   return (
       <View style={{ flex: 1 }}>
@@ -10,7 +11,7 @@ export default QuestionEditor = (props) => {
             style={styles.input}
             onChangeText={onChangeText}
             value={text}
-            placeholder="useless placeholder"
+            placeholder="How many coffees today?"
           />
       </View>
   );
@@ -24,3 +25,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+export default QuestionEditor;

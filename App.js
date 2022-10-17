@@ -1,11 +1,14 @@
 import React from 'react';
 import DataManager from './js/dataManager.js';
+import QuestionEditor from './js/questionEditor.js';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, TouchableOpacity, AsyncStorage, StyleSheet, Text, Button, View } from 'react-native';
 
-
+const Stack = createNativeStackNavigator();
 //
-let lDataManager = new DataManager("horse");
-console.log(lDataManager.describeAnimalType());
+//let lDataManager = new DataManager("horse");
+//console.log(lDataManager.describeAnimalType());
 
 const Question = (props) => {
   return (
@@ -20,13 +23,28 @@ const Question = (props) => {
 
 const BottomButton = (props) => {
 return (
-        <TouchableOpacity style={styles.button_footer2} onPress={()=>{alert("you clicked me")}}>
+        <TouchableOpacity style={styles.button_footer2} onPress={()=>{props.onClick();}}>
           <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={props.source}/>
         </TouchableOpacity>
 )
 }
 
-const MainView = () => {
+const MyStack = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={MainView}
+          options={{ title: 'Questions' }}
+        />
+        <Stack.Screen name="Question Editor" component={QuestionEditor} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const MainView = ({ navigation }) => {
     const arrayNames = [
       {name: 'How many times did you sleep today?', key:"1"},
       {name: 'Abb', key:"2"},
@@ -44,16 +62,18 @@ const MainView = () => {
 
 
   return (
-    <View style={{ flex: 1 }}>
-        {listItems}
-        <View style={{ position:'absolute', bottom:0, height:"10%", width:"100%"}}>
-            <View style={{   flex: 1, flexDirection: "row"}}>
-                <BottomButton source={require("./resources/curvesButton.png")}/>
-                <BottomButton source={require("./resources/plusButton.png")}/>
-                <BottomButton source={require("./resources/shareButton.png")}/>
-            </View>
-       </View>
-    </View>
+        <View style={{ flex: 1}}>
+            {listItems}
+            <View style={{ position:'absolute', bottom:0, height:"10%", width:"100%"}}>
+                <View style={{   flex: 1, flexDirection: "row"}}>
+                    <BottomButton
+                    source={require("./resources/curvesButton.png")}
+                    onClick={function() {}}/>
+                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor");}}/>
+                    <BottomButton source={require("./resources/shareButton.png")}/>
+                </View>
+           </View>
+        </View>
   );
 }
 
@@ -63,8 +83,6 @@ const styles = StyleSheet.create({
         backgroundColor: "powderblue",
 //      bottom: 0 ,
       flex: 1,
-//      width:50,
-//      height: "10%"
   },
 
     button_footer2: {
@@ -79,4 +97,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default MainView;
+export default MyStack;
