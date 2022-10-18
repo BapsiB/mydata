@@ -125,20 +125,20 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
         }
 
         return (
-        <View style={{flex:4, flexDirection: "row"}}>
+        <View style={{flex:2, flexDirection: "row"}}>
             <View style={{flex:1, flexDirection: "column"}}>
-              <Text style={styles.textTop}>from</Text>
+              <Text style={styles.textSub}>from</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, styles.minMax]}
                 onChangeText={text =>{ initOptions.number.min = text; onChange(initOptions)}}
                 value={initOptions.number.min}
                 keyboardType="numeric"
               />
             </View>
             <View style={{flex:1, flexDirection: "column"}}>
-              <Text style={styles.textTop}>from</Text>
+              <Text style={styles.textSub}>to</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, styles.minMax]}
                 onChangeText={text =>{ initOptions.number.max = text; onChange(initOptions)}}
                 value={initOptions.number.max}
                 keyboardType="numeric"
@@ -157,12 +157,23 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    borderTopColor: "transparent",
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    fontSize: 20,
     },
+
+    minMax: {
+        margin: 50,
+        textAlignVertical:'center',
+        textAlign:'center',
+    },
+
     questionType: {
-      flex:2,
       margin: 12,
       borderWidth: 1,
       padding: 10,
+      bottom:0
     },
 
     button_footer: {
@@ -192,8 +203,8 @@ const styles = StyleSheet.create({
     questionTypeContainer: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: 'center',
-        alignItems: 'center',
+//        justifyContent: 'center',
+//        alignItems: 'center',
     }
 });
 
