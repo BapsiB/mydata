@@ -89,10 +89,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
           backgroundColor: "aliceblue",
-//        bottom: 0 ,
         flex: 1,
-//        width:150
-//        height: "30%"
     }
 });
 
