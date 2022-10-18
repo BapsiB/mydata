@@ -46,10 +46,10 @@ const MyStack = () => {
 
 const MainView = ({ navigation }) => {
     const arrayNames = [
-      {name: 'How many times did you sleep today?', key:"1"},
-      {name: 'Abb', key:"2"},
-      {name: 'heyo', key:"3"},
-      {name: 'heo', key:"4"}
+      {name: 'How many times did you sleep today?', key:"1s"},
+      {name: 'Abb', key:"2s"},
+      {name: 'heyo', key:"3s"},
+      {name: 'heo', key:"4s"}
     ];
 
     const listItems = arrayNames.map((d) => <Question title={d.name} key_app={d.key}></Question>);

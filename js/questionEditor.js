@@ -21,14 +21,13 @@ const QuestionEditor = (props) => {
               onChangeText={onChangeQuestionText}
               value={questionText}
               placeholder={getQuestionExample(questionType)}
+              placeholderTextColor='#888'
             />
         </View>
         <View style={{flex: 2}}>
           <QuestionType style={styles.questionType} onChange={(index) => {onChangeQuestionType(index);}} questionTypeId={questionType} />
+          <QuestionOptions onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
         </View>
-          <View style={{flex: 1}}>
-              <QuestionOptions onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
-          </View>
       </View>
   );
 }
@@ -111,6 +110,44 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
         case QUESTION_TYPE_YES_NO:
         return (<View/>)
         break;
+        case QUESTION_TYPE_INTENSITY:
+                if(initOptions.intensity === undefined) {
+                    initOptions.intensity = {};
+                }
+
+                if(initOptions.intensity.min === undefined) {
+                    initOptions.intensity.min = "";
+                }
+
+                if(initOptions.intensity.max === undefined) {
+                    initOptions.intensity.max = "";
+                }
+                return (
+                <View style={{flex:2, flexDirection: "row"}}>
+                    <View style={{flex:1, flexDirection: "column"}}>
+                      <Text style={styles.textTopMinMax}>from</Text>
+                      <TextInput
+                        style={[styles.input, styles.minMaxInput]}
+                        onChangeText={text =>{ initOptions.intensity.min = text; onChange(initOptions)}}
+                        defaultValue={initOptions.intensity.min}
+                        placeholder="optional"
+                        placeholderTextColor='#888'
+                        keyboardType="characters"
+                      />
+                    </View>
+                    <View style={{flex:1, flexDirection: "column"}}>
+                      <Text style={styles.textTopMinMax}>to</Text>
+                      <TextInput
+                        style={[styles.input, styles.minMaxInput]}
+                        onChangeText={text =>{ initOptions.intensity.max = text; onChange(initOptions)}}
+                        defaultValue={initOptions.intensity.max}
+                        placeholder="optional"
+                        placeholderTextColor='#888'
+                        keyboardType="characters"
+                      />
+                    </View>
+                </View>
+                )
         case QUESTION_TYPE_NUMBER:
         if(initOptions.number === undefined) {
             initOptions.number = {};
@@ -127,20 +164,20 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
         return (
         <View style={{flex:2, flexDirection: "row"}}>
             <View style={{flex:1, flexDirection: "column"}}>
-              <Text style={styles.textSub}>from</Text>
+              <Text style={styles.textTopMinMax}>from</Text>
               <TextInput
-                style={[styles.input, styles.minMax]}
+                style={[styles.input, styles.minMaxInput]}
                 onChangeText={text =>{ initOptions.number.min = text; onChange(initOptions)}}
-                value={initOptions.number.min}
+                defaultValue={initOptions.number.min}
                 keyboardType="numeric"
               />
             </View>
             <View style={{flex:1, flexDirection: "column"}}>
-              <Text style={styles.textSub}>to</Text>
+              <Text style={styles.textTopMinMax}>to</Text>
               <TextInput
-                style={[styles.input, styles.minMax]}
+                style={[styles.input, styles.minMaxInput]}
                 onChangeText={text =>{ initOptions.number.max = text; onChange(initOptions)}}
-                value={initOptions.number.max}
+                defaultValue={initOptions.number.max}
                 keyboardType="numeric"
               />
             </View>
@@ -152,19 +189,31 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
 
 const styles = StyleSheet.create({
     input: {
-//    flex: 1,
     height:40,
-    margin: 12,
+    marginTop: 50,
+    marginLeft: 12,
+    marginRight: 12,
     borderWidth: 1,
     padding: 10,
     borderTopColor: "transparent",
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
     fontSize: 20,
+    color: 'black',
     },
 
-    minMax: {
-        margin: 50,
+    minMaxInput: {
+        marginTop: 5,
+        marginLeft: 50,
+        marginRight: 50,
+        textAlignVertical:'center',
+        textAlign:'center',
+    },
+
+    textTopMinMax: {
+        color: 'black',
+        fontWeight:'normal',
+        fontSize:20,
         textAlignVertical:'center',
         textAlign:'center',
     },
@@ -180,6 +229,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       height: 50,
+
     },
 
     textTop: {
@@ -187,6 +237,7 @@ const styles = StyleSheet.create({
         fontSize:30,
         textAlignVertical:'center',
         textAlign:'center',
+        color: 'black',
 //        justifyContent: 'center',
 //        alignItems: 'center',
     },
@@ -196,6 +247,7 @@ const styles = StyleSheet.create({
             fontSize:20,
             textAlignVertical:'center',
             textAlign:'center',
+            color: 'black',
     //        justifyContent: 'center',
     //        alignItems: 'center',
         },
