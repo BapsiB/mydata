@@ -1,6 +1,7 @@
 import React from 'react';
 import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
+import AnswerScreen from './js/answerScreen.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, TouchableOpacity, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
@@ -37,6 +38,7 @@ const MyStack = () => {
           options={{ title: 'Questions' }}
         />
         <Stack.Screen name="Question Editor" component={QuestionEditor} />
+        <Stack.Screen name="Answer Screen" component={AnswerScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

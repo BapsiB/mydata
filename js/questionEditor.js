@@ -3,8 +3,8 @@ import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Button } fr
 
 const QUESTION_TYPE_YES_NO = 0;
 const QUESTION_TYPE_NUMBER = 1;
-const QUESTION_TYPE_INTENSITY = 2
-const QUESTION_TYPE_COUNT = 3
+const QUESTION_TYPE_INTENSITY = 2;
+const QUESTION_TYPE_COUNT = 3;
 
 const QuestionEditor = (props) => {
 
