@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Button } from 'react-native';
-
-const QUESTION_TYPE_YES_NO = 0;
-const QUESTION_TYPE_NUMBER = 1;
-const QUESTION_TYPE_INTENSITY = 2;
-const QUESTION_TYPE_COUNT = 3;
+import SharedConstants from './sharedConstants.js';
 
 const QuestionEditor = (props) => {
 
@@ -17,13 +13,13 @@ const QuestionEditor = (props) => {
 function onPressAddQuestion() {
     let lOption;
     switch(questionType) {
-        case QUESTION_TYPE_YES_NO:
+        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
             lOption = {};
         break;
-        case QUESTION_TYPE_COUNT:
+        case SharedConstants.questionTypes.QUESTION_TYPE_COUNT:
             lOption = options.number;
         break;
-        case QUESTION_TYPE_INTENSITY:
+        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
             lOption = options.intensity;
         break;
     }
@@ -102,12 +98,12 @@ const QuestionType = ({questionTypeId, onChange}) => {
 
     const nextQuestion = () =>
     {
-        const value = (questionTypeId + 1) % QUESTION_TYPE_COUNT;
+        const value = (questionTypeId + 1) % SharedConstants.questionTypes.QUESTION_TYPE_COUNT;
         onChange(value);
     }
 
     const prevQuestion = function() {
-        const value = (questionTypeId == 0) ? QUESTION_TYPE_COUNT - 1 : questionTypeId - 1;
+        const value = (questionTypeId == 0) ? SharedConstants.questionTypes.QUESTION_TYPE_COUNT - 1 : questionTypeId - 1;
         onChange(value);
     }
 
@@ -135,10 +131,10 @@ const QuestionType = ({questionTypeId, onChange}) => {
 const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
 
     switch(questionTypeId) {
-        case QUESTION_TYPE_YES_NO:
+        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
         return (<View/>)
         break;
-        case QUESTION_TYPE_INTENSITY:
+        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
                 if(initOptions.intensity === undefined) {
                     initOptions.intensity = {};
                 }
@@ -176,7 +172,7 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
                     </View>
                 </View>
                 )
-        case QUESTION_TYPE_NUMBER:
+        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
         if(initOptions.number === undefined) {
             initOptions.number = {};
         }

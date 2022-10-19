@@ -2,7 +2,7 @@
 //import { AsyncStorage } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default class SharedConstants {
+class SharedConstants {
     constructor() {
 
        this.questionTypes = {
@@ -13,3 +13,5 @@ export default class SharedConstants {
        };
   }
 }
+
+export default new SharedConstants();

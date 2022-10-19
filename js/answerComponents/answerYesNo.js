@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 
-const AnswerScreen = (props) => {
+const AnswerYesNo = (props) => {
 
   return (
     <View style={{ flex: 1}}>
@@ -10,4 +10,4 @@ const AnswerScreen = (props) => {
   );
 }
 
-export default AnswerScreen;
+export default AnswerYesNo;
