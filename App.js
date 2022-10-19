@@ -43,20 +43,20 @@ const MyStack = () => {
 };
 
 const MainView = ({ navigation }) => {
+
+    const forceUpdate = React.useReducer(() => ({}))[1]
+
     const [arrayNames, setArrayNames] = React.useState(sDataManager.getQuestions());
 
     const updateQuestions = () => {
         setArrayNames(sDataManager.getQuestions());
+        forceUpdate();
     }
 
     sDataManager.setQuestionsListener(updateQuestions);
 
     const listItems = arrayNames.map((d) => <Question title={d.text} key_app={d.id}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
-
-
-
-
 
   return (
         <View style={{ flex: 1}}>

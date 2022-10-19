@@ -27,6 +27,7 @@ function onPressAddQuestion() {
             lOption = options.intensity;
         break;
     }
+
     dataManager.addQuestion(questionText, questionType, lOption);
     props.navigation.navigate("Home");
 }
