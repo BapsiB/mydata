@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Button } from 'react-native';
 
 const QUESTION_TYPE_YES_NO = 0;
 const QUESTION_TYPE_NUMBER = 1;
@@ -8,12 +8,33 @@ const QUESTION_TYPE_COUNT = 3
 
 const QuestionEditor = (props) => {
 
+  const dataManager = props.route.params;
+
   const [questionText, onChangeQuestionText] = React.useState("");
   const [questionType, onChangeQuestionType] = React.useState(0);
   const [options, onSetOptions] = React.useState({});
 
-  return (
+function onPressAddQuestion() {
+    let lOption;
+    switch(questionType) {
+        case QUESTION_TYPE_YES_NO:
+            lOption = {};
+        break;
+        case QUESTION_TYPE_COUNT:
+            lOption = options.number;
+        break;
+        case QUESTION_TYPE_INTENSITY:
+            lOption = options.intensity;
+        break;
+    }
+    dataManager.addQuestion(questionText, questionType, lOption);
+    props.navigation.navigate("Home", {reload:true});
+}
 
+const lDisableAddButton = questionText.length == 0;
+
+  return (
+    <View style={{ flex: 1}}>
       <View style={{ flex: 1, flexDirection: "column" }}>
       <View style={{flex: 1}}>
             <TextInput
@@ -29,6 +50,12 @@ const QuestionEditor = (props) => {
           <QuestionOptions onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
         </View>
       </View>
+        <View style={{margin: 50, height:50, bottom:30, alignItems: 'center',}}>
+        <TouchableOpacity disabled={lDisableAddButton} style={[styles.addButtonStyle, {opacity: lDisableAddButton ? 0.3 : 1}]} onPress={()=>{onPressAddQuestion();}}>
+            <Text style={{color:"black"}}>ADD</Text>
+        </TouchableOpacity>
+       </View>
+       </View>
   );
 }
 
@@ -200,6 +227,21 @@ const styles = StyleSheet.create({
     borderRightColor: "transparent",
     fontSize: 20,
     color: 'black',
+    },
+
+    addButtonStyle: {
+        height:50,
+        width:130,
+        backgroundColor: 'black',
+        color:"black",
+        alignItems: 'center',
+        backgroundColor:"white",
+        borderWidth:1,
+        borderRadius:10,
+        textAlignVertical:'center',
+        textAlign:'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     minMaxInput: {

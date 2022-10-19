@@ -6,9 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, TouchableOpacity, AsyncStorage, StyleSheet, Text, Button, View } from 'react-native';
 
 const Stack = createNativeStackNavigator();
-//
-//let lDataManager = new DataManager("horse");
-//console.log(lDataManager.describeAnimalType());
+const sDataManager = new DataManager();
 
 const Question = (props) => {
   return (
@@ -45,20 +43,15 @@ const MyStack = () => {
 };
 
 const MainView = ({ navigation }) => {
-    const arrayNames = [
-      {name: 'How many times did you sleep today?', key:"1s"},
-      {name: 'Abb', key:"2s"},
-      {name: 'heyo', key:"3s"},
-      {name: 'heo', key:"4s"}
-    ];
+    const [arrayNames, setArrayNames] = React.useState(sDataManager.getQuestions());
 
-    const listItems = arrayNames.map((d) => <Question title={d.name} key_app={d.key}></Question>);
+//    setArrayNames(sDataManager.getQuestions());
+
+    const listItems = arrayNames.map((d) => <Question title={d.text} key_app={d.id}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
 
-//message;
-//let test = new dataManagerIDK.default();
-//let lDataManager = new test();
-//  let lDataManager = new dataManagerClass();// = new dataManager();
+
+
 
 
   return (
@@ -69,7 +62,7 @@ const MainView = ({ navigation }) => {
                     <BottomButton
                     source={require("./resources/curvesButton.png")}
                     onClick={function() {}}/>
-                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor");}}/>
+                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor", sDataManager);}}/>
                     <BottomButton source={require("./resources/shareButton.png")}/>
                 </View>
            </View>
@@ -79,8 +72,7 @@ const MainView = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   button_footer: {
-//      padding: 10,
-        backgroundColor: "powderblue",
+        backgroundColor: "white",
 //      bottom: 0 ,
       flex: 1,
   },
@@ -88,7 +80,7 @@ const styles = StyleSheet.create({
     button_footer2: {
       justifyContent: 'center',
       alignItems: 'center',
-          backgroundColor: "aliceblue",
+          backgroundColor: "white",
         flex: 1,
     }
 });
