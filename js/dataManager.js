@@ -6,10 +6,13 @@ export default class DataManager {
 
        this.listQuestions = [];
        this.daysData = [];
+       this.questionCallback = null;
 
        this.saveListQuestions = function() {
             _storeData("@questions", this.listQuestions);
        }
+
+
 
        const _storeData = async (key, data) => {
         try {
@@ -18,8 +21,24 @@ export default class DataManager {
           } catch (e) {
             // saving error
           }
-
        };
+
+       const getData = async (key) => {
+         try {
+           const jsonValue = await AsyncStorage.getItem(key)
+           return jsonValue != null ? JSON.parse(jsonValue) : null;
+         } catch(e) {
+           // error reading value
+         }
+       }
+
+       const that = this;
+       getData("@questions").then((data) => {
+        that.listQuestions = data;
+        if(that.questionCallback) {
+            that.questionCallback();
+        }
+       })
 
        this.findAvailableId = function() {
         let lAvailableId = 0;
@@ -47,10 +66,18 @@ export default class DataManager {
            let lQuestion = {text:aQuestionText, type:aQuestionType, options:aOptions, id:lId};
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
+
+           if(this.questionCallback)
+            this.questionCallback();
        }
 
        this.getQuestions = function() {
-        return this.listQuestions;
+            return this.listQuestions;
        }
+
+        this.setQuestionsListener = function(callback){
+            this.questionCallback = callback;
+        }
+
     }
 }

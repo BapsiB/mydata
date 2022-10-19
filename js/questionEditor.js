@@ -28,7 +28,7 @@ function onPressAddQuestion() {
         break;
     }
     dataManager.addQuestion(questionText, questionType, lOption);
-    props.navigation.navigate("Home", {reload:true});
+    props.navigation.navigate("Home");
 }
 
 const lDisableAddButton = questionText.length == 0;

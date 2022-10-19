@@ -45,7 +45,11 @@ const MyStack = () => {
 const MainView = ({ navigation }) => {
     const [arrayNames, setArrayNames] = React.useState(sDataManager.getQuestions());
 
-//    setArrayNames(sDataManager.getQuestions());
+    const updateQuestions = () => {
+        setArrayNames(sDataManager.getQuestions());
+    }
+
+    sDataManager.setQuestionsListener(updateQuestions);
 
     const listItems = arrayNames.map((d) => <Question title={d.text} key_app={d.id}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
