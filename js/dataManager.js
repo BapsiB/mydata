@@ -1,5 +1,6 @@
 //import React from 'react';
-import { AsyncStorage } from 'react-native';
+//import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class DataManager {
     constructor() {
@@ -11,8 +12,6 @@ export default class DataManager {
        this.saveListQuestions = function() {
             _storeData("@questions", this.listQuestions);
        }
-
-
 
        const _storeData = async (key, data) => {
         try {

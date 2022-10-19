@@ -3,19 +3,19 @@ import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Image, TouchableOpacity, AsyncStorage, StyleSheet, Text, Button, View } from 'react-native';
+import { Image, TouchableOpacity, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const sDataManager = new DataManager();
 
 const Question = (props) => {
   return (
-    <Button
-    key={props.key_app}
-    title={props.title}
-    color="#841584"
-    accessibilityLabel="Learn more about this purple button"
-    />
+    <TouchableOpacity style={styles.questionsButtons}>
+      <Text style={{fontSize: 16, color:"black"}}>
+        {props.title}
+      </Text>
+    </TouchableOpacity>
+
   );
 }
 
@@ -57,11 +57,15 @@ const MainView = ({ navigation }) => {
 
     const listItems = arrayNames.map((d) => <Question title={d.text} key_app={d.id} key={d.id}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
-
+    const lSizeFooter = "10%";
   return (
         <View style={{ flex: 1}}>
-            {listItems}
-            <View style={{ position:'absolute', bottom:0, height:"10%", width:"100%"}}>
+            <SafeAreaView style={{marginBottom:"20%"}}>
+                <ScrollView style={styles.scrollView}>
+                {listItems}
+                </ScrollView>
+            </SafeAreaView>
+            <View style={{ position:'absolute', bottom:0, height:lSizeFooter, width:"100%"}}>
                 <View style={{   flex: 1, flexDirection: "row"}}>
                     <BottomButton
                     source={require("./resources/curvesButton.png")}
@@ -79,6 +83,19 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
 //      bottom: 0 ,
       flex: 1,
+  },
+
+  questionsButtons: {
+    marginVertical:3,
+    marginHorizontal:20,
+    borderWidth:1,
+    borderRadius:10,
+    height:50,
+    flex:1,
+    backgroundColor:"white",
+    borderColor:"black",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
     button_footer2: {
