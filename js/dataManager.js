@@ -62,7 +62,7 @@ class DataManager {
 
        this.addQuestion = function(aQuestionText, aQuestionType, aOptions) {
            const lId = this.findAvailableId();
-           let lQuestion = {text:aQuestionText, type:aQuestionType, options:aOptions, id:lId};
+           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, id:lId});
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
 
@@ -74,6 +74,15 @@ class DataManager {
             return this.listQuestions;
        }
 
+       this.getQuestionWithId = function(aId) {
+            for (s of this.listQuestions) {
+                if(s.id == aId) {
+                    return s;
+                }
+            }
+            return null;
+       }
+
         this.setQuestionsListener = function(callback){
             this.questionCallback = callback;
         }
@@ -81,4 +90,17 @@ class DataManager {
     }
 }
 
-export default new ClassManager();
+class Question {
+    constructor(data) {
+        this.text = data.text;
+        this.type = data.type;
+        this.options = data.options;
+        this.id = data.id;
+
+        this.getText = function() {
+            return this.text;
+        }
+    }
+}
+
+export default new DataManager();

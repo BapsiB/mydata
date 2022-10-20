@@ -7,11 +7,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, TouchableOpacity, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
 
 const Stack = createNativeStackNavigator();
-const sDataManager = new DataManager();
+const sDataManager = DataManager;
 
 const Question = (props) => {
+
+const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
+
   return (
-    <TouchableOpacity style={styles.questionsButtons}>
+    <TouchableOpacity
+        style={styles.questionsButtons}
+        onPress={goToQuestion}
+    >
       <Text style={{fontSize: 16, color:"black"}}>
         {props.title}
       </Text>
@@ -57,7 +63,7 @@ const MainView = ({ navigation }) => {
 
     sDataManager.setQuestionsListener(updateQuestions);
 
-    const listItems = arrayNames.map((d) => <Question title={d.text} key_app={d.id} key={d.id}></Question>);
+    const listItems = arrayNames.map((d) => <Question title={d.text} questionId={d.id} key={d.id} navigation={navigation}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
   return (
