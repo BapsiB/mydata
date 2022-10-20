@@ -2,7 +2,7 @@
 //import { AsyncStorage } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default class DataManager {
+class DataManager {
     constructor() {
 
        this.listQuestions = [];
@@ -80,3 +80,5 @@ export default class DataManager {
 
     }
 }
+
+export default new ClassManager();
