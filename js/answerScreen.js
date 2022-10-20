@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
 import AnswerYesNo from './answerComponents/answerYesNo.js';
@@ -9,6 +9,8 @@ const AnswerScreen = (props) => {
 
   const [currentQuestionId, setCurrentQuestionId] = React.useState(props.route.params);
   const currentQuestion = DataManager.getQuestionWithId(currentQuestionId);
+  const date = Date.now();
+  const [currentDate, setCurrentDate] = React.useState(date);
   const lView = getViewForQuestionId(currentQuestion);
 
    function getViewForQuestionId(currentQuestion, date) {
@@ -25,11 +27,40 @@ const AnswerScreen = (props) => {
         }
    }
 
+   function getDateString() {
+        return date.toDateString()
+   }
+
   return (
     <View style={{ flex: 1}}>
-        {lView}
+        <View style={{ flex: 1}}>
+            <Text style={styles.questionText}>{currentQuestion.text}</Text>
+        </View>
+        <View style={{ flex: 1}}>
+            <Text style={styles.questionText}>{currentQuestion.text}</Text>
+        </View>
+        <View style={{ flex: 1}}>
+            {lView}
+        </View>
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons]} onPress={()=>{onPress(false);}}>
+            <Text style={{color:"black"}}>CANCEL</Text>
+        </TouchableOpacity>
+        </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+    questionText: {
+        marginVertical:50,
+        marginHorizontal:20,
+        color: 'black',
+        fontSize: 35,
+        fontWeight: '500',
+        textAlignVertical:'center',
+        textAlign:'center',
+    },
+ });
 
 export default AnswerScreen;

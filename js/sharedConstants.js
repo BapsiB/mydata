@@ -1,5 +1,5 @@
 //import React from 'react';
-//import { AsyncStorage } from 'react-native';
+import { StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class SharedConstants {
@@ -11,6 +11,24 @@ class SharedConstants {
         QUESTION_TYPE_INTENSITY: 2,
         QUESTION_TYPE_COUNT: 3
        };
+
+       this.styles = StyleSheet.create({
+           BaseButtons: {
+               height:50,
+               width:130,
+               backgroundColor: 'black',
+               color:"black",
+               alignItems: 'center',
+               backgroundColor:"white",
+               borderWidth:1,
+               borderRadius:10,
+               textAlignVertical:'center',
+               textAlign:'center',
+               justifyContent: 'center',
+               alignItems: 'center',
+           },
+
+       })
   }
 }
 

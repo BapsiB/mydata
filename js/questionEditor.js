@@ -52,7 +52,7 @@ const lDisableAddButton = questionText.length == 0;
             <Text style={{color:"black"}}>ADD</Text>
         </TouchableOpacity>
        </View>
-       </View>
+    </View>
   );
 }
 
@@ -294,8 +294,6 @@ const styles = StyleSheet.create({
     questionTypeContainer: {
         flex: 1,
         flexDirection: "row",
-//        justifyContent: 'center',
-//        alignItems: 'center',
     }
 });
 
