@@ -39,25 +39,45 @@ class DataManager {
         }
        })
 
+       /*
+        * set the answer of a question for a specified date.
+        */
+       this.setData = function(questionID, date, value) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        if(month.length < 2) {
+            month = "0" + month;
+        }
+
+        if(day.length < 2) {
+            day = "0" + day;
+        }
+        const lTag = "@DataDay:" + year + month + day;
+
+        let lTagData = this.daysData[lTag];
+        if(lTagData === undefined ) {
+            lTagData = [];
+        }
+
+        lTagData[questionID] = value;
+
+        _storeData(lTag, lTagData);
+       }
+
        this.findAvailableId = function() {
-        let lAvailableId = 0;
+       let maxNum = 0;
         while(true) {
-            let lFoundId = false;
             var s;
             let array = this.listQuestions;
             for (s of array) {
-              if(s.id == lAvailableId.toString()) {
-                lFoundId = true;
-                break;
+            const intValue = s.id.parseInt();
+              if(intValue > maxNum) {
+                maxNum = intValue;
               }
             }
-
-            if(!lFoundId) {
-                return lAvailableId.toString();
-            }
-            lAvailableId ++;
         }
-
+        return maxNum.toString();
        }
 
        this.addQuestion = function(aQuestionText, aQuestionType, aOptions) {
@@ -71,7 +91,7 @@ class DataManager {
        }
 
        this.getQuestions = function() {
-            return this.listQuestions;
+         return this.listQuestions;
        }
 
        this.getQuestionWithId = function(aId) {
@@ -81,6 +101,30 @@ class DataManager {
                 }
             }
             return null;
+       }
+
+       /*
+       * return the next question in the list.
+       */
+       this.getNextQuestion = function(questionId) {
+           const len = this.listQuestions.length;
+           let indexReturn = 0;
+           let i;
+           for (i=0; i<len; ++i) {
+               const s = this.listQuestions[i];
+
+               if(s.id == questionId) {
+                   if(i == (this.listQuestions.length - 1)) {
+                       indexReturn = 0;
+                   }
+                   else {
+                    indexReturn = i + 1;
+                   }
+                   break;
+               }
+           }
+
+           return this.listQuestions[indexReturn];
        }
 
         this.setQuestionsListener = function(callback){

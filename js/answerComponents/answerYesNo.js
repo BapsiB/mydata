@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
+import DataManager from '../dataManager.js';
 
 const AnswerYesNo = (props) => {
-    const data = props.date;
+    const date = props.date;
     const question = props.question;
+
+    function onPress(isYes) {
+        DataManager.setData(question.id, date, isYes ? 1 : 0);
+        props.callback();
+    }
 
     return (
         <View style={{margin: 50, flexDirection: "row", justifyContent: 'center'}}>
