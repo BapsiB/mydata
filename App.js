@@ -8,7 +8,6 @@ import { Image, TouchableOpacity, StyleSheet, Text, Pressable, View, SafeAreaVie
 
 const Stack = createNativeStackNavigator();
 const sDataManager = DataManager;
-
 const Question = (props) => {
 
 const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
@@ -54,7 +53,7 @@ const MainView = ({ navigation }) => {
 
     const forceUpdate = React.useReducer(() => ({}))[1]
 
-    const [arrayNames, setArrayNames] = React.useState(sDataManager.getQuestions());
+    const [arrayNames, setArrayNames] = React.useState([]);
 
     const updateQuestions = () => {
         setArrayNames(sDataManager.getQuestions());

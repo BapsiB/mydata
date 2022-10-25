@@ -9,10 +9,6 @@ class DataManager {
        this.daysData = [];
        this.questionCallback = null;
 
-       this.saveListQuestions = function() {
-            _storeData("@questions", this.listQuestions);
-       }
-
        const _storeData = async (key, data) => {
         try {
             const jsonValue = JSON.stringify(data)
@@ -31,18 +27,41 @@ class DataManager {
          }
        }
 
-       const that = this;
-       getData("@questions").then((data) => {
-        that.listQuestions = data;
-        if(that.questionCallback) {
-            that.questionCallback();
-        }
-       })
+      const that = this;
+      getData("@questions").then((data) => {
+       that.listQuestions = data;
+       if(that.questionCallback) {
+           that.questionCallback();
+       }
+      });
 
-       /*
-        * set the answer of a question for a specified date.
-        */
-       this.setData = function(questionID, date, value) {
+        AsyncStorage.getAllKeys().then((stringArray) => {
+        let stringDataDayArray = [];
+
+         for (s of stringArray) {
+            const key = s;
+            if(key.includes("@DataDay:")) {
+                stringDataDayArray.push(key);
+            }
+         }
+
+         AsyncStorage.multiGet(stringDataDayArray, (error, response) => {
+            const lArrayObjects = response;
+            let pairData;
+            for (pairData of lArrayObjects) {
+                const key = pairData[0]
+                const object = pairData[1] != null ? JSON.parse(pairData[1]) : null;
+                const keyDateOnly = key.split("@DataDay:").pop();
+                this.daysData[keyDateOnly] = object;
+            }
+         });
+        });
+
+       this.saveListQuestions = function() {
+            _storeData("@questions", this.listQuestions);
+       }
+
+       function getDateString(date) {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString();
         const day = date.getDate().toString();
@@ -53,22 +72,33 @@ class DataManager {
         if(day.length < 2) {
             day = "0" + day;
         }
-        const lTag = "@DataDay:" + year + month + day;
 
-        let lTagData = this.daysData[lTag];
-        if(lTagData === undefined ) {
-            lTagData = [];
+        return year + month + day;
+       }
+
+       /*
+        * set the answer of a question for a specified date.
+        */
+       this.setData = function(questionID, date, value) {
+
+        const lDateStr = getDateString(date);
+        const lTagStoring = "@DataDay:" + lDateStr;
+
+        let lDayData = this.daysData[lDateStr];
+        if(lDayData === undefined ) {
+            lDayData = [];
         }
 
-        lTagData[questionID] = value;
+        lDayData[questionID] = value;
+        this.daysData[lDateStr] = lDayData;
 
-        _storeData(lTag, lTagData);
+        _storeData(lTagStoring, lDayData);
        }
 
        this.findAvailableId = function() {
        let maxNum = 0;
         while(true) {
-            var s;
+            let s;
             let array = this.listQuestions;
             for (s of array) {
             const intValue = s.id.parseInt();
@@ -95,6 +125,7 @@ class DataManager {
        }
 
        this.getQuestionWithId = function(aId) {
+            let s;
             for (s of this.listQuestions) {
                 if(s.id == aId) {
                     return s;
