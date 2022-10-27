@@ -12,6 +12,15 @@ class SharedConstants {
         QUESTION_TYPE_COUNT: 3
        };
 
+       this.getDateString = function(date) {
+          const dateStr = date.toDateString();
+          const today = new Date();
+          if(dateStr === today.toDateString()) {
+              return dateStr + " (today)";
+          }
+          return dateStr;
+       }
+
        this.styles = StyleSheet.create({
            BaseButtons: {
                height:50,
