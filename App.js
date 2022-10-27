@@ -2,6 +2,7 @@ import React from 'react';
 import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
+import HeaderDate from './js/headerDate.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, TouchableOpacity, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
@@ -40,7 +41,7 @@ const MyStack = () => {
         <Stack.Screen
           name="Home"
           component={MainView}
-          options={{ title: 'Questions' }}
+          options={{ headerShown:false }}
         />
         <Stack.Screen name="Question Editor" component={QuestionEditor} />
         <Stack.Screen name="Answer Screen" component={AnswerScreen} />
@@ -50,6 +51,14 @@ const MyStack = () => {
 };
 
 const MainView = ({ navigation }) => {
+
+    const unsubscribe = navigation.addListener('state', (e) => {
+      // You can get the raw navigation state (partial state object of the root navigator)
+      console.log(e.data.state);
+      if(e.data.state.routeNames[e.data.state.index] == "Home") {
+        forceUpdate();
+      }
+    });
 
     const forceUpdate = React.useReducer(() => ({}))[1]
 
@@ -67,6 +76,7 @@ const MainView = ({ navigation }) => {
     const lSizeFooter = "10%";
   return (
         <View style={{ flex: 1}}>
+            {HeaderDate.getHeader()}
             <SafeAreaView style={{marginBottom:"20%"}}>
                 <ScrollView style={styles.scrollView}>
                 {listItems}

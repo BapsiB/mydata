@@ -29,13 +29,17 @@ class HeaderDate {
     this.getHeader = function() {
         const [currentDate, setCurrentDate] = React.useState(that.getDate());
 
+        if(SharedConstants.getDateString(currentDate) != SharedConstants.getDateString(that.getDate())) {
+            setCurrentDate(that.getDate());
+        }
+
         function setDate(date) {
             that.setDate(date);
             setCurrentDate(date);
         }
 
         return (
-            <View style={{flex:1, flexDirection: "row", marginVertical:20,}}>
+            <View style={{height:40, flexDirection: "row", marginVertical:20,}}>
                 <View style={{flex:1, marginLeft:20}}>
                     <TouchableOpacity onPress={()=>{setDate(incrementDate(this.date, -1));}}>
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowLeft.png")}/>
