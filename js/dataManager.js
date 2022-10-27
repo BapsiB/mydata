@@ -124,6 +124,17 @@ class DataManager {
          return this.listQuestions;
        }
 
+        /*
+        * return the answer at the given date, to the question matching the question id.
+        */
+       this.getAnswerForQuestion = function(aQuestionId, aDate) {
+       const lIndex = getDateString(aDate);
+        const dateData = this.daysData[lIndex];
+        if(dateData !== undefined) {
+            return dateData[aQuestionId];
+        }
+       }
+
        this.getQuestionWithId = function(aId) {
             let s;
             for (s of this.listQuestions) {
