@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Button } from 'react-native';
 import SharedConstants from './sharedConstants.js';
+import DataManager from './dataManager.js';
 
 const QuestionEditor = (props) => {
-
-  const dataManager = props.route.params;
 
   const [questionText, onChangeQuestionText] = React.useState("");
   const [questionType, onChangeQuestionType] = React.useState(0);
@@ -24,7 +23,7 @@ function onPressAddQuestion() {
         break;
     }
 
-    dataManager.addQuestion(questionText, questionType, lOption);
+    DataManager.addQuestion(questionText, questionType, lOption);
     props.navigation.navigate("Home");
 }
 

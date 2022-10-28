@@ -1,13 +1,32 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import SharedConstants from '../sharedConstants.js';
+import DataManager from '../dataManager.js';
 
-const AnswerScreen = (props) => {
+const AnswerSlider = (props) => {
+    const date = props.date;
+    const question = props.question;
 
-  return (
-    <View style={{ flex: 1}}>
+    let answerGetData = DataManager.getAnswerForQuestion(question.id, date);
 
-    </View>
-  );
+    function onPress(isYes) {
+        DataManager.setData(question.id, date, isYes ? 1 : 0);
+        props.callback();
+    }
+
+    function getStyle(isSelected) {
+        return isSelected ? styles.yesNoButtonsSelected : styles.yesNoButtons;
+    }
+
+    return (
+       <View style={{margin: 50, flexDirection: "row", justifyContent: 'center'}}>
+            <Slider orientation="vertical"/>
+       </View>
+    );
 }
 
-export default AnswerScreen;
+const styles = StyleSheet.create({
+
+ });
+
+export default AnswerSlider;

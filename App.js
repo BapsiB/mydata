@@ -74,7 +74,7 @@ const MainView = ({ navigation }) => {
     const listItems = arrayNames.map((d) => <Question title={d.text} questionId={d.id} key={d.id} navigation={navigation}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
-  return (
+    return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
             <SafeAreaView style={{marginBottom:"20%"}}>
@@ -87,12 +87,12 @@ const MainView = ({ navigation }) => {
                     <BottomButton
                     source={require("./resources/curvesButton.png")}
                     onClick={function() {}}/>
-                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor", sDataManager);}}/>
+                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor");}}/>
                     <BottomButton source={require("./resources/shareButton.png")}/>
                 </View>
            </View>
         </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({

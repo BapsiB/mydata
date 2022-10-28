@@ -97,16 +97,15 @@ class DataManager {
 
        this.findAvailableId = function() {
        let maxNum = 0;
-        while(true) {
-            let s;
-            let array = this.listQuestions;
-            for (s of array) {
-            const intValue = s.id.parseInt();
-              if(intValue > maxNum) {
-                maxNum = intValue;
-              }
-            }
+        let question;
+        let array = this.listQuestions;
+        for (question of array) {
+        const intValue = +question.id;
+          if(intValue > maxNum) {
+            maxNum = intValue;
+          }
         }
+        maxNum++;
         return maxNum.toString();
        }
 
