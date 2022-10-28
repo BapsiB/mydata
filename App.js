@@ -77,11 +77,11 @@ const MainView = ({ navigation }) => {
     return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
-            <SafeAreaView style={{marginBottom:"20%"}}>
-                <ScrollView style={styles.scrollView}>
+
+            <ScrollView style={{marginBottom:"21%"}}>
                 {listItems}
-                </ScrollView>
-            </SafeAreaView>
+            </ScrollView>
+
             <View style={{ position:'absolute', bottom:0, height:lSizeFooter, width:"100%"}}>
                 <View style={{   flex: 1, flexDirection: "row"}}>
                     <BottomButton

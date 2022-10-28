@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Slider } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 
@@ -19,9 +19,9 @@ const AnswerSlider = (props) => {
     }
 
     return (
-       <View style={{margin: 50, flexDirection: "row", justifyContent: 'center'}}>
-            <Slider orientation="vertical"/>
-       </View>
+
+       <Slider orientation="vertical"/>
+
     );
 }
 

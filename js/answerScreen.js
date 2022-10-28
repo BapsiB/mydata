@@ -21,10 +21,10 @@ const AnswerScreen = (props) => {
                 return <AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={nextQuestion}/>;
             break;
             case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion}/>
+                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion}/>
             break;
             case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                return <AnswerSlider date={HeaderDate.getDate()} question={question} callback={nextQuestion}/>
+                return <AnswerSlider date={HeaderDate.getDate()} question={question} callback={nextQuestion} question={aCurrentQuestion}/>
             break;
         }
    }
