@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Slider } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import Slider from '@react-native-community/slider';
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 
@@ -19,8 +20,17 @@ const AnswerSlider = (props) => {
     }
 
     return (
+    <View style={{transform:[{rotate: "-90deg"}]}}>
+       <Slider
+         style={{height: 200}}
+         minimumValue={0}
+         maximumValue={1}
+         minimumTrackTintColor="#FFFFFF"
+         maximumTrackTintColor="#000000"
+         vertical={true}
 
-       <Slider orientation="vertical"/>
+       />
+    </View>
 
     );
 }
