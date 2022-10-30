@@ -1,27 +1,44 @@
 import React from 'react';
+import { Provider as PaperProvider } from 'react-native-paper';
 import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
 import HeaderDate from './js/headerDate.js';
+import MenuEditQuestion from './js/menuEditQuestion.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Image, TouchableOpacity, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
+import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const sDataManager = DataManager;
 const Question = (props) => {
 
+  const [menuVisible, setMenuVisible] = React.useState(false);
+
+  const openMenu = () => setMenuVisible(true);
+
+  const closeMenu = () => setMenuVisible(false);
+
 const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
+const displayOptions = () => {
+
+}
 
   return (
-    <TouchableOpacity
+  <View>
+     {menuVisible ?         <MenuEditQuestion visible={menuVisible}/>
+   : null}
+    <TouchableHighlight
         style={styles.questionsButtons}
         onPress={goToQuestion}
+        onLongPress={openMenu}
+        delayLongPress={1000}
     >
-      <Text style={{fontSize: 16, color:"black"}}>
-        {props.title}
-      </Text>
-    </TouchableOpacity>
+        <Text style={{fontSize: 16, color:"black"}}>
+            {props.title}
+        </Text>
+     </TouchableHighlight>
+     </View>
 
   );
 }
@@ -36,6 +53,7 @@ return (
 
 const MyStack = () => {
   return (
+   <PaperProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -47,6 +65,7 @@ const MyStack = () => {
         <Stack.Screen name="Answer Screen" component={AnswerScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+   </PaperProvider>
   );
 };
 
@@ -75,6 +94,7 @@ const MainView = ({ navigation }) => {
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
     return (
+
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
 
