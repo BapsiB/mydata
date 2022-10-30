@@ -1,5 +1,7 @@
 import React from 'react';
-import { Provider as PaperProvider } from 'react-native-paper';
+//import { Provider as PaperProvider } from 'react-native-paper';
+import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
+
 import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
@@ -13,32 +15,84 @@ const Stack = createNativeStackNavigator();
 const sDataManager = DataManager;
 const Question = (props) => {
 
-  const [menuVisible, setMenuVisible] = React.useState(false);
+  const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
 
-  const openMenu = () => setMenuVisible(true);
+  const requestDelete = () => {
+    if(DataManager.deleteQuestion(props.questionId)) {
+        props.changeCallback();
+    }
+  };
 
-  const closeMenu = () => setMenuVisible(false);
+const leftButton = (
+        <SwipeButtonsContainer
+            style={{
+                textAlign:"center",
+                flexDirection: 'column',
+                backgroundColor:"#f66",
+                height:50,
+                width:60,
+                paddingLeft:5,
+                paddingTop:2,
+//                paddingRight:5,
 
-const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
-const displayOptions = () => {
+              borderRadius: 9,
+              borderColor: 'black',
+              borderWidth:1
+            }}
 
-}
+        >
+            <TouchableOpacity
+                onPress={() => {requestDelete();}}
+            >
+                <Image style={{ width:46, height:46,  resizeMode: 'stretch' }} source={require("./resources/delete.png")}/>
+            </TouchableOpacity>
+        </SwipeButtonsContainer>
+    );
+
+const rightButton = (
+        <SwipeButtonsContainer
+            style={{
+                textAlign:"center",
+                flexDirection: 'column',
+                height:50,
+                width:60,
+                paddingLeft:6,
+//                paddingRight:5,
+
+
+            }}
+
+        >
+            <TouchableOpacity
+                onPress={() => console.log('left button clicked')}
+                style={{              borderRadius: 9,
+                                      borderColor: 'black',
+                                      borderWidth:1,
+                                      height:50,
+                                      backgroundColor:"#bfb",
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                      }}
+            >
+                <Image style={{ width:40, height:40,  resizeMode: 'stretch' }} source={require("./resources/pencil.png")}/>
+            </TouchableOpacity>
+        </SwipeButtonsContainer>
+    );
+
 
   return (
-  <View>
-     {menuVisible ?         <MenuEditQuestion visible={menuVisible}/>
-   : null}
-    <TouchableHighlight
-        style={styles.questionsButtons}
-        onPress={goToQuestion}
-        onLongPress={openMenu}
-        delayLongPress={1000}
-    >
-        <Text style={{fontSize: 16, color:"black"}}>
+
+  <SwipeItem
+      style={styles.questionsButtons}
+      swipeContainerStyle={styles.swipeContentContainerStyle}
+      leftButtons={leftButton}
+      rightButtons={rightButton}
+  >
+        <Text style={{fontSize: 16, color:"black", textAlign:"center"}}>
             {props.title}
         </Text>
-     </TouchableHighlight>
-     </View>
+  </SwipeItem>
+
 
   );
 }
@@ -53,7 +107,6 @@ return (
 
 const MyStack = () => {
   return (
-   <PaperProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -65,7 +118,6 @@ const MyStack = () => {
         <Stack.Screen name="Answer Screen" component={AnswerScreen} />
       </Stack.Navigator>
     </NavigationContainer>
-   </PaperProvider>
   );
 };
 
@@ -90,7 +142,7 @@ const MainView = ({ navigation }) => {
 
     sDataManager.setQuestionsListener(updateQuestions);
 
-    const listItems = arrayNames.map((d) => <Question title={d.text} questionId={d.id} key={d.id} navigation={navigation}></Question>);
+    const listItems = arrayNames.map((d) => <Question title={d.text} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions}></Question>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
     return (
@@ -99,7 +151,9 @@ const MainView = ({ navigation }) => {
             {HeaderDate.getHeader()}
 
             <ScrollView style={{marginBottom:"21%"}}>
+            <SwipeProvider>
                 {listItems}
+            </SwipeProvider>
             </ScrollView>
 
             <View style={{ position:'absolute', bottom:0, height:lSizeFooter, width:"100%"}}>
@@ -125,15 +179,24 @@ const styles = StyleSheet.create({
   questionsButtons: {
     marginVertical:3,
     marginHorizontal:20,
-    borderWidth:1,
+    paddingHorizontal:3,
+    borderWidth:0,
     borderRadius:10,
     height:50,
     flex:1,
-    backgroundColor:"white",
     borderColor:"black",
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+      swipeContentContainerStyle: {
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#ffffff',
+          borderRadius: 9,
+          borderColor: 'black',
+          borderWidth:1,
+      },
 
     button_footer2: {
       justifyContent: 'center',

@@ -119,6 +119,22 @@ class DataManager {
             this.questionCallback();
        }
 
+       /*
+       * delete the question having the given questionId.
+       * return true if the question has been successfully deleted.
+       */
+       this.deleteQuestion = function(aQuestionId) {
+            for( var i = 0; i < this.listQuestions.length; i++){
+                const q = this.listQuestions[i];
+                if(q.id == aQuestionId) {
+                    this.listQuestions.splice(i, 1);
+                    this.saveListQuestions();
+                    return true;
+                }
+            }
+            return false;
+       }
+
        this.getQuestions = function() {
          return this.listQuestions;
        }
