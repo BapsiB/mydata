@@ -15,7 +15,7 @@ function onPressAddQuestion() {
         case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
             lOption = {};
         break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_COUNT:
+        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
             lOption = options.number;
         break;
         case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:

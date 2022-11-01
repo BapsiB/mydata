@@ -7,6 +7,20 @@ import DataManager from '../dataManager.js';
 const AnswerSlider = (props) => {
     const date = props.date;
     const question = props.question;
+    let upLabel = question.options.max;
+    let downLabel = question.options.min;
+    let minValue;
+    let maxValue;
+    switch(props.question.type) {
+        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
+            minValue = question.options.min;
+            maxValue = question.options.max;
+        break;
+        case SharedConstants.questionTypes.QUESTION_TYPE_QUESTION_TYPE_INTENSITY:
+            minValue = 0;
+            maxValue = 100;
+        break;
+    }
 
     let answerGetData = DataManager.getAnswerForQuestion(question.id, date);
 
@@ -20,16 +34,31 @@ const AnswerSlider = (props) => {
     }
 
     return (
-    <View style={{transform:[{rotate: "-90deg"}]}}>
-       <Slider
-         style={{height: 200}}
-         minimumValue={0}
-         maximumValue={1}
-         minimumTrackTintColor="#FFFFFF"
-         maximumTrackTintColor="#000000"
-         vertical={true}
+    <View
+        flexDirection='row'
+        style={{top:0,
+            position:"absolute",
+            height:400,
+            justifyContent: 'center',
+            marginLeft:"45%"
+            }}
+    >
+        <View style={{width:"50%",}}>
+            <Text style={{top:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20,}}>{upLabel}</Text>
+            <Text style={{bottom:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20}}>{downLabel}</Text>
+        </View>
+        <View style={{transform:[{rotate: "-90deg"}]}}>
+           <Slider
+             style={{height: 200, width:400}}
+             minimumValue={+minValue}
+             maximumValue={+maxValue}
+             minimumTrackTintColor="#FFFFFF"
+             maximumTrackTintColor="#000000"
+             vertical={true}
+             step={1}
 
-       />
+           />
+       </View>
     </View>
 
     );

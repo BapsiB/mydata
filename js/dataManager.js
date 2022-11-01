@@ -63,8 +63,8 @@ class DataManager {
 
        function getDateString(date) {
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString();
-        const day = date.getDate().toString();
+        let month = (date.getMonth() + 1).toString();
+        let day = date.getDate().toString();
         if(month.length < 2) {
             month = "0" + month;
         }

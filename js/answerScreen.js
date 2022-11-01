@@ -24,7 +24,7 @@ const AnswerScreen = (props) => {
                 return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion}/>
             break;
             case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                return <AnswerSlider date={HeaderDate.getDate()} question={question} callback={nextQuestion} question={aCurrentQuestion}/>
+                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion}/>
             break;
         }
    }
@@ -43,7 +43,7 @@ const AnswerScreen = (props) => {
             {lView}
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons]} onPress={()=>{onPress(false);}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, {position:"absolute", bottom:30}]} onPress={()=>{onPress(false);}}>
             <Text style={{color:"black"}}>CANCEL</Text>
         </TouchableOpacity>
         </View>
