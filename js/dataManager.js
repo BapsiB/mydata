@@ -1,5 +1,4 @@
 //import React from 'react';
-//import { AsyncStorage } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class DataManager {
@@ -29,7 +28,10 @@ class DataManager {
 
       const that = this;
       getData("@questions").then((data) => {
-       that.listQuestions = data;
+      if(data) {
+        that.listQuestions = data;
+      }
+
        if(that.questionCallback) {
            that.questionCallback();
        }
@@ -143,11 +145,12 @@ class DataManager {
         * return the answer at the given date, to the question matching the question id.
         */
        this.getAnswerForQuestion = function(aQuestionId, aDate) {
-       const lIndex = getDateString(aDate);
+        const lIndex = getDateString(aDate);
         const dateData = this.daysData[lIndex];
         if(dateData !== undefined) {
             return dateData[aQuestionId];
         }
+        return null;
        }
 
        this.getQuestionWithId = function(aId) {

@@ -11,7 +11,6 @@ const AnswerScreen = (props) => {
   const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params);
   const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
-
 //  const [currentDate, setCurrentDate] = React.useState(date);
   const lView = getViewForQuestionId(currentQuestion);
 
@@ -33,6 +32,11 @@ const AnswerScreen = (props) => {
         const nextQuestion = DataManager.getNextQuestion(currentQuestion.id);
         setCurrentQuestion(nextQuestion);
    }
+
+   function onReturn() {
+        props.navigation.navigate("Home");
+   }
+
   return (
     <View style={{ flex: 1}}>
         {HeaderDate.getHeader()}
@@ -43,7 +47,7 @@ const AnswerScreen = (props) => {
             {lView}
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, {position:"absolute", bottom:30}]} onPress={()=>{onPress(false);}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, {position:"absolute", bottom:30}]} onPress={()=>{onReturn();}}>
             <Text style={{color:"black"}}>CANCEL</Text>
         </TouchableOpacity>
         </View>

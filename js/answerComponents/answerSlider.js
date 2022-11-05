@@ -7,6 +7,13 @@ import DataManager from '../dataManager.js';
 const AnswerSlider = (props) => {
     const date = props.date;
     const question = props.question;
+
+    let lAnswerForQuestion = DataManager.getAnswerForQuestion(question.id, date);
+    if(lAnswerForQuestion === undefined) {
+        lAnswerForQuestion = 0;
+    }
+    const [answer, setAnswer] = React.useState(lAnswerForQuestion);
+
     let upLabel = question.options.max;
     let downLabel = question.options.min;
     let minValue;
@@ -16,7 +23,7 @@ const AnswerSlider = (props) => {
             minValue = question.options.min;
             maxValue = question.options.max;
         break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_QUESTION_TYPE_INTENSITY:
+        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
             minValue = 0;
             maxValue = 100;
         break;
@@ -24,8 +31,8 @@ const AnswerSlider = (props) => {
 
     let answerGetData = DataManager.getAnswerForQuestion(question.id, date);
 
-    function onPress(isYes) {
-        DataManager.setData(question.id, date, isYes ? 1 : 0);
+    function onSetValue(aValue) {
+        DataManager.setData(question.id, date, aValue);
         props.callback();
     }
 
@@ -56,7 +63,8 @@ const AnswerSlider = (props) => {
              maximumTrackTintColor="#000000"
              vertical={true}
              step={1}
-
+             value={+answer}
+             onSlidingComplete={onSetValue}
            />
        </View>
     </View>

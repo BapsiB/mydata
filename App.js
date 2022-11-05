@@ -7,97 +7,12 @@ import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
 import HeaderDate from './js/headerDate.js';
 import MenuEditQuestion from './js/menuEditQuestion.js';
+import QuestionButton from './js/questionButton.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
 
 const Stack = createNativeStackNavigator();
-const Question = (props) => {
-
-  const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
-
-  const requestDelete = () => {
-    if(DataManager.deleteQuestion(props.questionId)) {
-        props.changeCallback();
-    }
-  };
-
-const leftButton = (
-        <SwipeButtonsContainer
-            style={{
-                textAlign:"center",
-                flexDirection: 'column',
-                backgroundColor:"#f66",
-                height:50,
-                width:60,
-                paddingLeft:5,
-                paddingTop:2,
-//                paddingRight:5,
-
-              borderRadius: 9,
-              borderColor: 'black',
-              borderWidth:1
-            }}
-
-        >
-            <TouchableOpacity
-                onPress={() => {requestDelete();}}
-            >
-                <Image style={{ width:46, height:46,  resizeMode: 'stretch' }} source={require("./resources/delete.png")}/>
-            </TouchableOpacity>
-        </SwipeButtonsContainer>
-    );
-
-const rightButton = (
-        <SwipeButtonsContainer
-            style={{
-                textAlign:"center",
-                flexDirection: 'column',
-                height:50,
-                width:60,
-                paddingLeft:6,
-//                paddingRight:5,
-
-
-            }}
-
-        >
-            <TouchableOpacity
-                onPress={() => console.log('left button clicked')}
-                style={{              borderRadius: 9,
-                                      borderColor: 'black',
-                                      borderWidth:1,
-                                      height:50,
-                                      backgroundColor:"#bfb",
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                      }}
-            >
-                <Image style={{ width:40, height:40,  resizeMode: 'stretch' }} source={require("./resources/pencil.png")}/>
-            </TouchableOpacity>
-        </SwipeButtonsContainer>
-    );
-
-
-  return (
-
-  <SwipeItem
-      style={styles.questionsButtons}
-      swipeContainerStyle={styles.swipeContentContainerStyle}
-      leftButtons={leftButton}
-      rightButtons={rightButton}
-      onPress={()=>{goToQuestion;}}
-  >
-  <TouchableOpacity onPress={()=>{goToQuestion();}}>
-        <Text style={{fontSize: 16, color:"black", textAlign:"center"}}>
-            {props.title}
-        </Text>
-  </TouchableOpacity>
-  </SwipeItem>
-
-
-  );
-}
 
 const BottomButton = (props) => {
 return (
@@ -144,11 +59,10 @@ const MainView = ({ navigation }) => {
 
     DataManager.setQuestionsListener(updateQuestions);
 
-    const listItems = arrayNames.map((d) => <Question title={d.text} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions}></Question>);
+    const listItems = arrayNames.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions}></QuestionButton>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
     return (
-
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
 
@@ -178,27 +92,9 @@ const styles = StyleSheet.create({
       flex: 1,
   },
 
-  questionsButtons: {
-    marginVertical:3,
-    marginHorizontal:20,
-    paddingHorizontal:3,
-    borderWidth:0,
-    borderRadius:10,
-    height:50,
-    flex:1,
-    borderColor:"black",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 
-      swipeContentContainerStyle: {
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#ffffff',
-          borderRadius: 9,
-          borderColor: 'black',
-          borderWidth:1,
-      },
+
+
 
     button_footer2: {
       justifyContent: 'center',

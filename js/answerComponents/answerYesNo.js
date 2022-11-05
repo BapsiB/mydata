@@ -6,11 +6,12 @@ import DataManager from '../dataManager.js';
 const AnswerYesNo = (props) => {
     const date = props.date;
     const question = props.question;
-
-    let answerGetData = DataManager.getAnswerForQuestion(question.id, date);
+    const [answer, setAnswer] = React.useState(DataManager.getAnswerForQuestion(question.id, date));
 
     function onPress(isYes) {
-        DataManager.setData(question.id, date, isYes ? 1 : 0);
+        const lAnswer = isYes ? 1 : 0;
+        DataManager.setData(question.id, date, lAnswer);
+        setAnswer(lAnswer);
         props.callback();
     }
 
@@ -20,10 +21,10 @@ const AnswerYesNo = (props) => {
 
     return (
         <View style={{margin: 50, flexDirection: "row", justifyContent: 'center'}}>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answerGetData == 1)]} onPress={()=>{onPress(true);}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answer == 1)]} onPress={()=>{onPress(true);}}>
             <Text style={{color:"black"}}>YES</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answerGetData == 0)]} onPress={()=>{onPress(false);}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answer == 0)]} onPress={()=>{onPress(false);}}>
             <Text style={{color:"black"}}>NO</Text>
         </TouchableOpacity>
        </View>
