@@ -4,6 +4,9 @@ import Slider from '@react-native-community/slider';
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 
+/*
+* Component showing the slider for both numbered and intensity type of questions.
+*/
 const AnswerSlider = (props) => {
     const date = props.date;
     const question = props.question;
@@ -45,18 +48,18 @@ const AnswerSlider = (props) => {
         flexDirection='row'
         style={{top:0,
             position:"absolute",
-            height:400,
+            height:300,
             justifyContent: 'center',
             marginLeft:"45%"
             }}
     >
-        <View style={{width:"50%",}}>
+        <View style={{width:"30%",}}>
             <Text style={{top:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20,}}>{upLabel}</Text>
             <Text style={{bottom:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20}}>{downLabel}</Text>
         </View>
         <View style={{transform:[{rotate: "-90deg"}]}}>
            <Slider
-             style={{height: 200, width:400}}
+             style={{height: 200, width:300}}
              minimumValue={+minValue}
              maximumValue={+maxValue}
              minimumTrackTintColor="#FFFFFF"
@@ -74,6 +77,6 @@ const AnswerSlider = (props) => {
 
 const styles = StyleSheet.create({
 
- });
+});
 
 export default AnswerSlider;

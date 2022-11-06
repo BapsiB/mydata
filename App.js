@@ -96,12 +96,12 @@ const styles = StyleSheet.create({
 
 
 
-    button_footer2: {
-      justifyContent: 'center',
-      alignItems: 'center',
-          backgroundColor: "white",
-        flex: 1,
-    }
+  button_footer2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+        backgroundColor: "white",
+      flex: 1,
+  }
 });
 
 

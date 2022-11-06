@@ -165,26 +165,57 @@ class DataManager {
 
        /*
        * return the next question in the list.
+       * @questionId, id of the queston
+       * @goForward, wether we want to go forward (true) or backward (false)
        */
-       this.getNextQuestion = function(questionId) {
+       this.getNextQuestion = function(questionId, goForward, onlyTakeUnreplied, date) {
            const len = this.listQuestions.length;
+           let returnQuestion = null;
            let indexReturn = 0;
            let i;
            for (i=0; i<len; ++i) {
                const s = this.listQuestions[i];
 
                if(s.id == questionId) {
-                   if(i == (this.listQuestions.length - 1)) {
+                   if(i == (this.listQuestions.length - 1) && goForward) {
                        indexReturn = 0;
                    }
-                   else {
-                    indexReturn = i + 1;
+                   else if(i == 0 && !goForward) {
+                        indexReturn = this.listQuestions.length - 1;
                    }
-                   break;
+                   else {
+                    indexReturn = i + goForward ? 1 : -1;
+                   }
+                   const lQuestion = this.listQuestions[indexReturn];
+                   if(onlyTakeUnreplied) {
+                    const answer = this.getAnswerForQuestion(lQuestion.id, date);
+                    if(answer == null) {
+                        return lQuestion;
+                    }
+                    else {
+                        return this.getNextQuestionUnrespoindedInArray(i, date);
+                    }
+                   }
+                   else {
+                    return lQuestion;
+                   }
+                   
                }
            }
 
-           return this.listQuestions[indexReturn];
+           return 
+       }
+
+       this.getNextQuestionUnrespoindedInArray = function(aIndexInArray, date) {
+        let index;
+        for(let indexAdd = 0; indexAdd < this.listQuestions.length; indexAdd++) {
+            index = (aIndexInArray + indexAdd) % this.listQuestions.length;
+            const answer = this.getAnswerForQuestion(this.listQuestions[index].id, date);
+            if(answer == null) {
+                return this.listQuestions[index];
+            }
+        }
+        return null;
        }
 
         this.setQuestionsListener = function(callback){

@@ -25,6 +25,7 @@ class SharedConstants {
            BaseButtons: {
                height:50,
                width:130,
+               marginHorizontal:5,
                backgroundColor: 'black',
                color:"black",
                alignItems: 'center',

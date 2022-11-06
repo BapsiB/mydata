@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image, Modal, Pressable } from 'react-native';
 import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
 import AnswerYesNo from './answerComponents/answerYesNo.js';
@@ -8,8 +8,10 @@ import HeaderDate from './headerDate.js';
 
 const AnswerScreen = (props) => {
 
-  const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params);
-  const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
+const [modalVisible, setModalVisible] = useState(false);
+
+const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params);
+const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
 //  const [currentDate, setCurrentDate] = React.useState(date);
   const lView = getViewForQuestionId(currentQuestion);
@@ -28,9 +30,21 @@ const AnswerScreen = (props) => {
         }
    }
 
-   function nextQuestion() {
-        const nextQuestion = DataManager.getNextQuestion(currentQuestion.id);
-        setCurrentQuestion(nextQuestion);
+   function nextQuestion(goNext, onlyTakeEmptyAnswer) {
+    if(goNext === undefined) {
+        goNext = true;
+    }
+
+    // undefined means it comes from the answer slider.
+    if(onlyTakeEmptyAnswer === undefined) {
+        onlyTakeEmptyAnswer = true;
+    }
+    const nextQuestion = DataManager.getNextQuestion(currentQuestion.id, true, onlyTakeEmptyAnswer, HeaderDate.getDate());
+    if(nextQuestion == null) {
+        setModalVisible(true);
+        return;
+    }
+    setCurrentQuestion(nextQuestion);
    }
 
    function onReturn() {
@@ -39,6 +53,29 @@ const AnswerScreen = (props) => {
 
   return (
     <View style={{ flex: 1}}>
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+    <View style={{ flex: 1}}>
         {HeaderDate.getHeader()}
         <View style={{ flex: 1}}>
             <Text style={styles.questionText}>{currentQuestion.text}</Text>
@@ -46,11 +83,18 @@ const AnswerScreen = (props) => {
         <View style={{ flex: 1}}>
             {lView}
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, {position:"absolute", bottom:30}]} onPress={()=>{onReturn();}}>
-            <Text style={{color:"black"}}>CANCEL</Text>
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, flexDirection: "row"}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
+            <Text style={{color:"black"}}>PREV</Text>
+        </TouchableOpacity>       
+         <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn();}}>
+            <Text style={{color:"black"}}>RETURN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true);}}>
+            <Text style={{color:"black"}}>NEXT</Text>
         </TouchableOpacity>
         </View>
+    </View>
     </View>
   );
 }
