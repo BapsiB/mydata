@@ -184,7 +184,8 @@ class DataManager {
                         indexReturn = this.listQuestions.length - 1;
                    }
                    else {
-                    indexReturn = i + goForward ? 1 : -1;
+                    const toAdd =  goForward ? 1 : -1;
+                    indexReturn = i + toAdd;
                    }
                    const lQuestion = this.listQuestions[indexReturn];
                    if(onlyTakeUnreplied) {

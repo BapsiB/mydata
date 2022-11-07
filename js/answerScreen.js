@@ -58,39 +58,46 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+            <Text style={styles.modalText}>You went through all the questions.</Text>
+            <View style={{flexDirection: "row"}}>
+                <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(false)}
+                >
+                <Text style={styles.textStyle}>CONTINUE</Text>
+                </Pressable>
+                <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => onReturn()}
+                >
+                <Text style={styles.textStyle}>HOME</Text>
+                </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
 
     <View style={{ flex: 1}}>
         {HeaderDate.getHeader()}
-        <View style={{ flex: 1}}>
+        <View style={{ flex: 2}}>
             <Text style={styles.questionText}>{currentQuestion.text}</Text>
         </View>
-        <View style={{ flex: 1}}>
+        <View style={{ flex: 3}}>
             {lView}
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, flexDirection: "row"}}>
+        <View style={{justifyContent: 'flex-end', alignItems: 'center', flex: 1, flexDirection: "row", backgroundColour:"blue"}}>
         <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
             <Text style={{color:"black"}}>PREV</Text>
         </TouchableOpacity>       
          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn();}}>
             <Text style={{color:"black"}}>RETURN</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true);}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true, false);}}>
             <Text style={{color:"black"}}>NEXT</Text>
         </TouchableOpacity>
         </View>
@@ -109,6 +116,49 @@ const styles = StyleSheet.create({
         textAlignVertical:'center',
         textAlign:'center',
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        marginHorizontal:5
+      },
+      buttonOpen: {
+        backgroundColor: "#Fbc4FF",
+      },
+      buttonClose: {
+        backgroundColor: "#2196F3",
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+      }
+    
 
  });
 

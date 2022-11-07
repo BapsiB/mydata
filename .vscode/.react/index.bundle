@@ -97815,7 +97815,8 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           } else if (i == 0 && !goForward) {
             indexReturn = this.listQuestions.length - 1;
           } else {
-            indexReturn = i + goForward ? 1 : -1;
+            var toAdd = goForward ? 1 : -1;
+            indexReturn = i + toAdd;
           }
           var lQuestion = this.listQuestions[indexReturn];
           if (onlyTakeUnreplied) {
@@ -98787,7 +98788,6 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         transparent: true,
         visible: modalVisible,
         onRequestClose: function onRequestClose() {
-          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         },
         children: (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.View, {
@@ -98796,16 +98796,30 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
             style: styles.modalView,
             children: [(0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Text, {
               style: styles.modalText,
-              children: "Hello World!"
-            }), (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Pressable, {
-              style: [styles.button, styles.buttonClose],
-              onPress: function onPress() {
-                return setModalVisible(!modalVisible);
+              children: "You went through all the questions."
+            }), (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsxs)(_reactNative.View, {
+              style: {
+                flexDirection: "row"
               },
-              children: (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Text, {
-                style: styles.textStyle,
-                children: "Hide Modal"
-              })
+              children: [(0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Pressable, {
+                style: [styles.button, styles.buttonClose],
+                onPress: function onPress() {
+                  return setModalVisible(false);
+                },
+                children: (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Text, {
+                  style: styles.textStyle,
+                  children: "CONTINUE"
+                })
+              }), (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Pressable, {
+                style: [styles.button, styles.buttonClose],
+                onPress: function onPress() {
+                  return onReturn();
+                },
+                children: (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Text, {
+                  style: styles.textStyle,
+                  children: "HOME"
+                })
+              })]
             })]
           })
         })
@@ -98823,15 +98837,16 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           })
         }), (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.View, {
           style: {
-            flex: 1
+            flex: 2
           },
           children: lView
         }), (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsxs)(_reactNative.View, {
           style: {
-            justifyContent: 'center',
+            justifyContent: 'flex-end',
             alignItems: 'center',
             flex: 1,
-            flexDirection: "row"
+            flexDirection: "row",
+            backgroundColour: "blue"
           },
           children: [(0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.TouchableOpacity, {
             style: [_sharedConstants.default.styles.BaseButtons, {
@@ -98864,7 +98879,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
               flex: 1
             }],
             onPress: function onPress() {
-              nextQuestion(true);
+              nextQuestion(true, false);
             },
             children: (0, _$$_REQUIRE(_dependencyMap[9], "react/jsx-runtime").jsx)(_reactNative.Text, {
               style: {
@@ -98888,6 +98903,48 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       fontWeight: '500',
       textAlignVertical: 'center',
       textAlign: 'center'
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+      marginHorizontal: 5
+    },
+    buttonOpen: {
+      backgroundColor: "#Fbc4FF"
+    },
+    buttonClose: {
+      backgroundColor: "#2196F3"
+    },
+    textStyle: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center"
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center"
     }
   });
   var _default = AnswerScreen;
