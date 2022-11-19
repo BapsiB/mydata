@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import Slider from '@react-native-community/slider';
+// import Slider from '@react-native-community/slider';
+import MySlider from "./mySlider"
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 
@@ -57,8 +58,8 @@ const AnswerSlider = (props) => {
             <Text style={{top:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20,}}>{upLabel}</Text>
             <Text style={{bottom:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20}}>{downLabel}</Text>
         </View>
-        <View style={{transform:[{rotate: "-90deg"}]}}>
-           <Slider
+        <View>
+           <MySlider
              style={{height: 200, width:300}}
              minimumValue={+minValue}
              maximumValue={+maxValue}
