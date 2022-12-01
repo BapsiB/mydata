@@ -44,12 +44,14 @@ const AnswerSlider = (props) => {
         return isSelected ? styles.yesNoButtonsSelected : styles.yesNoButtons;
     }
 
+    const heightSlider = 300;
+
     return (
     <View
         flexDirection='row'
         style={{top:0,
             position:"absolute",
-            height:300,
+            height:heightSlider,
             justifyContent: 'center',
             marginLeft:"45%"
             }}
@@ -60,7 +62,8 @@ const AnswerSlider = (props) => {
         </View>
         <View>
            <MySlider
-             style={{height: 200, width:300}}
+             height={heightSlider}
+             style={{width:300}}
              minimumValue={+minValue}
              maximumValue={+maxValue}
              minimumTrackTintColor="#FFFFFF"

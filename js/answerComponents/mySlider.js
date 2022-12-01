@@ -2,15 +2,16 @@ import { PrivateValueStore } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
 import { shadow } from 'react-native-paper';
+import Draggable from 'react-native-draggable';
 
 const { add } = Animated;
 
-let widthView, heightView;
+let widthView;
 
 const MySlider = (props) => {
     const y = 0;
     let widthView = 0;
-    let heightView = 0;
+    const {height, step} = props;
     return (
         <View 
         style={styles.container}
@@ -21,44 +22,57 @@ const MySlider = (props) => {
             <Animated.View
             style={{
                 ...StyleSheet.absoluteFillObject,
-                backgroundColor:"#bbb",
-                borderRadius:widthView/2,
-                height:add(y, widthView),
+                backgroundColor:"#0bb",
+                borderRadius:35,
+                height: "100%",
+                width: 70
             }}
-            />
+            >
+                <Cursor size={70} heightParent={height} stepCounts={step}>
+
+                </Cursor>
+            </Animated.View>
 
         </View>
     )
 };
 
-/*  */
-// <Cursor size={widthView}/>
-// const Cursor = (props) => {
-//     const {size} = props;
-//     return (
-//         <Animated.View
-//             style={{
-//                 width:size,
-//                 height:size,
-//                 borderRadius:size / 2,
-//                 backgroundColor:"white",
-//                 shadowColor:"#000",
-//                 shadowOffset: {
-//                     width: 2,
-//                     height: 0,
-//                 },
-//                 shadowOpacity:0.25,
-//                 shadowRadius:3.84,
-//                 elevation:5
-//             }}
-//         />
-//     )
-// };
+
+const Cursor = (props) => {
+    const {size, heightParent} = props;
+    return (
+        <Draggable
+        maxX={size}
+        minX={0}
+        minY={0}
+        maxY={heightParent}
+        onDrag={(e) => console.log('drag')}
+        >
+            <View
+                style={{
+                    width:size,
+                    height:size,
+                    borderRadius:size / 2,
+                    backgroundColor:"white",
+                    shadowColor:"#000",
+                    shadowOffset: {
+                        width: 2,
+                        height: 0,
+                    },
+                    shadowOpacity:0.25,
+                    shadowRadius:3.84,
+                    elevation:5
+                }}
+            >
+            </View>
+        </Draggable>
+    )
+};
 
 const styles = StyleSheet.create({
-    constainer:{
+    container:{
         width:30,
-        height:heightView,
+        height: "100%",
         borderRadius : 10,
         backgroundColor:"#eee"
 
