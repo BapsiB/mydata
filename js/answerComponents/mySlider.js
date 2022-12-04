@@ -1,6 +1,6 @@
 import { PrivateValueStore } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Animated, PanResponder } from 'react-native';
 import { shadow } from 'react-native-paper';
 import Draggable from 'react-native-draggable';
 
@@ -11,27 +11,76 @@ let widthView;
 const MySlider = (props) => {
     const y = 0;
     let widthView = 0;
+    const sizeKnob = 70;
     const {height, step} = props;
+
+    const pan = useRef(
+        new Animated.ValueXY({ x: 0, y: 0 })
+      ).current;
+
+      const panResponder = useRef(
+        PanResponder.create({
+          onMoveShouldSetPanResponder: () => true,
+          onPanResponderGrant: () => {
+            pan.setOffset({
+              x: pan.x._value,
+              y: pan.y._value
+            });
+          },
+          onPanResponderMove: (e, gestureState) => {
+            const lOffset = pan.y._offset;
+            pan.setValue({x:gestureState.dx, y:gestureState.dy});//Math.max(0, Math.min(height, gestureState.dy + lOffset))});
+          },
+          onPanResponderRelease: () => {
+            pan.flattenOffset();
+            const currentStepValue = step * pan.y._value / height;
+            const TopShouldBe = Math.floor(currentStepValue) * (height - sizeKnob) / (step - 1);
+            pan.setValue({x:0, y:TopShouldBe})
+          }
+        })
+      ).current;
+    
+
     return (
         <View 
         style={styles.container}
-        onLayout={(event) => {
-            var {x, y, width, height} = event.nativeEvent.layout;
-          }}
         >
-            <Animated.View
+            <View
+
             style={{
                 ...StyleSheet.absoluteFillObject,
                 backgroundColor:"#0bb",
                 borderRadius:35,
                 height: "100%",
-                width: 70
+                width: sizeKnob
             }}
             >
-                <Cursor size={70} heightParent={height} stepCounts={step}>
+                <Animated.View 
 
-                </Cursor>
-            </Animated.View>
+                    size={sizeKnob} 
+                    heightParent={height} 
+                    stepCounts={step}
+                    style={{
+                        position:"absolute",
+                        top: pan.y,
+                        width:sizeKnob,
+                        height:sizeKnob,
+                        borderRadius:sizeKnob / 2,
+                        backgroundColor:"white",
+                        shadowColor:"#000",
+                        shadowOffset: {
+                            width: 2,
+                            height: 0,
+                        },
+                        shadowOpacity:0.25,
+                        shadowRadius:3.84,
+                        elevation:5
+                    }}
+                    {...panResponder.panHandlers}
+                >
+
+                </Animated.View>
+            </View>
 
         </View>
     )
@@ -39,17 +88,12 @@ const MySlider = (props) => {
 
 
 const Cursor = (props) => {
-    const {size, heightParent} = props;
+    let {size, heightParent, position} = props;
     return (
-        <Draggable
-        maxX={size}
-        minX={0}
-        minY={0}
-        maxY={heightParent}
-        onDrag={(e) => console.log('drag')}
-        >
+        <View>
             <View
                 style={{
+                    top: position,
                     width:size,
                     height:size,
                     borderRadius:size / 2,
@@ -65,7 +109,7 @@ const Cursor = (props) => {
                 }}
             >
             </View>
-        </Draggable>
+        </View>
     )
 };
 

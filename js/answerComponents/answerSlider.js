@@ -69,7 +69,7 @@ const AnswerSlider = (props) => {
              minimumTrackTintColor="#FFFFFF"
              maximumTrackTintColor="#000000"
              vertical={true}
-             step={1}
+             step={3}
              value={+answer}
              onSlidingComplete={onSetValue}
            />

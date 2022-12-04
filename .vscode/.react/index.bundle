@@ -99127,7 +99127,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           minimumTrackTintColor: "#FFFFFF",
           maximumTrackTintColor: "#000000",
           vertical: true,
-          step: 1,
+          step: 3,
           value: +answer,
           onSlidingComplete: onSetValue
         })
@@ -99151,54 +99151,94 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   var _reactNative = _$$_REQUIRE(_dependencyMap[1], "react-native");
   var _reactNativeDraggable = _$$_REQUIRE(_dependencyMap[2], "@babel/runtime/helpers/interopRequireDefault")(_$$_REQUIRE(_dependencyMap[3], "react-native-draggable"));
   var _this = this,
-    _jsxFileName = "/Users/baptistebohelay/Dev/Android/MyData/js/answerComponents/mySlider.js";
+    _jsxFileName = "/Users/baptistebohelay/Dev/Android/MyData/js/answerComponents/mySlider.js",
+    _s = $RefreshSig$();
   function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
   function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
   var add = _reactNative.Animated.add;
   var widthView;
   var MySlider = function MySlider(props) {
+    _s();
     var y = 0;
     var widthView = 0;
+    var sizeKnob = 70;
     var height = props.height,
       step = props.step;
+    var pan = (0, _react.useRef)(new _reactNative.Animated.ValueXY({
+      x: 0,
+      y: 0
+    })).current;
+    var panResponder = (0, _react.useRef)(_reactNative.PanResponder.create({
+      onMoveShouldSetPanResponder: function onMoveShouldSetPanResponder() {
+        return true;
+      },
+      onPanResponderGrant: function onPanResponderGrant() {
+        pan.setOffset({
+          x: pan.x._value,
+          y: pan.y._value
+        });
+      },
+      onPanResponderMove: function onPanResponderMove(e, gestureState) {
+        var lOffset = pan.y._offset;
+        pan.setValue({
+          x: gestureState.dx,
+          y: gestureState.dy
+        });
+      },
+
+      onPanResponderRelease: function onPanResponderRelease() {
+        pan.flattenOffset();
+        var currentStepValue = step * pan.y._value / height;
+        var TopShouldBe = Math.floor(currentStepValue) * (height - sizeKnob) / (step - 1);
+        pan.setValue({
+          x: 0,
+          y: TopShouldBe
+        });
+      }
+    })).current;
     return (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(_reactNative.View, {
       style: styles.container,
-      onLayout: function onLayout(event) {
-        var _event$nativeEvent$la = event.nativeEvent.layout,
-          x = _event$nativeEvent$la.x,
-          y = _event$nativeEvent$la.y,
-          width = _event$nativeEvent$la.width,
-          height = _event$nativeEvent$la.height;
-      },
-      children: (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(_reactNative.Animated.View, {
+      children: (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(_reactNative.View, {
         style: Object.assign({}, _reactNative.StyleSheet.absoluteFillObject, {
           backgroundColor: "#0bb",
           borderRadius: 35,
           height: "100%",
-          width: 70
+          width: sizeKnob
         }),
-        children: (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(Cursor, {
-          size: 70,
+        children: (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(_reactNative.Animated.View, Object.assign({
+          size: sizeKnob,
           heightParent: height,
-          stepCounts: step
-        })
+          stepCounts: step,
+          style: {
+            position: "absolute",
+            top: pan.y,
+            width: sizeKnob,
+            height: sizeKnob,
+            borderRadius: sizeKnob / 2,
+            backgroundColor: "white",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 2,
+              height: 0
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5
+          }
+        }, panResponder.panHandlers))
       })
     });
   };
+  _s(MySlider, "V+5l/JhlJEL5kpnng8NK2UhACvk=");
   _c = MySlider;
   var Cursor = function Cursor(props) {
     var size = props.size,
-      heightParent = props.heightParent;
-    return (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(_reactNativeDraggable.default, {
-      maxX: size,
-      minX: 0,
-      minY: 0,
-      maxY: heightParent,
-      onDrag: function onDrag(e) {
-        return console.log('drag');
-      },
+      heightParent = props.heightParent,
+      position = props.position;
+    return (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(_reactNative.View, {
       children: (0, _$$_REQUIRE(_dependencyMap[4], "react/jsx-runtime").jsx)(_reactNative.View, {
         style: {
+          top: position,
           width: size,
           height: size,
           borderRadius: size / 2,
