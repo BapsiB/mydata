@@ -29,7 +29,7 @@ const MySlider = (props) => {
           },
           onPanResponderMove: (e, gestureState) => {
             const lOffset = pan.y._offset;
-            pan.setValue({x:gestureState.dx, y:gestureState.dy});//Math.max(0, Math.min(height, gestureState.dy + lOffset))});
+            pan.setValue({x:gestureState.dx, y:Math.max(-lOffset, Math.min(height - lOffset - sizeKnob, gestureState.dy))});
           },
           onPanResponderRelease: () => {
             pan.flattenOffset();
