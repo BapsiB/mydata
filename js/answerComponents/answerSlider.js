@@ -68,8 +68,7 @@ const AnswerSlider = (props) => {
              maximumValue={+maxValue}
              minimumTrackTintColor="#FFFFFF"
              maximumTrackTintColor="#000000"
-             vertical={true}
-             step={3}
+             step={maxValue - minValue + 1}
              value={+answer}
              onSlidingComplete={onSetValue}
            />

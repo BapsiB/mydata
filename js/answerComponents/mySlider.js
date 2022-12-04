@@ -12,7 +12,7 @@ const MySlider = (props) => {
     const y = 0;
     let widthView = 0;
     const sizeKnob = 70;
-    const {height, step} = props;
+    const {height, step, value, minimumValue, maximumValue, onSlidingComplete} = props;
 
     const pan = useRef(
         new Animated.ValueXY({ x: 0, y: 0 })
@@ -30,12 +30,27 @@ const MySlider = (props) => {
           onPanResponderMove: (e, gestureState) => {
             const lOffset = pan.y._offset;
             pan.setValue({x:gestureState.dx, y:Math.max(-lOffset, Math.min(height - lOffset - sizeKnob, gestureState.dy))});
+
+            const currentStepValue = step * (pan.y._value + pan.y._offset) / (height - sizeKnob);
+            console.log(currentStepValue);
           },
           onPanResponderRelease: () => {
             pan.flattenOffset();
-            const currentStepValue = step * pan.y._value / height;
-            const TopShouldBe = Math.floor(currentStepValue) * (height - sizeKnob) / (step - 1);
+            const currentStepValue = step * pan.y._value / (height - sizeKnob);
+            const currentValue = Math.min(step - 1, Math.floor(currentStepValue));
+            const TopShouldBe = currentValue * (height - sizeKnob) / (step - 1);
             pan.setValue({x:0, y:TopShouldBe})
+
+            const currentValueConsideringMinMax = minimumValue + currentValue;
+            onSlidingComplete(currentValueConsideringMinMax)
+            // Animated.spring(pan, {
+            //     toValue: {x:0, y:TopShouldBe},
+            //     friction: 2,
+            //     tension: 140,
+            //     // left/top are not supported
+            //     useNativeDriver: false,
+            //   }).start();
+          
           }
         })
       ).current;
