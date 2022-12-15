@@ -16,7 +16,8 @@ const AnswerSlider = (props) => {
     if(lAnswerForQuestion === undefined) {
         lAnswerForQuestion = 0;
     }
-    const [answer, setAnswer] = React.useState(lAnswerForQuestion);
+    const [answer, setAnswer] = React.useState(DataManager.getAnswerForQuestion(question.id, date));
+    const [valueDisplay, setValueDisplay] = React.useState(answer);
 
     let upLabel = question.options.max;
     let downLabel = question.options.min;
@@ -40,6 +41,10 @@ const AnswerSlider = (props) => {
         props.callback();
     }
 
+    function onValueChanged(aValue) {
+        setValueDisplay(aValue);
+    }
+
     function getStyle(isSelected) {
         return isSelected ? styles.yesNoButtonsSelected : styles.yesNoButtons;
     }
@@ -53,10 +58,13 @@ const AnswerSlider = (props) => {
             position:"absolute",
             height:heightSlider,
             justifyContent: 'center',
-            marginLeft:"45%"
+            marginLeft:"5%"
             }}
     >
-        <View style={{width:"30%",}}>
+        <View style={{width:"40%", backgroundColor:"white", alignItems: 'center', justifyContent: 'center'}}>
+            <Text style={{color: 'black', fontSize:50, marginTop:'0%'}}>{valueDisplay}</Text>
+        </View>
+        <View style={{width:"30%", backgroundColor:"yellow", alignItems: 'center'}}>
             <Text style={{top:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20,}}>{upLabel}</Text>
             <Text style={{bottom:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20}}>{downLabel}</Text>
         </View>
@@ -71,6 +79,7 @@ const AnswerSlider = (props) => {
              step={maxValue - minValue + 1}
              value={+answer}
              onSlidingComplete={onSetValue}
+             onValueChanged={onValueChanged}
            />
        </View>
     </View>

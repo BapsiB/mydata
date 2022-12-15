@@ -32,7 +32,11 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
    function nextQuestion(goNext, onlyTakeEmptyAnswer) {
     if(goNext === undefined) {
-        goNext = true;
+        goNext = false;
+    }
+
+    if(!goNext) {
+      return;
     }
 
     // undefined means it comes from the answer slider.

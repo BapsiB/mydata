@@ -1,5 +1,5 @@
 import { PrivateValueStore } from '@react-navigation/native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Animated, PanResponder } from 'react-native';
 import { shadow } from 'react-native-paper';
 import Draggable from 'react-native-draggable';
@@ -12,11 +12,30 @@ const MySlider = (props) => {
     const y = 0;
     let widthView = 0;
     const sizeKnob = 70;
-    const {height, step, value, minimumValue, maximumValue, onSlidingComplete} = props;
+    const {height, step, value, minimumValue, maximumValue, onSlidingComplete, onValueChanged} = props;
 
     const pan = useRef(
         new Animated.ValueXY({ x: 0, y: 0 })
       ).current;
+
+    useEffect(() => {
+        updatePanValue(value); // this will fire only on first render
+    }, []);
+
+      const updatePanValue = (aValue) => {
+        aValue = (-aValue + maximumValue) - minimumValue;
+        const TopShouldBe = aValue * (height - sizeKnob) / (step - 1);
+        console.log(TopShouldBe + " " + pan.y._value + " " + pan.y._offset);
+        pan.setValue({x:0, y:TopShouldBe})
+      }
+
+      const getCurrentDataValueFromPosition = () => {
+        const currentStepValue = step * (pan.y._value + pan.y._offset) / (height - sizeKnob);
+        const currentValue = Math.min(step - 1, Math.floor(currentStepValue));
+
+        const currentValueConsideringMinMax = minimumValue + (maximumValue - currentValue);
+        return currentValueConsideringMinMax;
+      }
 
       const panResponder = useRef(
         PanResponder.create({
@@ -32,16 +51,17 @@ const MySlider = (props) => {
             pan.setValue({x:gestureState.dx, y:Math.max(-lOffset, Math.min(height - lOffset - sizeKnob, gestureState.dy))});
 
             const currentStepValue = step * (pan.y._value + pan.y._offset) / (height - sizeKnob);
-            console.log(currentStepValue);
+
+            console.log("onPanResponderMove " + pan.y._value + " " + pan.y._offset);
+
+            onValueChanged(getCurrentDataValueFromPosition())
+            
           },
           onPanResponderRelease: () => {
             pan.flattenOffset();
-            const currentStepValue = step * pan.y._value / (height - sizeKnob);
-            const currentValue = Math.min(step - 1, Math.floor(currentStepValue));
-            const TopShouldBe = currentValue * (height - sizeKnob) / (step - 1);
-            pan.setValue({x:0, y:TopShouldBe})
-
-            const currentValueConsideringMinMax = minimumValue + currentValue;
+            const currentValueConsideringMinMax = getCurrentDataValueFromPosition();
+            
+            updatePanValue(currentValueConsideringMinMax);
             onSlidingComplete(currentValueConsideringMinMax)
             // Animated.spring(pan, {
             //     toValue: {x:0, y:TopShouldBe},

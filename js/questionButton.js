@@ -10,7 +10,7 @@ const goToQuestion = () => props.navigation.navigate("Answer Screen", props.ques
   const requestDelete = () => {
     if(DataManager.deleteQuestion(props.questionId)) {
         props.changeCallback();
-    }
+    }   
   };
 
   const answer = DataManager.getAnswerForQuestion(props.questionId, props.date);
