@@ -78,6 +78,10 @@ class DataManager {
         return year + month + day;
        }
 
+       function getDateFromString(date) {
+
+       }
+
        /*
         * set the answer of a question for a specified date.
         */
@@ -151,6 +155,10 @@ class DataManager {
             return dateData[aQuestionId];
         }
         return null;
+       }
+
+       this.getAllData = function() {
+        return this.daysData;
        }
 
        this.getQuestionWithId = function(aId) {

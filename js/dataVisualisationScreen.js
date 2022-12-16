@@ -1,30 +1,39 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { VictoryArea, VictoryChart, VictoryTheme } from "victory-native";
-
-
+import DataManager from './dataManager.js';
 
 const DataVisualisationScreen = (props) => {
 
-  const data = [
-    {quarter: 1, earnings: 13000},
-    {quarter: 2, earnings: 16500},
-    {quarter: 3, earnings: 14250},
-    {quarter: 4, earnings: 19000}
-  ];
+  const allData = DataManager.getAllData();
 
-  const data2 = [
-    {quarter: 1, earnings: 9000},
-    {quarter: 2, earnings: 7500},
-    {quarter: 3, earnings: 17250},
-    {quarter: 4, earnings: 10000}
-  ];
+  let data = [];
+  allData.forEach((val, index) => {
+    const date = index;
+    // your code goes here 
+    val.forEach((dayVal, questionIndex) => {
+      if(data[questionIndex] === undefined) {
+        data[questionIndex] = [];
+      }
+      if(dayVal == null) {
+        dayVal = 0; //TODO: set an unvalid value.
+      }
+      data[questionIndex].push({date:date, value:dayVal});
+    })
+  })
+
+  const renderVictoryLines = () => {
+    return data.map((item) => {
+        return (
+          <VictoryArea interpolation="natural" data={item} x="date" y="value" style={{ data: { fill: "#c43a31", fillOpacity: 0.5, stroke: "#c43a31", strokeWidth: 3 } }}/>
+        );
+    });
+  }
 
     return (
       <View style={styles.container}>
-        <VictoryChart animate={{ duration: 1000 }} width={350} theme={VictoryTheme.material}>
-          <VictoryArea interpolation="natural" data={data} x="quarter" y="earnings" style={{ data: { fill: "#c43a31", fillOpacity: 0.5, stroke: "#c43a31", strokeWidth: 3 } }}/>
-          <VictoryArea interpolation="natural" data={data2} x="quarter" y="earnings" style={{ data: { fill: "#043a91", fillOpacity: 0.5, stroke: "#043a91", strokeWidth: 3 } }}/>
+        <VictoryChart animate={{ duration: 1000 }} width={450} theme={VictoryTheme.material}>
+          {renderVictoryLines()}
         </VictoryChart>
       </View>
     );
