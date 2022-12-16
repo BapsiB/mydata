@@ -9,23 +9,26 @@ const DataVisualisationScreen = (props) => {
 
   let data = [];
   allData.forEach((val, index) => {
-    const date = index;
+    const dateStr = index.toString();
     // your code goes here 
     val.forEach((dayVal, questionIndex) => {
       if(data[questionIndex] === undefined) {
         data[questionIndex] = [];
       }
-      if(dayVal == null) {
-        dayVal = 0; //TODO: set an unvalid value.
-      }
-      data[questionIndex].push({date:date, value:dayVal});
+
+      data[questionIndex].push({date:DataManager.getDateFromString(dateStr), value:dayVal});
     })
   })
 
   const renderVictoryLines = () => {
     return data.map((item) => {
+      const randomColor = Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, '0');
+    const colour = `#${randomColor}`;
+  
         return (
-          <VictoryArea interpolation="natural" data={item} x="date" y="value" style={{ data: { fill: "#c43a31", fillOpacity: 0.5, stroke: "#c43a31", strokeWidth: 3 } }}/>
+          <VictoryArea interpolation="natural" data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: colour, strokeWidth: 3 } }}/>
         );
     });
   }
