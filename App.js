@@ -5,6 +5,7 @@ import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-sw
 import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
+import DataVisualisationScreen from './js/dataVisualisationScreen.js';
 import HeaderDate from './js/headerDate.js';
 import MenuEditQuestion from './js/menuEditQuestion.js';
 import QuestionButton from './js/questionButton.js';
@@ -33,6 +34,7 @@ const MyStack = () => {
         />
         <Stack.Screen name="Question Editor" component={QuestionEditor} />
         <Stack.Screen name="Answer Screen" component={AnswerScreen} />
+        <Stack.Screen name="Data Visualisation Screen" component={DataVisualisationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -76,7 +78,7 @@ const MainView = ({ navigation }) => {
                 <View style={{   flex: 1, flexDirection: "row"}}>
                     <BottomButton
                     source={require("./resources/curvesButton.png")}
-                    onClick={function() {}}/>
+                    onClick={function() {navigation.navigate("Data Visualisation Screen");}}/>
                     <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor");}}/>
                     <BottomButton source={require("./resources/shareButton.png")}/>
                 </View>
@@ -91,10 +93,6 @@ const styles = StyleSheet.create({
 //      bottom: 0 ,
       flex: 1,
   },
-
-
-
-
 
   button_footer2: {
     justifyContent: 'center',
