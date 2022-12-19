@@ -8,7 +8,17 @@ class DataManager {
        this.listQuestions = [];
        this.daysData = [];
        this.questionCallback = null;
-
+       this.clearAll = async () => {
+        try {
+          await AsyncStorage.clear()
+        } catch(e) {
+          // clear error
+        }
+      
+        console.log('Done.')
+      }
+      clearAll();
+      
        const _storeData = async (key, data) => {
         try {
             const jsonValue = JSON.stringify(data)

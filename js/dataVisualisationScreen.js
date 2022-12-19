@@ -28,17 +28,17 @@ const DataVisualisationScreen = (props) => {
   })
 
   const renderVictoryLines = () => {
-    // return data.map((item) => {
-      // if(item.length > 1) 
+    return data.map((item) => {
+      if(item.length > 1) 
         return (
-          <VictoryArea interpolation="natural" data={data[3]} x="date" y="value" style={{ data: { fill: "#c43a31", fillOpacity: 0.5, stroke: "#c43a31", strokeWidth: 3 } }}/>
+          <VictoryArea interpolation="natural" data={item} x="date" y="value" style={{ data: { fill: "#c43a31", fillOpacity: 0.5, stroke: "#c43a31", strokeWidth: 3 } }}/>
         );
-    // });
+    });
   }
 
     return (
       <View style={styles.container}>
-        <VictoryChart animate={{ duration: 1000 }} width={420} theme={VictoryTheme.material}>
+        <VictoryChart animate={{ duration: 500 }} width={420} theme={VictoryTheme.material}>
           {renderVictoryLines()}
         </VictoryChart>
       </View>
