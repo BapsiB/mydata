@@ -1,5 +1,6 @@
 //import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SharedConstants from './sharedConstants.js';
 
 class DataManager {
     constructor() {
@@ -29,7 +30,11 @@ class DataManager {
       const that = this;
       getData("@questions").then((data) => {
       if(data) {
-        that.listQuestions = data;
+        that.listQuestions = [];
+        for (question of data) {
+            const questionCast = new Question(question);
+            that.listQuestions.push(questionCast);
+        }
       }
 
        if(that.questionCallback) {
@@ -248,6 +253,25 @@ class Question {
             return this.text;
         }
     }
+
+    normalizeValue(aValue) {
+        switch(+this.type) {
+            case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+                return aValue;
+            break;
+            case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
+                {
+                const value = (aValue - this.options.min) / (this.options.max - this.options.min);
+                return value;
+                }
+            case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+                {
+                const value = aValue / 100;
+                return value;
+                }
+            break;
+        }
+     }
 }
 
 export default new DataManager();
