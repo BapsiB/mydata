@@ -8,6 +8,7 @@ class DataManager {
        this.listQuestions = [];
        this.daysData = [];
        this.questionCallback = null;
+       
        this.clearAll = async () => {
         try {
           await AsyncStorage.clear()
@@ -17,7 +18,6 @@ class DataManager {
       
         console.log('Done.')
       }
-      clearAll();
       
        const _storeData = async (key, data) => {
         try {

@@ -13,13 +13,75 @@ const goToQuestion = () => props.navigation.navigate("Answer Screen", props.ques
     }   
   };
 
-  const answer = DataManager.getAnswerForQuestion(props.questionId, props.date);
-  const isAnswered = (answer != null) && (answer !== undefined);
-  const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
+  const requestEdit = () => {
+    props.editCallback(props.questionId);
+  };
+
   let answerText = "";
-  if(isAnswered) {
-    answerText = getAnswerText(answer, DataManager.getQuestionWithId(props.questionId).type);
+  let isAnswered = false;
+
+  if(props.date !== undefined) {
+    const answer = DataManager.getAnswerForQuestion(props.questionId, props.date);
+    isAnswered = (answer != null) && (answer !== undefined);
+    
+    if(isAnswered) {
+      answerText = getAnswerText(answer, DataManager.getQuestionWithId(props.questionId).type);
+    }
   }
+
+  
+
+  const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
+
+
+  const leftButton = (
+    <SwipeButtonsContainer
+        style={{
+            textAlign:"center",
+            flexDirection: 'column',
+            backgroundColor:"#f66",
+            height:50,
+            width:60,
+            paddingLeft:5,
+            paddingTop:2,
+            borderRadius: 9,
+            borderColor: 'black',
+            borderWidth:1
+        }}
+    >
+        <TouchableOpacity
+            onPress={() => {requestDelete();}}
+        >
+            <Image style={{ width:46, height:46,  resizeMode: 'stretch' }} source={require("../resources/delete.png")}/>
+        </TouchableOpacity>
+    </SwipeButtonsContainer>
+);
+
+const rightButton = (
+    <SwipeButtonsContainer
+        style={{
+            textAlign:"center",
+            flexDirection: 'column',
+            height:50,
+            width:60,
+            paddingLeft:6,
+        }}
+    >
+        <TouchableOpacity
+            onPress={() => {requestEdit();}}
+            style={{              borderRadius: 9,
+                                  borderColor: 'black',
+                                  borderWidth:1,
+                                  height:50,
+                                  backgroundColor:"#bfb",
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  }}
+        >
+            <Image style={{ width:40, height:40,  resizeMode: 'stretch' }} source={require("../resources/pencil.png")}/>
+        </TouchableOpacity>
+    </SwipeButtonsContainer>
+);
 
   return (
   <SwipeItem
@@ -41,8 +103,7 @@ const goToQuestion = () => props.navigation.navigate("Answer Screen", props.ques
 
   );
 
-
-
+  
 }
 
 const getAnswerText = function(answerValue, questionType) {
@@ -73,55 +134,7 @@ const getAnswerText = function(answerValue, questionType) {
     }
 }
 
-const leftButton = (
-    <SwipeButtonsContainer
-        style={{
-            textAlign:"center",
-            flexDirection: 'column',
-            backgroundColor:"#f66",
-            height:50,
-            width:60,
-            paddingLeft:5,
-            paddingTop:2,
-            borderRadius: 9,
-            borderColor: 'black',
-            borderWidth:1
-        }}
 
-    >
-        <TouchableOpacity
-            onPress={() => {requestDelete();}}
-        >
-            <Image style={{ width:46, height:46,  resizeMode: 'stretch' }} source={require("../resources/delete.png")}/>
-        </TouchableOpacity>
-    </SwipeButtonsContainer>
-);
-
-const rightButton = (
-    <SwipeButtonsContainer
-        style={{
-            textAlign:"center",
-            flexDirection: 'column',
-            height:50,
-            width:60,
-            paddingLeft:6,
-        }}
-    >
-        <TouchableOpacity
-            onPress={() => console.log('left button clicked')}
-            style={{              borderRadius: 9,
-                                  borderColor: 'black',
-                                  borderWidth:1,
-                                  height:50,
-                                  backgroundColor:"#bfb",
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                  }}
-        >
-            <Image style={{ width:40, height:40,  resizeMode: 'stretch' }} source={require("../resources/pencil.png")}/>
-        </TouchableOpacity>
-    </SwipeButtonsContainer>
-);
 
 const styles = StyleSheet.create({
   questionsButtons: {
@@ -139,7 +152,6 @@ const styles = StyleSheet.create({
 
     swipeContentContainerStyle: {
         justifyContent: 'center',
-//        alignItems: 'center',
         borderRadius: 9,
         borderColor: 'black',
         borderWidth:1,

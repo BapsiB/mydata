@@ -59,9 +59,13 @@ const MainView = ({ navigation }) => {
         forceUpdate();
     }
 
+    const editQuestion = (questionId) => {
+      navigation.navigate("Question Editor", {questionID:questionId});
+    }
+
     DataManager.setQuestionsListener(updateQuestions);
 
-    const listItems = arrayNames.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions}></QuestionButton>);
+    const listItems = arrayNames.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
     return (

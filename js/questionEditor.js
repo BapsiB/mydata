@@ -4,10 +4,14 @@ import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
 
 const QuestionEditor = (props) => {
+  // defines the question we want to edit. null if new question.
+  if(props.route.params.questionID !== undefined) {
+    fromQuestion = DataManager.getQuestionWithId(props.route.params.questionID);
+  }
 
-  const [questionText, onChangeQuestionText] = React.useState("");
-  const [questionType, onChangeQuestionType] = React.useState(0);
-  const [options, onSetOptions] = React.useState({});
+  const [questionText, onChangeQuestionText] = React.useState(fromQuestion ? fromQuestion.text : "");
+  const [questionType, onChangeQuestionType] = React.useState(fromQuestion ? fromQuestion.type : 0);
+  const [options, onSetOptions] = React.useState(fromQuestion ? fromQuestion.options : {});
 
 function onPressAddQuestion() {
     let lOption;
@@ -48,7 +52,7 @@ const lDisableAddButton = questionText.length == 0;
             />
         </View>
         <View style={{flex: 2}}>
-          <QuestionType style={styles.questionType} onChange={(index) => {onChangeQuestionType(index);}} questionTypeId={questionType} />
+          <QuestionType enabled={!fromQuestion} style={styles.questionType} onChange={(index) => {onChangeQuestionType(index);}} questionTypeId={questionType} />
           <QuestionOptions onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
         </View>
       </View>
@@ -82,7 +86,7 @@ function getQuestionExample(questionType) {
     return "eg: " + lQuestions[questionType][lRandom];
 }
 
-const QuestionType = ({questionTypeId, onChange}) => {
+const QuestionType = ({questionTypeId, onChange, enabled}) => {
 
     let lTextTop;
     let lSubText;
@@ -113,9 +117,9 @@ const QuestionType = ({questionTypeId, onChange}) => {
     }
 
     return (
-    <View style={styles.questionTypeContainer}>
+    <View style={[styles.questionTypeContainer]}>
         <View style={{flex:1}}>
-        <TouchableOpacity style={styles.button_footer} onPress={()=>{prevQuestion();}}>
+        <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{prevQuestion();}}>
           <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowLeft.png")}/>
         </TouchableOpacity>
         </View>
@@ -124,7 +128,7 @@ const QuestionType = ({questionTypeId, onChange}) => {
             <Text style={styles.textSub}>{lSubText}</Text>
         </View>
         <View style={{flex:1}}>
-        <TouchableOpacity style={styles.button_footer} onPress={()=>{nextQuestion();}}>
+        <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{nextQuestion();}}>
           <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowRight.png")}/>
         </TouchableOpacity>
         </View>
@@ -299,7 +303,11 @@ const styles = StyleSheet.create({
     questionTypeContainer: {
         flex: 1,
         flexDirection: "row",
-    }
+    },
+
+    disabled: {
+      opacity:0
+  }
 });
 
 export default QuestionEditor;
