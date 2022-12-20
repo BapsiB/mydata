@@ -1,20 +1,25 @@
 import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
+import { useRef } from 'react';
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
 import DataManager from './dataManager.js';
 import SharedConstants from './sharedConstants.js';
 
-
 export default QuestionButton = (props) => {
+
+    const itemRef = useRef(true);
+
 const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
 
   const requestDelete = () => {
     if(DataManager.deleteQuestion(props.questionId)) {
         props.changeCallback();
+        itemRef.current.close();
     }   
   };
 
   const requestEdit = () => {
     props.editCallback(props.questionId);
+    itemRef.current.close();
   };
 
   let answerText = "";
@@ -28,8 +33,6 @@ const goToQuestion = () => props.navigation.navigate("Answer Screen", props.ques
       answerText = getAnswerText(answer, DataManager.getQuestionWithId(props.questionId).type);
     }
   }
-
-  
 
   const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
 
@@ -89,6 +92,7 @@ const rightButton = (
       swipeContainerStyle={[styles.swipeContentContainerStyle, styleAns]}
       leftButtons={leftButton}
       rightButtons={rightButton}
+      ref={itemRef} 
       onPress={()=>{goToQuestion;}}
   >
   <TouchableOpacity onPress={()=>{goToQuestion();}}>
