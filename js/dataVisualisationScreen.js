@@ -29,8 +29,11 @@ const DataVisualisationScreen = (props) => {
 
   const renderVictoryLines = () => {
     let id = 0;
-    return data.map((item) => {
+    let components = [];
+    data.forEach((item, index) => {
       if(item.length > 1) {
+        const question = DataManager.getQuestionWithId(index);
+        const colour = question.colour ? question.colour : "#c43a31";
         id++;
         return (
           <VictoryArea interpolation="natural" key={id} data={item} x="date" y="value" style={{ data: { fill: "#c43a31", fillOpacity: 0.5, stroke: "#c43a31", strokeWidth: 3 } }}/>
