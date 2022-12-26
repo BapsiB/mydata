@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Button } from 'react-native';
 import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
+import ColorPicker from 'react-native-wheel-color-picker'
 
 const QuestionEditor = (props) => {
-  // defines the question we want to edit. null if new question.
+  // the question we want to edit. null if new.
+  let fromQuestion = null;
+  if(props.route.params)
   if(props.route.params.questionID !== undefined) {
     fromQuestion = DataManager.getQuestionWithId(props.route.params.questionID);
   }
@@ -12,6 +15,15 @@ const QuestionEditor = (props) => {
   const [questionText, onChangeQuestionText] = React.useState(fromQuestion ? fromQuestion.text : "");
   const [questionType, onChangeQuestionType] = React.useState(fromQuestion ? fromQuestion.type : 0);
   const [options, onSetOptions] = React.useState(fromQuestion ? fromQuestion.options : {});
+  const [colour, onSetColour] = React.useState(fromQuestion && fromQuestion.colour ? fromQuestion.colour : getRandomColour());
+
+function getRandomColour() {
+  return "#" + Math.floor(Math.random()*16777215).toString(16);
+}
+
+function onColourChange(newColour) {
+  onSetColour(newColour);
+}
 
 function onPressAddQuestion() {
     let lOption;
@@ -27,13 +39,13 @@ function onPressAddQuestion() {
         break;
     }
 
-    const randomColor = Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, '0');
-    const colour = `#${randomColor}`;
-    lOption.colour = colour;
-
-    DataManager.addQuestion(questionText, questionType, lOption);
+    if(fromQuestion) {
+      DataManager.updateQuestion(fromQuestion.id, questionText, questionType, lOption, colour);
+    }
+    else {
+      DataManager.addQuestion(questionText, questionType, lOption, colour);
+    }
+    
     props.navigation.navigate("Home");
 }
 
@@ -54,11 +66,12 @@ const lDisableAddButton = questionText.length == 0;
         <View style={{flex: 2}}>
           <QuestionType enabled={!fromQuestion} style={styles.questionType} onChange={(index) => {onChangeQuestionType(index);}} questionTypeId={questionType} />
           <QuestionOptions onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
+          <QuestionColour onChange={onColourChange} initColour={colour}/>
         </View>
       </View>
         <View style={{margin: 50, height:50, bottom:30, alignItems: 'center',}}>
         <TouchableOpacity disabled={lDisableAddButton} style={[styles.addButtonStyle, {opacity: lDisableAddButton ? 0.3 : 1}]} onPress={()=>{onPressAddQuestion();}}>
-            <Text style={{color:"black"}}>ADD</Text>
+            <Text style={{color:"black"}}>{fromQuestion ? "UPDATE" : "ADD"}</Text>
         </TouchableOpacity>
        </View>
     </View>
@@ -220,6 +233,27 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
     }
 }
 
+const QuestionColour = ({onChange, initColour}) => {
+  const [displayColours, setDisplayColours] = React.useState(false);
+
+  return (
+    <View style={{flex: 2}}>
+    <TouchableOpacity style={[styles.button_colour, null]} onPress={()=>{setDisplayColours(!displayColours);}}>
+      <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour }} source={require("../resources/arrowLeft.png")}/>
+    </TouchableOpacity>
+    <ColorPicker
+      style={{opacity: displayColours ? 1 : 0, marginHorizontal:10}}
+      discrete={true}
+      swatchesOnly={true}
+      discreteLength={12}
+      palette={['#000000','#888888','#ed1c24','#d11cd5','#1633e6','#00aeef','#00c85d','#57ff0a','#ffde17','#f26522','#ffffff', '#888888']}
+      onColorChangeComplete={colour =>{onChange(colour)}}
+    ></ColorPicker>
+    </View>
+  );
+}
+
+
 const styles = StyleSheet.create({
     input: {
     height:40,
@@ -270,7 +304,8 @@ const styles = StyleSheet.create({
       margin: 12,
       borderWidth: 1,
       padding: 10,
-      bottom:0
+      bottom:0,
+      flex: 2,
     },
 
     button_footer: {
@@ -278,6 +313,13 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       height: 50,
 
+    },
+
+    button_colour: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 50,
+      marginBottom: 20,
     },
 
     textTop: {

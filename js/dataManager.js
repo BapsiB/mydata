@@ -133,15 +133,32 @@ class DataManager {
         return maxNum.toString();
        }
 
-       this.addQuestion = function(aQuestionText, aQuestionType, aOptions) {
+       this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colour) {
            const lId = this.findAvailableId();
-           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, id:lId});
+           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colour, id:lId});
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
 
            if(this.questionCallback)
             this.questionCallback();
        }
+
+       this.updateQuestion = function(aQuestionId, aQuestionText, questionType, options, colour) {
+        let s;
+        for (s of this.listQuestions) {
+            if(s.id == aQuestionId) {
+                s.text = aQuestionText;
+                s.type = questionType;
+                s.options = options;
+                s.colour = colour;
+            }
+        }
+
+        this.saveListQuestions();
+
+        if(this.questionCallback)
+         this.questionCallback();
+    }
 
        /*
        * delete the question having the given questionId.
@@ -255,8 +272,11 @@ class DataManager {
 class Question {
     constructor(data) {
         this.text = data.text;
+        // id of the question type.
         this.type = data.type;
         this.options = data.options;
+        this.colour = data.colour;
+        // unique id of the question.
         this.id = data.id;
 
         this.getText = function() {
