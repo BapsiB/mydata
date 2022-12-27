@@ -75,7 +75,9 @@ const MySlider = (props) => {
         })
       ).current;
     
-
+    if(isNaN(pan.y._value)) {
+      return(<View/>)
+    }
     return (
         <View 
         style={styles.container}

@@ -16,8 +16,6 @@ const AnswerSlider = (props) => {
     if(lAnswerForQuestion === undefined) {
         lAnswerForQuestion = 0;
     }
-    const [answer, setAnswer] = React.useState(DataManager.getAnswerForQuestion(question.id, date));
-    const [valueDisplay, setValueDisplay] = React.useState(answer);
 
     let upLabel = question.options.max;
     let downLabel = question.options.min;
@@ -29,10 +27,16 @@ const AnswerSlider = (props) => {
             maxValue = question.options.max;
         break;
         case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-            minValue = 0;
-            maxValue = 100;
+            minValue = "0";
+            maxValue = "100";
         break;
     }
+
+    let lAnswer = DataManager.getAnswerForQuestion(question.id, date);
+    //in case answer is undefined we set it to the min value.
+    lAnswer = (lAnswer === undefined) ? +minValue : lAnswer;
+    const [answer, setAnswer] = React.useState(lAnswer);
+    const [valueDisplay, setValueDisplay] = React.useState(answer);
 
     let answerGetData = DataManager.getAnswerForQuestion(question.id, date);
 
@@ -61,21 +65,20 @@ const AnswerSlider = (props) => {
             marginLeft:"5%"
             }}
     >
-        <View style={{width:"40%", backgroundColor:"white", alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{width:"40%", alignItems: 'center', justifyContent: 'center'}}>
             <Text style={{color: 'black', fontSize:50, marginTop:'0%'}}>{valueDisplay}</Text>
         </View>
-        <View style={{width:"30%", backgroundColor:"yellow", alignItems: 'center'}}>
+        <View style={{width:"30%", alignItems: 'center'}}>
             <Text style={{top:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20,}}>{upLabel}</Text>
             <Text style={{bottom:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20}}>{downLabel}</Text>
         </View>
         <View>
            <MySlider
              height={heightSlider}
-             style={{width:300}}
+             style={{width:200 + Math.random() * 100}}
              minimumValue={+minValue}
              maximumValue={+maxValue}
-             minimumTrackTintColor="#FFFFFF"
-             maximumTrackTintColor="#000000"
+             trackColour={question.colour}
              step={maxValue - minValue + 1}
              value={+answer}
              onSlidingComplete={onSetValue}

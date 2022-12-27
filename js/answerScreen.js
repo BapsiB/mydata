@@ -13,19 +13,16 @@ const [modalVisible, setModalVisible] = useState(false);
 const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params);
 const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
-//  const [currentDate, setCurrentDate] = React.useState(date);
-  const lView = getViewForQuestionId(currentQuestion);
-
    function getViewForQuestionId(aCurrentQuestion, date) {
         switch(aCurrentQuestion.type) {
             case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
                 return <AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={nextQuestion}/>;
             break;
             case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion}/>
+                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
             break;
             case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion}/>
+                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
             break;
         }
    }
@@ -48,6 +45,7 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
         setModalVisible(true);
         return;
     }
+
     setCurrentQuestion(nextQuestion);
    }
 
@@ -92,7 +90,7 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
             <Text style={styles.questionText}>{currentQuestion.text}</Text>
         </View>
         <View style={{ flex: 3}}>
-            {lView}
+            {getViewForQuestionId(currentQuestion)}
         </View>
         <View style={{justifyContent: 'flex-end', alignItems: 'center', flex: 1, flexDirection: "row", backgroundColour:"blue"}}>
         <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
