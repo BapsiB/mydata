@@ -46,7 +46,7 @@ const AnswerSlider = (props) => {
     }
 
     function onValueChanged(aValue) {
-        const lValue = SharedConstants.getAnswerText(aValue, question.type);
+        const lValue = SharedConstants.getAnswerText(aValue, question);
         setValueDisplay(lValue);
     }
 
@@ -63,11 +63,17 @@ const AnswerSlider = (props) => {
             position:"absolute",
             height:heightSlider,
             justifyContent: 'center',
-            marginLeft:"5%"
+            marginLeft:"0%"
             }}
     >
         <View style={{width:"40%", alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{color: 'black', fontSize:50, marginTop:'0%'}}>{valueDisplay}</Text>
+            <Text   style={{color: 'black', fontSize:50, marginTop:'0%', marginHorizontal:'-20%', textAlign: 'center'}}
+                    adjustsFontSizeToFit={true}
+                    numberOfLines={2}
+                    lineBreakMode='middle'
+                    >
+                        {valueDisplay}
+            </Text>
         </View>
         <View style={{width:"30%", alignItems: 'center'}}>
             <Text style={{top:0, position:"absolute", color: 'black', textAlign: 'right', fontSize:20,}}>{upLabel}</Text>
@@ -76,7 +82,7 @@ const AnswerSlider = (props) => {
         <View>
            <MySlider
              height={heightSlider}
-             style={{width:200 + Math.random() * 100}}
+             style={{width:300}}
              minimumValue={+minValue}
              maximumValue={+maxValue}
              trackColour={question.colour}

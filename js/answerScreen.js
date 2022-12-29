@@ -87,7 +87,10 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
     <View style={{ flex: 1}}>
         {HeaderDate.getHeader()}
         <View style={{ flex: 2}}>
-            <Text style={styles.questionText}>{currentQuestion.text}</Text>
+            <Text style={styles.questionText}
+                adjustsFontSizeToFit={true}
+                numberOfLines={2}
+            >{currentQuestion.text}</Text>
         </View>
         <View style={{ flex: 3}}>
             {getViewForQuestionId(currentQuestion)}

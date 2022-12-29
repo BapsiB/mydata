@@ -30,7 +30,7 @@ const goToQuestion = () => props.navigation.navigate("Answer Screen", props.ques
     isAnswered = (answer != null) && (answer !== undefined);
     
     if(isAnswered) {
-      answerText = SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId).type);
+      answerText = SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId));
     }
   }
 

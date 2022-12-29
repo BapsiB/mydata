@@ -21,8 +21,8 @@ class SharedConstants {
           return dateStr;
        }
 
-       this.getAnswerText = function(answerValue, questionType) {
-            switch(+questionType) {
+       this.getAnswerText = function(answerValue, question) {
+            switch(+question.type) {
                 case this.questionTypes.QUESTION_TYPE_YES_NO:
                     return answerValue == 1 ? "yes" : "no";
                 break;
@@ -31,7 +31,10 @@ class SharedConstants {
                 break;
                 case this.questionTypes.QUESTION_TYPE_INTENSITY:
                     if(answerValue < 15) {
-                        return "very low";
+                        if(question.options.min != "") {
+                            return question.options.min;
+                        }
+                        return "very high";
                     }
                     else if(answerValue < 30) {
                         return "low";
@@ -43,6 +46,9 @@ class SharedConstants {
                         return "high";
                     }
                     else {
+                        if(question.options.max != "") {
+                            return question.options.max;
+                        }
                         return "very high";
                     }
                 break;
