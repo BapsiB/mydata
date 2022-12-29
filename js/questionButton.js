@@ -30,7 +30,7 @@ const goToQuestion = () => props.navigation.navigate("Answer Screen", props.ques
     isAnswered = (answer != null) && (answer !== undefined);
     
     if(isAnswered) {
-      answerText = getAnswerText(answer, DataManager.getQuestionWithId(props.questionId).type);
+      answerText = SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId).type);
     }
   }
 
@@ -109,36 +109,6 @@ const rightButton = (
 
   
 }
-
-const getAnswerText = function(answerValue, questionType) {
-    switch(+questionType) {
-        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-            return answerValue == 1 ? "yes" : "no";
-        break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-            return answerValue;
-        break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-            if(answerValue < 15) {
-                return "very low";
-            }
-            else if(answerValue < 30) {
-                return "low";
-            }
-            else if(answerValue < 70) {
-                return "mild";
-            }
-            else if(answerValue < 85) {
-                return "high";
-            }
-            else {
-                return "very high";
-            }
-        break;
-    }
-}
-
-
 
 const styles = StyleSheet.create({
   questionsButtons: {

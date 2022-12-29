@@ -46,7 +46,8 @@ const AnswerSlider = (props) => {
     }
 
     function onValueChanged(aValue) {
-        setValueDisplay(aValue);
+        const lValue = SharedConstants.getAnswerText(aValue, question.type);
+        setValueDisplay(lValue);
     }
 
     function getStyle(isSelected) {

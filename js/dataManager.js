@@ -8,6 +8,8 @@ class DataManager {
        this.listQuestions = [];
        this.daysData = [];
        this.questionCallback = null;
+       // callback to be called when the answers data are loaded.
+       this.answersLoadedCallback = null;
        
        this.clearAll = async () => {
         try {
@@ -71,6 +73,8 @@ class DataManager {
                 const keyDateOnly = key.split("@DataDay:").pop();
                 this.daysData[keyDateOnly] = object;
             }
+            if(this.answersLoadedCallback)
+                this.answersLoadedCallback();
          });
         });
 
@@ -264,6 +268,10 @@ class DataManager {
 
         this.setQuestionsListener = function(callback){
             this.questionCallback = callback;
+        }
+
+        this.setAnswersLoadedListener = function(callback){
+            this.answersLoadedCallback = callback;
         }
 
     }

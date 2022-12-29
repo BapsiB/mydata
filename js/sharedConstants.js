@@ -21,7 +21,35 @@ class SharedConstants {
           return dateStr;
        }
 
-       this.styles = StyleSheet.create({
+       this.getAnswerText = function(answerValue, questionType) {
+            switch(+questionType) {
+                case this.questionTypes.QUESTION_TYPE_YES_NO:
+                    return answerValue == 1 ? "yes" : "no";
+                break;
+                case this.questionTypes.QUESTION_TYPE_NUMBER:
+                    return answerValue;
+                break;
+                case this.questionTypes.QUESTION_TYPE_INTENSITY:
+                    if(answerValue < 15) {
+                        return "very low";
+                    }
+                    else if(answerValue < 30) {
+                        return "low";
+                    }
+                    else if(answerValue < 70) {
+                        return "mild";
+                    }
+                    else if(answerValue < 85) {
+                        return "high";
+                    }
+                    else {
+                        return "very high";
+                    }
+                break;
+            }
+        }
+
+        this.styles = StyleSheet.create({
            BaseButtons: {
                height:50,
                width:130,
