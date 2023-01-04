@@ -4,6 +4,7 @@ import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
 import AnswerYesNo from './answerComponents/answerYesNo.js';
 import AnswerSlider from './answerComponents/answerSlider.js';
+import AnswerNote from './answerComponents/answerNote.js';
 import HeaderDate from './headerDate.js';
 
 const AnswerScreen = (props) => {
@@ -23,6 +24,9 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
             break;
             case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
                 return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
+            break;
+            case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
+              return <AnswerNote date={HeaderDate.getDate()} callback={nextQuestion} navigation={props.navigation} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
             break;
         }
    }
@@ -86,7 +90,7 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
     <View style={{ flex: 1}}>
         {HeaderDate.getHeader()}
-        <View style={{ flex: 2}}>
+        <View style={{ flex: 1}}>
             <Text style={styles.questionText}
                 adjustsFontSizeToFit={true}
                 numberOfLines={2}
@@ -113,7 +117,7 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
 const styles = StyleSheet.create({
     questionText: {
-        marginVertical:50,
+        marginVertical:0,
         marginHorizontal:20,
         color: 'black',
         fontSize: 35,

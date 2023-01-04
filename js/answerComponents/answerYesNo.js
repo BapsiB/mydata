@@ -15,18 +15,29 @@ const AnswerYesNo = (props) => {
         props.callback();
     }
 
+    function onPressRemoveData() {
+        DataManager.removeData(question.id, date);
+        setAnswer(-1);
+        props.callback();
+    }
+
     function getStyle(isSelected) {
         return isSelected ? styles.yesNoButtonsSelected : styles.yesNoButtons;
     }
 
     return (
-        <View style={{margin: 50, flexDirection: "row", justifyContent: 'center'}}>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answer == 1)]} onPress={()=>{onPress(true);}}>
-            <Text style={{color:"black"}}>YES</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answer == 0)]} onPress={()=>{onPress(false);}}>
-            <Text style={{color:"black"}}>NO</Text>
-        </TouchableOpacity>
+        <View style={{margin: 50, flexDirection: "column", justifyContent: 'center'}}>
+            <View style={{margin: 50, flexDirection: "row", justifyContent: 'center'}}>
+                <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answer == 1)]} onPress={()=>{onPress(true);}}>
+                    <Text style={{color:"black"}}>YES</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[SharedConstants.styles.BaseButtons, getStyle(answer == 0)]} onPress={()=>{onPress(false);}}>
+                    <Text style={{color:"black"}}>NO</Text>
+                </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={{justifyContent: 'center', alignItems:'center', height:50, marginVertical:-20 }} onPress={()=>{onPressRemoveData();}}>
+                <Text style={{color:"black", textDecorationLine: 'underline'}}>I DON'T KNOW</Text>
+            </TouchableOpacity>
        </View>
     );
 }

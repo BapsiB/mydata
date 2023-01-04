@@ -108,20 +108,36 @@ class DataManager {
         * set the answer of a question for a specified date.
         */
        this.setData = function(questionID, date, value) {
+            const lDateStr = getDateString(date);
+            const lTagStoring = "@DataDay:" + lDateStr;
 
-        const lDateStr = getDateString(date);
-        const lTagStoring = "@DataDay:" + lDateStr;
+            let lDayData = this.daysData[lDateStr];
+            if(lDayData === undefined ) {
+                lDayData = [];
+            }
 
-        let lDayData = this.daysData[lDateStr];
-        if(lDayData === undefined ) {
-            lDayData = [];
-        }
+            lDayData[questionID] = value;
+            this.daysData[lDateStr] = lDayData;
 
-        lDayData[questionID] = value;
-        this.daysData[lDateStr] = lDayData;
-
-        _storeData(lTagStoring, lDayData);
+            _storeData(lTagStoring, lDayData);
        }
+
+        /*
+        * remove the data matching the question id at the given date..
+        */
+       this.removeData = function(questionID, date) {
+            const lDateStr = getDateString(date);
+            const lTagStoring = "@DataDay:" + lDateStr;
+
+            let lDayData = this.daysData[lDateStr];
+            if(lDayData === undefined ) {
+                return
+            }
+
+            delete lDayData[questionID];
+
+            _storeData(lTagStoring, lDayData);
+        }
 
        this.findAvailableId = function() {
        let maxNum = 0;
@@ -308,6 +324,8 @@ class Question {
                 return value;
                 }
             break;
+            default:
+                return 0;
         }
      }
 }

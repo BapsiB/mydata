@@ -5,11 +5,39 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class SharedConstants {
     constructor() {
 
+        this.coloursiforgot = {
+            colour1:"#ffe2df",
+            colour2:"#cccccc",
+            colour3:"#afdfe5",
+            colour4:"#ffd7a5",
+            colour5:"#d1ffcc",
+        }
+
+        this.coloursAqua = {
+            colour1:"#a6f5e2",
+            colour2:"#82edd4",
+            colour3:"#6de6c2",
+            colour4:"#8feadd",
+            colour5:"#c8fffd",
+        }
+
+        this.coloursCalmPastelAqua = {
+            colour1:"#f3e7ea",
+            colour2:"#eaf1fa",
+            colour3:"#ced6e8",
+            colour4:"#fbf1e4",
+            colour5:"#f3e2da",
+        }
+
+        this.colours = this.coloursiforgot;
+ 
+
        this.questionTypes = {
         QUESTION_TYPE_YES_NO: 0,
         QUESTION_TYPE_NUMBER: 1,
         QUESTION_TYPE_INTENSITY: 2,
-        QUESTION_TYPE_COUNT: 3
+        QUESTION_TYPE_NOTE: 3,
+        QUESTION_TYPE_COUNT: 4
        };
 
        this.getDateString = function(date) {
@@ -51,6 +79,9 @@ class SharedConstants {
                         }
                         return "very high";
                     }
+                break;
+                case this.questionTypes.QUESTION_TYPE_NOTE:
+                    return "...";
                 break;
             }
         }

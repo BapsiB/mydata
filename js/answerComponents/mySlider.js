@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Dimensions, Animated, PanResponder } from 'react-native';
 import { shadow } from 'react-native-paper';
 import Draggable from 'react-native-draggable';
+import sharedConstants from '../sharedConstants';
 
 const { add } = Animated;
 
@@ -12,7 +13,7 @@ const MySlider = (props) => {
     const y = 0;
     let widthView = 0;
     const sizeKnob = 70;
-    const {height, step, value, minimumValue, maximumValue, onSlidingComplete, onValueChanged} = props;
+    const {height, step, value, minimumValue, maximumValue, onSlidingComplete, onValueChanged, trackColour} = props;
 
     const pan = useRef(
         new Animated.ValueXY({ x: 0, y: 0 })
@@ -63,14 +64,6 @@ const MySlider = (props) => {
             
             updatePanValue(currentValueConsideringMinMax);
             onSlidingComplete(currentValueConsideringMinMax)
-            // Animated.spring(pan, {
-            //     toValue: {x:0, y:TopShouldBe},
-            //     friction: 2,
-            //     tension: 140,
-            //     // left/top are not supported
-            //     useNativeDriver: false,
-            //   }).start();
-          
           }
         })
       ).current;
@@ -86,14 +79,13 @@ const MySlider = (props) => {
 
             style={{
                 ...StyleSheet.absoluteFillObject,
-                backgroundColor:"#0bb",
+                backgroundColor:trackColour,
                 borderRadius:35,
                 height: "100%",
                 width: sizeKnob
             }}
             >
                 <Animated.View 
-
                     size={sizeKnob} 
                     heightParent={height} 
                     stepCounts={step}
@@ -115,7 +107,6 @@ const MySlider = (props) => {
                     }}
                     {...panResponder.panHandlers}
                 >
-
                 </Animated.View>
             </View>
 

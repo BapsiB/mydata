@@ -37,6 +37,9 @@ function onPressAddQuestion() {
         case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
             lOption = options.intensity;
         break;
+        case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
+          lOption = {};
+        break;
     }
 
     if(fromQuestion) {
@@ -84,6 +87,7 @@ function getQuestionExample(questionType) {
     lYesNoQuestions = [];
     lQuantityQuestions = [];
     lIntensityQuestions = [];
+    lNotesQuestions = [];
     lYesNoQuestions.push("did you remember your dream?");
     lYesNoQuestions.push("did you drink alcohol?");
     lYesNoQuestions.push("have you talked to a friend?");
@@ -96,6 +100,10 @@ function getQuestionExample(questionType) {
     lIntensityQuestions.push("how happy did you feel?");
     lIntensityQuestions.push("how easy was it to sleep?");
     lQuestions.push(lIntensityQuestions);
+    lNotesQuestions.push("dreams i remember");
+    lNotesQuestions.push("what happened today");
+    lNotesQuestions.push("general thoughts");
+    lQuestions.push(lNotesQuestions);
     return "eg: " + lQuestions[questionType][lRandom];
 }
 
@@ -104,18 +112,22 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
     let lTextTop;
     let lSubText;
     switch(questionTypeId) {
-        case 0:
+        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
             lTextTop = "yes/no";
             lSubText = "the answer can be yes or no."
             break;
-        case 1:
+        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
             lTextTop = "quantity";
             lSubText = "the answer is a number."
             break;
-        case 2:
+        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
             lTextTop = "intensity";
             lSubText = "for things that cannot be numbered."
             break;
+        case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
+          lTextTop = "notes";
+          lSubText = "classic journal content."
+          break;
     }
 
     const nextQuestion = () =>
@@ -155,6 +167,9 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
     switch(questionTypeId) {
         case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
         return (<View/>)
+        break;
+        case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
+          return (<View/>)
         break;
         case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
                 if(initOptions.intensity === undefined) {
