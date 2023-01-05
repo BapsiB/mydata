@@ -9,7 +9,9 @@ import DataVisualisationScreen from './js/dataVisualisationScreen.js';
 import HeaderDate from './js/headerDate.js';
 import MenuEditQuestion from './js/menuEditQuestion.js';
 import QuestionButton from './js/questionButton.js';
-import NotesScreen from './js/notesScreen.js'
+import NotesScreen from './js/questionsScreens/notesScreen.js'
+import MeasureScreen from './js/questionsScreens/measuresScreen.js'
+import Utils from './js/utils.js'
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -20,6 +22,7 @@ import {
   createStackNavigator
 } from '@react-navigation/stack';
 import { Image, Button, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
+
 const Stack = createNativeStackNavigator();
 
 const BottomButton = (props) => {
@@ -31,10 +34,9 @@ return (
 }
 
 const MyStack = () => {
-const navigationRef = useNavigationContainerRef();
   
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
@@ -61,13 +63,6 @@ const MainView = ({ navigation }) => {
 
     const forceUpdate = React.useReducer(() => ({}))[1]
 
-    const [arrayNames, setArrayNames] = React.useState([]);
-
-    const updateQuestions = () => {
-        setArrayNames(DataManager.getQuestions());
-        forceUpdate();
-    }
-
     const answersLoadedCallback = () => {
       forceUpdate();
     }
@@ -76,48 +71,23 @@ const MainView = ({ navigation }) => {
       navigation.navigate("Question Editor", {questionID:questionId});
     }
 
-    DataManager.setQuestionsListener(updateQuestions);
-    DataManager.setAnswersLoadedListener(answersLoadedCallback);
-
-    const listItems = arrayNames.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
-    const lListItemsContained = (props) => {return (<ScrollView style={{marginBottom:"21%"}}><SwipeProvider>{listItems}</SwipeProvider></ScrollView>)};
-    //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
     const StackIn = createStackNavigator();
-
-    const horizontalAnimation = {
-      cardStyleInterpolator: ({ current, layouts }) => {
-        return {
-          cardStyle: {
-            transform: [
-              {
-                translateX: current.progress.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [layouts.screen.width, 0],
-                }),
-              },
-            ],
-          },
-        };
-      },
-    };
-
-
 
     return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
 
-            <Button title="button" onPress={() => navigation.navigate('Notes')}></Button>
+            <Button title="button" onPress={() => navigation.navigate('Notes',  {date:questionId})}></Button>
 
-            <StackIn.Navigator screenOptions={horizontalAnimation}>
+            <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
               <StackIn.Screen
-                name="Measure Questions"
-                component={lListItemsContained}
+                name="Measure"
+                component={MeasureScreen}
                 options={{ headerShown:false }}
               />
               <StackIn.Screen name="Notes" component={NotesScreen} 
-              options={{horizontalAnimation}}
+              options={Utils.horizontalScreenAnimation}
               />
             </StackIn.Navigator>
 
