@@ -1,6 +1,4 @@
 import React from 'react';
-//import { Provider as PaperProvider } from 'react-native-paper';
-import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
 
 import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
@@ -21,7 +19,7 @@ import {
   TransitionSpecs,
   createStackNavigator
 } from '@react-navigation/stack';
-import { Image, Button, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
+import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,14 +61,6 @@ const MainView = ({ navigation }) => {
 
     const forceUpdate = React.useReducer(() => ({}))[1]
 
-    const answersLoadedCallback = () => {
-      forceUpdate();
-    }
-
-    const editQuestion = (questionId) => {
-      navigation.navigate("Question Editor", {questionID:questionId});
-    }
-
     const lSizeFooter = "10%";
     const StackIn = createStackNavigator();
 
@@ -78,11 +68,13 @@ const MainView = ({ navigation }) => {
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
 
-            <Button title="button" onPress={() => navigation.navigate('Notes',  {date:questionId})}></Button>
+            <TouchableOpacity style={styles.button_footer2} onPress={()=>{props.onClick();}}>
+              <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={props.source}/>
+            </TouchableOpacity>
 
             <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
               <StackIn.Screen
-                name="Measure"
+                name="Measures"
                 component={MeasureScreen}
                 options={{ headerShown:false }}
               />

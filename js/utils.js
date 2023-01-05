@@ -29,4 +29,4 @@ class Utils {
 
 
 
-  export default new SharedConstants();
+  export default new Utils();
