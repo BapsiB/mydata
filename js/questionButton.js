@@ -95,8 +95,8 @@ const rightButton = (
       ref={itemRef} 
       onPress={()=>{goToQuestion;}}
   >
-  <TouchableOpacity onPress={()=>{goToQuestion();}}>
-        <Text style={{fontSize: 16, color:"black", textAlign: 'center'}}>
+  <TouchableOpacity style={{height:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{goToQuestion();}}>
+        <Text style={{fontSize: 16, color:"black", textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
       <Text style={{fontSize: 16, color:"grey", textAlign:"right", position:"absolute", width:'100%', paddingRight:10}}>

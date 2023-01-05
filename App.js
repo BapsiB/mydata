@@ -9,10 +9,17 @@ import DataVisualisationScreen from './js/dataVisualisationScreen.js';
 import HeaderDate from './js/headerDate.js';
 import MenuEditQuestion from './js/menuEditQuestion.js';
 import QuestionButton from './js/questionButton.js';
-import { NavigationContainer } from '@react-navigation/native';
+import NotesScreen from './js/notesScreen.js'
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
-
+import {
+  HeaderStyleInterpolators,
+  StackCardInterpolationProps,
+  StackNavigationOptions,
+  TransitionSpecs,
+  createStackNavigator
+} from '@react-navigation/stack';
+import { Image, Button, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView, ScrollView } from 'react-native';
 const Stack = createNativeStackNavigator();
 
 const BottomButton = (props) => {
@@ -24,8 +31,10 @@ return (
 }
 
 const MyStack = () => {
+const navigationRef = useNavigationContainerRef();
+  
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen
           name="Home"
@@ -71,17 +80,46 @@ const MainView = ({ navigation }) => {
     DataManager.setAnswersLoadedListener(answersLoadedCallback);
 
     const listItems = arrayNames.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
+    const lListItemsContained = (props) => {return (<ScrollView style={{marginBottom:"21%"}}><SwipeProvider>{listItems}</SwipeProvider></ScrollView>)};
     //const listItems = [<Question title="number 1"></Question>, <Question title="number 2"></Question>]
     const lSizeFooter = "10%";
+    const StackIn = createStackNavigator();
+
+    const horizontalAnimation = {
+      cardStyleInterpolator: ({ current, layouts }) => {
+        return {
+          cardStyle: {
+            transform: [
+              {
+                translateX: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [layouts.screen.width, 0],
+                }),
+              },
+            ],
+          },
+        };
+      },
+    };
+
+
+
     return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
 
-            <ScrollView style={{marginBottom:"21%"}}>
-            <SwipeProvider>
-                {listItems}
-            </SwipeProvider>
-            </ScrollView>
+            <Button title="button" onPress={() => navigation.navigate('Notes')}></Button>
+
+            <StackIn.Navigator screenOptions={horizontalAnimation}>
+              <StackIn.Screen
+                name="Measure Questions"
+                component={lListItemsContained}
+                options={{ headerShown:false }}
+              />
+              <StackIn.Screen name="Notes" component={NotesScreen} 
+              options={{horizontalAnimation}}
+              />
+            </StackIn.Navigator>
 
             <View style={{ position:'absolute', bottom:0, height:lSizeFooter, width:"100%"}}>
                 <View style={{   flex: 1, flexDirection: "row"}}>
