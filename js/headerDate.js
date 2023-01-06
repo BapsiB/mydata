@@ -3,17 +3,25 @@ import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import SharedConstants from './sharedConstants.js';
 
 class HeaderDate {
-//const HeaderDate = (props) => {
+
     constructor() {
     this.date = new Date();
     const that = this;
+    this.changeCallbacks = [];
 
     this.getDate = function() {
         return this.date;
     }
 
+    this.addChangeCallback = function(id, callback) {
+        this.changeCallbacks[id] = callback;
+    }
+
     this.setDate = function(date) {
         this.date = date;
+        for (const i in this.changeCallbacks) {
+            this.changeCallbacks[i]();
+        }
     }
 
     function setDate(date) {

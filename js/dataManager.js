@@ -12,14 +12,14 @@ class DataManager {
        this.answersUpdateCallback = null;
        
        this.clearAll = async () => {
-        try {
-          await AsyncStorage.clear()
-        } catch(e) {
-          // clear error
+            try {
+            await AsyncStorage.clear()
+            } catch(e) {
+            // clear error
+            }
+        
+            console.log('Done.')
         }
-      
-        console.log('Done.')
-      }
       
        const _storeData = async (key, data) => {
         try {

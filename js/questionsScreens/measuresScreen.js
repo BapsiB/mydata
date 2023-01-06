@@ -5,7 +5,7 @@ import DataManager from '../dataManager.js';
 import HeaderDate from '../headerDate.js';
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
 
-const MeasuresScreen = ({navigation}) => {
+const MeasuresScreen = ({navigation, date}) => {
 
   const updateQuestions = () => {
     const arrayQuestionsOrigin = DataManager.getQuestions();
@@ -26,6 +26,7 @@ const MeasuresScreen = ({navigation}) => {
 
   DataManager.setQuestionsListener(updateQuestions);
   DataManager.setAnswersUpdateListener(updateAnswer);
+  HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
 
   const [arrayQuestions, setArrayQuestions] = React.useState([]);
 

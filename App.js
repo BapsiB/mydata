@@ -61,15 +61,13 @@ const MainView = ({ navigation }) => {
 
     const forceUpdate = React.useReducer(() => ({}))[1]
 
-    const lSizeFooter = "10%";
+    const lSizeFooter = "8%";
     const StackIn = createStackNavigator();
 
     return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
-
-            <View style={{ flexDirection: "row",     justifyContent: 'center',
-    alignItems: 'center'}}>
+            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
               <View style={styles.buttonsTypeQuestions}>
               <TouchableOpacity style={{}} onPress={()=>{navigation.navigate("Measures")}}>
                 <Image style={{ width:32, height:32,  resizeMode: 'stretch' }} source={require("./resources/measuresButton.png")}/>
@@ -88,8 +86,9 @@ const MainView = ({ navigation }) => {
                 component={MeasureScreen}
                 options={{ headerShown:false }}
               />
-              <StackIn.Screen name="Notes" component={NotesScreen} 
-              options={{headerShown:false}}
+              <StackIn.Screen name="Notes" 
+                component={NotesScreen} 
+                options={{headerShown:false}}
               />
             </StackIn.Navigator>
 
