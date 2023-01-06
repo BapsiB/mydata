@@ -68,9 +68,19 @@ const MainView = ({ navigation }) => {
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
 
-            <TouchableOpacity style={styles.button_footer2} onPress={()=>{props.onClick();}}>
-              <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={props.source}/>
-            </TouchableOpacity>
+            <View style={{ flexDirection: "row",     justifyContent: 'center',
+    alignItems: 'center'}}>
+              <View style={styles.buttonsTypeQuestions}>
+              <TouchableOpacity style={{}} onPress={()=>{navigation.navigate("Measures")}}>
+                <Image style={{ width:32, height:32,  resizeMode: 'stretch' }} source={require("./resources/measuresButton.png")}/>
+              </TouchableOpacity>
+              </View>
+              <View style={styles.buttonsTypeQuestions}>
+              <TouchableOpacity style={{}} onPress={()=>{navigation.navigate("Notes")}}>
+                <Image style={{ width:32, height:32,  resizeMode: 'stretch' }} source={require("./resources/notesbutton.png")}/>
+              </TouchableOpacity>
+              </View>
+            </View>
 
             <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
               <StackIn.Screen
@@ -79,7 +89,7 @@ const MainView = ({ navigation }) => {
                 options={{ headerShown:false }}
               />
               <StackIn.Screen name="Notes" component={NotesScreen} 
-              options={Utils.horizontalScreenAnimation}
+              options={{headerShown:false}}
               />
             </StackIn.Navigator>
 
@@ -102,6 +112,10 @@ const styles = StyleSheet.create({
 //      bottom: 0 ,
       flex: 1,
   },
+
+buttonsTypeQuestions: {
+  margin:30,  
+},
 
   button_footer2: {
     justifyContent: 'center',

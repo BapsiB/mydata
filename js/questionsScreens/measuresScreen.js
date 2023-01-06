@@ -8,13 +8,15 @@ import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-sw
 const MeasuresScreen = ({navigation}) => {
 
   const updateQuestions = () => {
-    setArrayQuestions(DataManager.getQuestions());
+    const arrayQuestionsOrigin = DataManager.getQuestions();
+    // we remove the questions that are the notes (they will be displayed in another screen)
+    const filtered = arrayQuestionsOrigin.filter((question) => {return question.type != SharedConstants.questionTypes.QUESTION_TYPE_NOTE});
+    setArrayQuestions(filtered);
     forceUpdate();
   }
-
   const forceUpdate = React.useReducer(() => ({}))[1]
 
-  const answersLoadedCallback = () => {
+  const updateAnswer = () => {
     forceUpdate();
   }
 
@@ -23,7 +25,7 @@ const MeasuresScreen = ({navigation}) => {
   }
 
   DataManager.setQuestionsListener(updateQuestions);
-  DataManager.setAnswersLoadedListener(answersLoadedCallback);
+  DataManager.setAnswersUpdateListener(updateAnswer);
 
   const [arrayQuestions, setArrayQuestions] = React.useState([]);
 

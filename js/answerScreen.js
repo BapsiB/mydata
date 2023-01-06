@@ -104,7 +104,7 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
             <Text style={{color:"black"}}>PREV</Text>
         </TouchableOpacity>       
          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn();}}>
-            <Text style={{color:"black"}}>RETURN</Text>
+            <Text style={{color:"black"}}>BACK</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true, false);}}>
             <Text style={{color:"black"}}>NEXT</Text>
