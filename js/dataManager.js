@@ -6,6 +6,7 @@ class DataManager {
     constructor() {
 
        this.listQuestions = [];
+       this.listNotes = [];
        this.daysData = [];
        this.questionCallback = null;
        // callback to be called when the answers data are loaded.
@@ -45,7 +46,12 @@ class DataManager {
         that.listQuestions = [];
         for (question of data) {
             const questionCast = new Question(question);
-            that.listQuestions.push(questionCast);
+            if(questionCast.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE) {
+                that.listNotes.push(questionCast);
+            }
+            else {
+                that.listQuestions.push(questionCast);
+            }
         }
       }
 

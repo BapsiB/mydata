@@ -9,15 +9,15 @@ import HeaderDate from './headerDate.js';
 
 const AnswerScreen = (props) => {
 
-const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
-const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params);
-const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
+    const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params);
+    const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
    function getViewForQuestionId(aCurrentQuestion, date) {
         switch(aCurrentQuestion.type) {
             case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-                return <AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={nextQuestion}/>;
+                return <AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={nextQuestion} key={aCurrentQuestion.id}/>;
             break;
             case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
                 return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
@@ -30,6 +30,14 @@ const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
             break;
         }
    }
+
+   const forceUpdate = React.useReducer(() => ({}))[1]
+
+   function dateChanged() {
+    forceUpdate();
+   }
+
+   HeaderDate.addChangeCallback("AnswerScreen",dateChanged);
 
    function nextQuestion(goNext, onlyTakeEmptyAnswer) {
     if(goNext === undefined) {
