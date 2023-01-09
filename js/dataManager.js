@@ -6,7 +6,6 @@ class DataManager {
     constructor() {
 
        this.listQuestions = [];
-       this.listNotes = [];
        this.daysData = [];
        this.questionCallback = null;
        // callback to be called when the answers data are loaded.
@@ -46,12 +45,7 @@ class DataManager {
         that.listQuestions = [];
         for (question of data) {
             const questionCast = new Question(question);
-            if(questionCast.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE) {
-                that.listNotes.push(questionCast);
-            }
-            else {
-                that.listQuestions.push(questionCast);
-            }
+            that.listQuestions.push(questionCast);
         }
       }
 
@@ -206,8 +200,14 @@ class DataManager {
        }
 
        this.getQuestions = function() {
-         return this.listQuestions;
+        const filtered = this.listQuestions.filter((question) => {return question.type != SharedConstants.questionTypes.QUESTION_TYPE_NOTE});
+        return filtered;
        }
+
+       this.getNotes = function() {
+        const filtered = this.listQuestions.filter((question) => {return question.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE});
+        return filtered;
+      }
 
         /*
         * return the answer at the given date, to the question matching the question id.

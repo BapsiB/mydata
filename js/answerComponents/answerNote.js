@@ -16,7 +16,7 @@ const AnswerNote = (props) => {
       
 
     let lAnswerForQuestion = DataManager.getAnswerForQuestion(question.id, date);
-    if(lAnswerForQuestion === undefined) {
+    if(lAnswerForQuestion === undefined || !lAnswerForQuestion) {
         lAnswerForQuestion = "";
     }
 

@@ -33,9 +33,11 @@ const MeasuresScreen = ({navigation, date}) => {
   const listItems = arrayQuestions.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
 
   return (
-    <ScrollView style={{marginBottom:"21%"}}>
+    <ScrollView style={{marginBottom:"17%"}}>
       <SwipeProvider>
+        <View style={{height:15}}/>
         {listItems}
+        <View style={{height:15}}/>
       </SwipeProvider>
     </ScrollView>
   )

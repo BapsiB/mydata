@@ -10,13 +10,9 @@ import QuestionButton from './js/questionButton.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
 import MeasureScreen from './js/questionsScreens/measuresScreen.js'
 import Utils from './js/utils.js'
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  HeaderStyleInterpolators,
-  StackCardInterpolationProps,
-  StackNavigationOptions,
-  TransitionSpecs,
   createStackNavigator
 } from '@react-navigation/stack';
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView } from 'react-native';

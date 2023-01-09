@@ -6,6 +6,10 @@ import AnswerYesNo from './answerComponents/answerYesNo.js';
 import AnswerSlider from './answerComponents/answerSlider.js';
 import AnswerNote from './answerComponents/answerNote.js';
 import HeaderDate from './headerDate.js';
+import Utils from './utils.js'
+import {
+  createStackNavigator
+} from '@react-navigation/stack';
 
 const AnswerScreen = (props) => {
 
@@ -14,22 +18,50 @@ const AnswerScreen = (props) => {
     const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params);
     const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
-   function getViewForQuestionId(aCurrentQuestion, date) {
-        switch(aCurrentQuestion.type) {
-            case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-                return <AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={nextQuestion} key={aCurrentQuestion.id}/>;
-            break;
-            case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
-            break;
-            case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                return <AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
-            break;
-            case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
-              return <AnswerNote date={HeaderDate.getDate()} callback={nextQuestion} navigation={props.navigation} question={aCurrentQuestion} key={aCurrentQuestion.id}/>
-            break;
-        }
-   }
+    const StackIn = createStackNavigator();
+
+    const AnswerComponent = () => {
+      const [localQuestion, setLocalQuestion] = React.useState(currentQuestion);
+
+      return (
+        <View style={{ flex: 4}}>
+          <View style={{ flex: 1}}>
+            <Text style={styles.questionText}
+                adjustsFontSizeToFit={true}
+                numberOfLines={2}
+            >{localQuestion.text}</Text>
+          </View>
+          <View style={{ flex: 3}}>
+            {getProperAnswerElement(localQuestion)}
+          </View>
+        </View>
+      )
+
+    }
+
+    function getProperAnswerElement(aCurrentQuestion) {
+
+      switch(aCurrentQuestion.type) {
+          case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+              return (<AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={nextQuestion} key={aCurrentQuestion.id}/>);
+          break;
+          case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
+              return (<AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>)
+          break;
+          case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+              return (<AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>)
+          break;
+          case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
+            return (<AnswerNote date={HeaderDate.getDate()} callback={nextQuestion} navigation={props.navigation} question={aCurrentQuestion} key={aCurrentQuestion.id}/>)
+          break;
+      }
+    }
+
+  function getStackNavigator() {
+    listQuestions = DataManager.getQuestions();
+    const listItems = listQuestions.map((d) => <StackIn.Screen name={d.id} component={AnswerComponent} options={{ headerShown:false }} key={d.id} />);
+    return listItems;
+  }
 
    const forceUpdate = React.useReducer(() => ({}))[1]
 
@@ -52,13 +84,13 @@ const AnswerScreen = (props) => {
     if(onlyTakeEmptyAnswer === undefined) {
         onlyTakeEmptyAnswer = true;
     }
-    const nextQuestion = DataManager.getNextQuestion(currentQuestion.id, true, onlyTakeEmptyAnswer, HeaderDate.getDate());
-    if(nextQuestion == null) {
+    const nextQuestionToDisplay = DataManager.getNextQuestion(currentQuestion.id, true, onlyTakeEmptyAnswer, HeaderDate.getDate());
+    if(nextQuestionToDisplay == null) {
         setModalVisible(true);
         return;
     }
-
-    setCurrentQuestion(nextQuestion);
+    setCurrentQuestion(nextQuestionToDisplay);
+    props.navigation.replace(nextQuestionToDisplay.id) ;
    }
 
    function onReturn() {
@@ -98,30 +130,27 @@ const AnswerScreen = (props) => {
 
     <View style={{ flex: 1}}>
         {HeaderDate.getHeader()}
-        <View style={{ flex: 1}}>
-            <Text style={styles.questionText}
-                adjustsFontSizeToFit={true}
-                numberOfLines={2}
-            >{currentQuestion.text}</Text>
-        </View>
-        <View style={{ flex: 3}}>
-            {getViewForQuestionId(currentQuestion)}
-        </View>
-        <View style={{justifyContent: 'flex-end', alignItems: 'center', flex: 1, flexDirection: "row", backgroundColour:"blue"}}>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
-            <Text style={{color:"black"}}>PREV</Text>
-        </TouchableOpacity>       
-         <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn();}}>
-            <Text style={{color:"black"}}>BACK</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true, false);}}>
-            <Text style={{color:"black"}}>NEXT</Text>
-        </TouchableOpacity>
+
+        <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} style={{ flex: 4}} >
+          {getStackNavigator()}
+        </StackIn.Navigator>
+        <View style={{justifyContent: 'flex-end', alignItems: 'center', flexDirection: "row", backgroundColour:"blue", marginVertical:10}}>
+          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
+              <Text style={{color:"black"}}>PREV</Text>
+          </TouchableOpacity>       
+          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn();}}>
+              <Text style={{color:"black"}}>BACK</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true, false);}}>
+              <Text style={{color:"black"}}>NEXT</Text>
+          </TouchableOpacity>
         </View>
     </View>
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
     questionText: {
