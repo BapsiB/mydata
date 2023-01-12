@@ -49,6 +49,16 @@ class SharedConstants {
           return dateStr;
        }
 
+       this.coloursSet = ['#000000','#888888','#ffffff','#d11cd5','#1633e6','#00aeef','#00c85d','#57ff0a','#ffde17','#f26522', '#ffa8b5'];
+
+       this.getIndexOfColour = function(colour) {
+        function isColour(c) {
+            return (c[3] == colour[3]) &&  (c[5] == colour[5]) && (c[7] == colour[7]);
+        }
+        const returnValue = this.coloursSet.findIndex(isColour);
+        return returnValue;
+      }
+
        this.getAnswerText = function(answerValue, question) {
             switch(+question.type) {
                 case this.questionTypes.QUESTION_TYPE_YES_NO:

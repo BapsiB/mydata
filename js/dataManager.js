@@ -156,9 +156,9 @@ class DataManager {
         return maxNum.toString();
        }
 
-       this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colour) {
+       this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colourIndex) {
            const lId = this.findAvailableId();
-           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colour, id:lId});
+           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colourIndex, id:lId});
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
 
@@ -166,14 +166,14 @@ class DataManager {
             this.questionCallback();
        }
 
-       this.updateQuestion = function(aQuestionId, aQuestionText, questionType, options, colour) {
+       this.updateQuestion = function(aQuestionId, aQuestionText, questionType, options, colourIndex) {
         let s;
         for (s of this.listQuestions) {
             if(s.id == aQuestionId) {
                 s.text = aQuestionText;
                 s.type = questionType;
-                s.options = options;
-                s.colour = colour;
+                s.setOptions(options);
+                s.colourIndex = colourIndex;
             }
         }
 
@@ -307,12 +307,30 @@ class Question {
         // id of the question type.
         this.type = data.type;
         this.options = data.options;
-        this.colour = data.colour;
+        if(data.colourIndex === undefined) {
+            data.colourIndex = 0;
+        }
+        this.colourIndex = data.colourIndex;
         // unique id of the question.
         this.id = data.id;
 
         this.getText = function() {
             return this.text;
+        }
+
+        this.getColour = function() {
+            if(this.colourIndex.length > 3) {
+                this.colourIndex = 0;
+                return this.colourIndex;
+            }
+            return SharedConstants.coloursSet[this.colourIndex];
+        }
+    }
+    
+    setOptions(options) {
+        for (const [key, value] of Object.entries(options)) {
+            console.log(`${key}: ${value}`);
+            this.options[key] = value;
         }
     }
 

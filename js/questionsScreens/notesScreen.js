@@ -4,7 +4,7 @@ import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 import Draggable from 'react-native-draggable';
 import Utils from '../utils.js'
-import headerDate from '../headerDate.js';
+import HeaderDate from '../headerDate.js';
 
 const NotesScreen = ({navigation}) => {
 
@@ -23,11 +23,21 @@ const NotesScreen = ({navigation}) => {
     navigation.navigate("Answer Screen", questionId);
   }
 
+  const openNoteEditor = (questionId) => {
+    navigation.navigate("Question Editor", {questionID:questionId});
+  }
+
+  HeaderDate.addChangeCallback("AnswerNote",dateChanged);
+
   const forceUpdate = React.useReducer(() => ({}))[1]
+
+  function dateChanged() {
+      forceUpdate();
+  }
 
   function getNoteLines(question) {
     let string = "";
-    const value = DataManager.getAnswerForQuestion(question.id, headerDate.getDate());
+    const value = DataManager.getAnswerForQuestion(question.id, HeaderDate.getDate());
     if(value) {
       string += value;
     }
@@ -37,7 +47,7 @@ const NotesScreen = ({navigation}) => {
 
   function getEmptyLines() {
     let string = "";
-    for(let j = 0; j < 5; j++) {
+    for(let j = 0; j < 4; j++) {
       for(let i = 0; i < 64; i++) {
         string += " ";
       }
@@ -51,17 +61,35 @@ const NotesScreen = ({navigation}) => {
     return angle + "deg"
   }
 
+  function noteReleased(id, bounds) {
+    const xRel = Math.round(100 * bounds.left / windowWidth);
+    const yRel = Math.round(100 * bounds.top / windowWidth);
+    const question = DataManager.getQuestionWithId(id);
+    question.setOptions({x:xRel, y:yRel});
+    DataManager.saveListQuestions();
+  }
+
+  function getPercentToPix(percent) {
+    if((percent === undefined) || !percent) {
+      return 50;
+    }
+    return windowWidth * (percent / 100);
+  }  
+
   const listItems = arrayNotes.map((d) =>         
-  <Draggable x={50} y={50} key={d.id} 
-  onDragRelease={()=>console.log('drag release')}
+  <Draggable x={getPercentToPix(d.options.x)} y={getPercentToPix(d.options.y)} key={d.id} 
+  onDragRelease={(event, gestureState, bounds)=>noteReleased(d.id, bounds)}
   onLongPress={()=>console.log('long press')}
   onShortPressRelease={()=>console.log('press drag')}
   onPressIn={()=>console.log('in press')}
   onPressOut={()=>console.log('out press')}>
-    <TouchableWithoutFeedback onPress={()=>editQuestion(d.id)}>
-      <View style={[styles.noteContainer, {width:windowWidth * 0.3, height:windowWidth * 0.3, backgroundColor:Utils.increase_brightness(d.colour, 95), transform: [{ rotate: getRandomRotate() }]}]}>
-        <Text style={[styles.noteTitle, {backgroundColor:Utils.increase_brightness(d.colour, 85)}]}>{d.text}</Text>
-        <Text style={styles.noteContent} multiline={true} numberOfLines={5}>{getNoteLines(d)}</Text>
+    <TouchableWithoutFeedback onPress={()=>editQuestion(d.id)} onLongPress={()=>openNoteEditor(d.id)}
+>
+      <View style={[styles.noteContainer, {width:windowWidth * 0.3, height:windowWidth * 0.3, backgroundColor:Utils.increase_brightness(d.getColour(), 95), transform: [{ rotate: getRandomRotate() }]}]}>
+        <View style={[styles.noteTitleContainer, {backgroundColor:Utils.increase_brightness(d.getColour(), 85)}]}>
+          <Text style={styles.noteTitle} numberOfLines={2}>{d.text}</Text>
+        </View>
+        <Text style={styles.noteContent} multiline={true} numberOfLines={4}>{getNoteLines(d)}</Text>
         <Text style={[styles.noteContent, {textDecorationLine: 'underline', color: "#ddd",}]} multiline={true} numberOfLines={5}>{getEmptyLines()}</Text>
       </View>
     </TouchableWithoutFeedback>
@@ -80,20 +108,27 @@ const NotesScreen = ({navigation}) => {
 }
 
 const styles = StyleSheet.create({
-  noteTitle: {
-    textAlign:'center',
-    fontWeight: 'bold',
-    fontFamily:"Cochin",
+  noteTitleContainer: {
     paddingBottom:5,
     borderTopLeftRadius:10,
-    borderTopRightRadius:10
+    borderTopRightRadius:10,
+    height:40,
+    justifyContent: 'center', //Centered horizontally
+    alignItems: 'center', //Centered vertically
+  },
+
+  noteTitle: {
+    color:'#555',
+    textAlign:'center',
+    fontWeight: 'bold',
+    marginHorizontal:3
   },
 
   noteContent: {
     color: "#999",
     marginHorizontal:3,
     position:"absolute",
-    marginTop:25,
+    marginTop:40,
   },
 
   noteContainer: {

@@ -5,12 +5,11 @@ import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
 import DataVisualisationScreen from './js/dataVisualisationScreen.js';
 import HeaderDate from './js/headerDate.js';
-import MenuEditQuestion from './js/menuEditQuestion.js';
 import QuestionButton from './js/questionButton.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
 import MeasureScreen from './js/questionsScreens/measuresScreen.js'
 import Utils from './js/utils.js'
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   createStackNavigator
@@ -38,7 +37,7 @@ const MyStack = () => {
           options={{ headerShown:false }}
         />
         <Stack.Screen name="Question Editor" component={QuestionEditor} />
-        <Stack.Screen name="Answer Screen" component={AnswerScreen} />
+        <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="Data Visualisation Screen" component={DataVisualisationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -46,6 +45,8 @@ const MyStack = () => {
 };
 
 const MainView = ({ navigation }) => {
+
+    const [screenId, setScreenId] = React.useState(0);
 
     const unsubscribe = navigation.addListener('state', (e) => {
       // You can get the raw navigation state (partial state object of the root navigator)
@@ -55,6 +56,25 @@ const MainView = ({ navigation }) => {
       }
     });
 
+    function getTopButtonStyle(buttonScreenId) {
+      if(screenId == buttonScreenId)  {
+        return {backgroundColor:"#fff", borderColor: "#000",}
+      }
+      return null;
+    }
+
+    function goToScreen(aScreenId) {
+      switch(aScreenId) {
+        case 0:
+          navigation.navigate("Measures");
+          break;
+        case 1:
+          navigation.navigate("Notes");
+          break;
+      }
+      setScreenId(aScreenId);
+    }
+
     const forceUpdate = React.useReducer(() => ({}))[1]
 
     const lSizeFooter = "8%";
@@ -63,18 +83,18 @@ const MainView = ({ navigation }) => {
     return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
-            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
-              <View style={styles.buttonsTypeQuestions}>
-              <TouchableOpacity style={{}} onPress={()=>{navigation.navigate("Measures")}}>
+            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>
+              <View style={[styles.buttonsTypeQuestions, getTopButtonStyle(0)]}>
+              <TouchableOpacity style={{}} onPress={()=>{goToScreen(0)}}>
                 <Image style={{ width:32, height:32,  resizeMode: 'stretch' }} source={require("./resources/measuresButton.png")}/>
               </TouchableOpacity>
               </View>
-              <View style={styles.buttonsTypeQuestions}>
-              <TouchableOpacity style={{}} onPress={()=>{navigation.navigate("Notes")}}>
+              <View style={[styles.buttonsTypeQuestions, getTopButtonStyle(1)]}>
+              <TouchableOpacity style={{}} onPress={()=>{goToScreen(1)}}>
                 <Image style={{ width:32, height:32,  resizeMode: 'stretch' }} source={require("./resources/notesbutton.png")}/>
               </TouchableOpacity>
               </View>
-            </View>
+          </View>
 
             <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
               <StackIn.Screen
@@ -103,13 +123,17 @@ const MainView = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   button_footer: {
-        backgroundColor: "white",
+    backgroundColor: "white",
 //      bottom: 0 ,
-      flex: 1,
+    flex: 1,
   },
 
 buttonsTypeQuestions: {
-  margin:30,  
+  margin:30,
+  borderWidth: 1,
+  borderColor: "#999",
+  borderRadius: 50,
+  padding:10,
 },
 
   button_footer2: {

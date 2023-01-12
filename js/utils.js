@@ -26,6 +26,9 @@ class Utils {
         };
 
         this.increase_brightness = function(hex, percent){
+            if(hex === undefined) {
+                return "#fff";
+            }
             // strip the leading # if it's there
             hex = hex.replace(/^\s*#|\s*$/g, '');
         

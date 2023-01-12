@@ -47,22 +47,22 @@ class HeaderDate {
         }
 
         return (
-            <View style={{height:40, flexDirection: "row", marginVertical:20,}}>
-                <View style={{flex:1, marginLeft:20}}>
-                    <TouchableOpacity onPress={()=>{setDate(incrementDate(this.date, -1));}}>
+            <View style={{height:40, flexDirection: "row", marginVertical:0, marginBottom:20}}>
+                <View style={{flex:1, marginLeft:0}}>
+                    <TouchableOpacity style={{width:50, height:60, paddingTop:20}} onPress={()=>{setDate(incrementDate(this.date, -1));}}>
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowLeft.png")}/>
                     </TouchableOpacity>
                 </View>
-                <View style={{ flex: 12}}>
+                <View style={{ flex: 10, marginRight:-20, height:60, paddingTop:20}}>
                     <Text style={styles.dateText}>{SharedConstants.getDateString(that.date)}</Text>
                 </View>
                 <View style={{flex:1}}>
-                    <TouchableOpacity onPress={()=>{setDate(incrementDate(this.date, 1));}}>
+                    <TouchableOpacity style={{width:50, height:60, paddingLeft:20, paddingTop:20, marginLeft:-15}} onPress={()=>{setDate(incrementDate(this.date, 1));}}>
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowRight.png")}/>
                     </TouchableOpacity>
                 </View>
-                <View style={{flex:1, marginRight:10}}>
-                    <TouchableOpacity style={styles.button_footer} onPress={()=>{setDate(this.date);}}>
+                <View style={{flex:1}}>
+                    <TouchableOpacity style={{width:50, height:60, paddingRight:20, paddingTop:20}} onPress={()=>{setDate(new Date());}}>
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowDoubleRight.png")}/>
                     </TouchableOpacity>
                 </View>

@@ -4,6 +4,8 @@ import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
 import ColorPicker from 'react-native-wheel-color-picker'
 
+
+
 const QuestionEditor = (props) => {
   // the question we want to edit. null if new.
   let fromQuestion = null;
@@ -15,10 +17,11 @@ const QuestionEditor = (props) => {
   const [questionText, onChangeQuestionText] = React.useState(fromQuestion ? fromQuestion.text : "");
   const [questionType, onChangeQuestionType] = React.useState(fromQuestion ? fromQuestion.type : 0);
   const [options, onSetOptions] = React.useState(fromQuestion ? fromQuestion.options : {});
-  const [colour, onSetColour] = React.useState(fromQuestion && fromQuestion.colour ? fromQuestion.colour : getRandomColour());
+  const [colour, onSetColour] = React.useState(fromQuestion && fromQuestion.getColour() ? fromQuestion.getColour() : getRandomColour());
 
 function getRandomColour() {
-  return "#" + Math.floor(Math.random()*16777215).toString(16);
+  const index = Math.round(Math.random() * SharedConstants.coloursSet.length);
+  return SharedConstants.coloursSet[index]
 }
 
 function onColourChange(newColour) {
@@ -42,11 +45,12 @@ function onPressAddQuestion() {
         break;
     }
 
+    const indexColour = SharedConstants.getIndexOfColour(colour);
     if(fromQuestion) {
-      DataManager.updateQuestion(fromQuestion.id, questionText, questionType, lOption, colour);
+      DataManager.updateQuestion(fromQuestion.id, questionText, questionType, lOption, indexColour);
     }
     else {
-      DataManager.addQuestion(questionText, questionType, lOption, colour);
+      DataManager.addQuestion(questionText, questionType, lOption, indexColour);
     }
     
     props.navigation.navigate("Home");
@@ -250,7 +254,7 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
 
 const QuestionColour = ({onChange, initColour}) => {
   const [displayColours, setDisplayColours] = React.useState(false);
-
+  
   return (
     <View style={{flex: 2}}>
     <TouchableOpacity style={[styles.button_colour, null]} onPress={()=>{setDisplayColours(!displayColours);}}>
@@ -261,7 +265,7 @@ const QuestionColour = ({onChange, initColour}) => {
       discrete={true}
       swatchesOnly={true}
       discreteLength={12}
-      palette={['#000000','#888888','#ed1c24','#d11cd5','#1633e6','#00aeef','#00c85d','#57ff0a','#ffde17','#f26522','#ffffff', '#888888']}
+      palette={SharedConstants.coloursSet}
       onColorChangeComplete={colour =>{onChange(colour)}}
     ></ColorPicker>
     </View>

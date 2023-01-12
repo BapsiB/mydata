@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { VictoryArea, VictoryChart, VictoryTheme } from "victory-native";
+import { VictoryArea, VictoryChart, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import DataManager from './dataManager.js';
 
 const DataVisualisationScreen = (props) => {
@@ -59,7 +59,7 @@ const DataVisualisationScreen = (props) => {
     data.forEach((item, index) => {
       if(item.length > 1) {
         const question = DataManager.getQuestionWithId(index);
-        const colour = question.colour ? question.colour : "#c43a31";
+        const colour = question.getColour() ? question.getColour() : "#c43a31";
         id++;
         components.push(<VictoryArea interpolation="natural" key={id} data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
       }
@@ -69,7 +69,9 @@ const DataVisualisationScreen = (props) => {
 
     return (
       <View style={styles.container}>
-        <VictoryChart  width={420} theme={VictoryTheme.material}>
+        <VictoryChart  width={420} theme={VictoryTheme.material}   containerComponent={
+            <VictoryZoomContainer/>
+          }>
           {renderVictoryLines()}
         </VictoryChart>
       </View>
