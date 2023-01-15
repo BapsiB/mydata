@@ -240,7 +240,7 @@ class DataManager {
        * @questionId, id of the queston
        * @goForward, wether we want to go forward (true) or backward (false)
        */
-       this.getNextQuestion = function(questionId, goForward, onlyTakeUnreplied, date) {
+       this.getNextQuestion = function(questionId, goForward, onlyTakeUnreplied, discardNotes, date) {
            const len = this.listQuestions.length;
            let returnQuestion = null;
            let indexReturn = 0;
@@ -260,6 +260,11 @@ class DataManager {
                     indexReturn = i + toAdd;
                    }
                    const lQuestion = this.listQuestions[indexReturn];
+                   // discard the notes cards if that's what we want.
+                   if(discardNotes && lQuestion.isNote()) {
+                     return this.getNextQuestion(indexReturn, goForward, onlyTakeUnreplied, discardNotes, date);
+                   }
+
                    if(onlyTakeUnreplied) {
                     const answer = this.getAnswerForQuestion(lQuestion.id, date);
                     if(answer == null) {
@@ -284,7 +289,8 @@ class DataManager {
         for(let indexAdd = 0; indexAdd < this.listQuestions.length; indexAdd++) {
             index = (aIndexInArray + indexAdd) % this.listQuestions.length;
             const answer = this.getAnswerForQuestion(this.listQuestions[index].id, date);
-            if(answer == null) {
+
+            if((answer == null) && !this.listQuestions[index].isNote()) {
                 return this.listQuestions[index];
             }
         }
@@ -324,6 +330,10 @@ class Question {
                 return this.colourIndex;
             }
             return SharedConstants.coloursSet[this.colourIndex];
+        }
+
+        this.isNote = function() {
+            return this.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE;
         }
     }
     

@@ -72,7 +72,7 @@ class SharedConstants {
                         if(question.options.min != "") {
                             return question.options.min;
                         }
-                        return "very high";
+                        return "very low";
                     }
                     else if(answerValue < 30) {
                         return "low";
