@@ -44,13 +44,11 @@ function onPressAddQuestion() {
           lOption = {};
         break;
     }
-
-    const indexColour = SharedConstants.getIndexOfColour(colour);
     if(fromQuestion) {
-      DataManager.updateQuestion(fromQuestion.id, questionText, questionType, lOption, indexColour);
+      DataManager.updateQuestion(fromQuestion.id, questionText, questionType, lOption, colour);
     }
     else {
-      DataManager.addQuestion(questionText, questionType, lOption, indexColour);
+      DataManager.addQuestion(questionText, questionType, lOption, colour);
     }
     
     props.navigation.navigate("Home");

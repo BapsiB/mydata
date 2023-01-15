@@ -156,9 +156,9 @@ class DataManager {
         return maxNum.toString();
        }
 
-       this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colourIndex) {
+       this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colour) {
            const lId = this.findAvailableId();
-           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colourIndex, id:lId});
+           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colour, id:lId});
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
 
@@ -166,14 +166,14 @@ class DataManager {
             this.questionCallback();
        }
 
-       this.updateQuestion = function(aQuestionId, aQuestionText, questionType, options, colourIndex) {
+       this.updateQuestion = function(aQuestionId, aQuestionText, questionType, options, colour) {
         let s;
         for (s of this.listQuestions) {
             if(s.id == aQuestionId) {
                 s.text = aQuestionText;
                 s.type = questionType;
                 s.setOptions(options);
-                s.colourIndex = colourIndex;
+                s.colour = colour;
             }
         }
 
@@ -313,10 +313,10 @@ class Question {
         // id of the question type.
         this.type = data.type;
         this.options = data.options;
-        if(data.colourIndex === undefined) {
-            data.colourIndex = 0;
+        if(data.colour === undefined) {
+            data.colour = 0;
         }
-        this.colourIndex = data.colourIndex;
+        this.colour = data.colour;
         // unique id of the question.
         this.id = data.id;
 
@@ -325,11 +325,7 @@ class Question {
         }
 
         this.getColour = function() {
-            if(this.colourIndex.length > 3) {
-                this.colourIndex = 0;
-                return this.colourIndex;
-            }
-            return SharedConstants.coloursSet[this.colourIndex];
+            return this.colour;
         }
 
         this.isNote = function() {

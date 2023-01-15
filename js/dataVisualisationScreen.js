@@ -1,11 +1,18 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, {useEffect} from "react";
+import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "react-native";
 import { VictoryArea, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import DataManager from './dataManager.js';
+import SharedConstants from './sharedConstants.js';
+import QuestionButton from './dataVizzScreen/questionButton.js';
 
 const DataVisualisationScreen = (props) => {
 
   const allData = DataManager.getAllData();
+
+  const [arrayQuestions, setArrayQuestions] = React.useState([]);
+  useEffect(() => {
+    updateQuestions();
+}, []);
 
   let data = [];
   allData.forEach((val, index) => {
@@ -41,6 +48,16 @@ const DataVisualisationScreen = (props) => {
     return components;
   }
 
+  const updateQuestions = () => {
+    const arrayQuestionsOrigin = DataManager.getQuestions();
+    // we remove the questions that are the notes (they will be displayed in another screen)
+    const filtered = arrayQuestionsOrigin.filter((question) => {return question.type != SharedConstants.questionTypes.QUESTION_TYPE_NOTE});
+    setArrayQuestions(filtered);
+    forceUpdate();
+  }
+  const forceUpdate = React.useReducer(() => ({}))[1]
+  
+
   function getStringDate(ms) {
     // date.toString();
     const date = new Date(ms);
@@ -48,15 +65,26 @@ const DataVisualisationScreen = (props) => {
     return humanDateFormat;
   }
 
+  function questionUpdate() {
+    // here goes questions visibility in chart update.
+  }
+
+  const listItems = arrayQuestions.map((d) => <QuestionButton title={d.text} questionId={d.id} key={d.id} navigation={props.navigation} changeCallback={updateQuestions} updateCallback={questionUpdate}></QuestionButton>);
+
     return (
-      <View style={styles.container}>
-        <VictoryChart  width={420} theme={VictoryTheme.material}   containerComponent={
+      <View style={{flex:1}}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView style={{width:400, height:200}} >
+        <View style={{width:Dimensions.get('window').width * 2, height:1200}}>
+        <VictoryChart  width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
             <VictoryZoomContainer/>
           }>
         <VictoryAxis
           tickFormat={x => getStringDate(x)}
         />
         <VictoryAxis
+          tickValues={[0]}
+          style={{ ticks: { size: 0 } }}
           tickFormat={x => ''}
           dependentAxis
           // tickFormat specifies how ticks should be displayed
@@ -64,6 +92,18 @@ const DataVisualisationScreen = (props) => {
           {renderVictoryLines()}
           
         </VictoryChart>
+        </View>
+        </ScrollView>
+      </SafeAreaView>
+
+    
+      <SafeAreaView style={styles.container}>
+      <ScrollView style={{marginBottom:"17%", flex:3}}>
+          <View style={{height:15}}/>
+          {listItems}
+          <View style={{height:15}}/>
+      </ScrollView>
+      </SafeAreaView>
       </View>
     );
 }
