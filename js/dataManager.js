@@ -1,6 +1,7 @@
 //import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SharedConstants from './sharedConstants.js';
+import Question from './question.js';
 
 class DataManager {
     constructor() {
@@ -100,7 +101,7 @@ class DataManager {
         return true;
        }
 
-       function getDateString(date) {
+       this.getDateString = function(date) {
         const year = date.getFullYear();
         let month = (date.getMonth() + 1).toString();
         let day = date.getDate().toString();
@@ -126,7 +127,7 @@ class DataManager {
         * set the answer of a question for a specified date.
         */
        this.setData = function(questionID, date, value) {
-            const lDateStr = getDateString(date);
+            const lDateStr = this.getDateString(date);
             const lTagStoring = "@DataDay:" + lDateStr;
 
             let lDayData = this.daysData[lDateStr];
@@ -146,7 +147,7 @@ class DataManager {
         * remove the data matching the question id at the given date..
         */
        this.removeData = function(questionID, date) {
-            const lDateStr = getDateString(date);
+            const lDateStr = this.getDateString(date);
             const lTagStoring = "@DataDay:" + lDateStr;
 
             let lDayData = this.daysData[lDateStr];
@@ -230,7 +231,7 @@ class DataManager {
         * return the answer at the given date, to the question matching the question id.
         */
        this.getAnswerForQuestion = function(aQuestionId, aDate) {
-        const lIndex = getDateString(aDate);
+        const lIndex = this.getDateString(aDate);
         const dateData = this.daysData[lIndex];
         if(dateData !== undefined) {
             return dateData[aQuestionId];
@@ -322,61 +323,6 @@ class DataManager {
             this.answersUpdateCallback = callback;
         }
     }
-}
-
-class Question {
-    constructor(data) {
-        this.text = data.text;
-        // id of the question type.
-        this.type = data.type;
-        this.options = data.options;
-        if(data.colour === undefined) {
-            data.colour = 0;
-        }
-        this.colour = data.colour;
-        // unique id of the question.
-        this.id = data.id;
-
-        this.getText = function() {
-            return this.text;
-        }
-
-        this.getColour = function() {
-            return this.colour;
-        }
-
-        this.isNote = function() {
-            return this.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE;
-        }
-    }
-    
-    setOptions(options) {
-        for (const [key, value] of Object.entries(options)) {
-            console.log(`${key}: ${value}`);
-            this.options[key] = value;
-        }
-    }
-
-    normalizeValue(aValue) {
-        switch(+this.type) {
-            case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-                return aValue;
-            break;
-            case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-                {
-                const value = (aValue - this.options.min) / (this.options.max - this.options.min);
-                return value;
-                }
-            case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                {
-                const value = aValue / 100;
-                return value;
-                }
-            break;
-            default:
-                return 0;
-        }
-     }
 }
 
 export default new DataManager();

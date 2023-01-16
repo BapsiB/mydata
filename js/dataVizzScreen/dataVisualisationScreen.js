@@ -1,15 +1,13 @@
 import React, {useEffect} from "react";
 import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "react-native";
 import { VictoryArea, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
-import DataManager from './dataManager.js';
-import SharedConstants from './sharedConstants.js';
-import QuestionVizzList from './dataVizzScreen/questionVizzList.js';
+import DataManager from '../dataManager.js';
+import SharedConstants from '../sharedConstants.js';
+import QuestionVizzList from './questionVizzList.js';
 
 const DataVisualisationScreen = (props) => {
 
   const allData = DataManager.getAllData();
-
-
 
   let data = [];
   allData.forEach((val, index) => {
@@ -32,6 +30,17 @@ const DataVisualisationScreen = (props) => {
     })
   })
 
+  data.forEach((item, index) => {
+    item.sort(function(a, b){
+      if(a.date.getTime() === b.date.getTime()) {
+        return 0;
+      }
+      else {
+        a.date > b.date ? 1 : -1;
+      }
+    });
+  });
+
   const renderVictoryLines = () => {
     let id = 0;
     let components = [];
@@ -40,7 +49,7 @@ const DataVisualisationScreen = (props) => {
         const question = DataManager.getQuestionWithId(index);
         const colour = question.getColour() ? question.getColour() : "#c43a31";
         id++;
-        components.push(<VictoryArea interpolation="natural" key={id} data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
+        components.push(<VictoryArea interpolation="monotoneX" key={id} data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
       }
     });
     return components;

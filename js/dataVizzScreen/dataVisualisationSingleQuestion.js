@@ -1,57 +1,27 @@
 import React, {useEffect} from "react";
 import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "react-native";
 import { VictoryArea, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
-import DataManager from './dataManager.js';
-import SharedConstants from './sharedConstants.js';
-import QuestionVizzList from './dataVizzScreen/questionVizzList.js';
+import DataManager from '../dataManager.js';
+import SharedConstants from '../sharedConstants.js';
 
-const DataVisualisationScreen = (props) => {
+const DataVisualisationSingleQuestion = (props) => {
 
-  const allData = DataManager.getAllData();
-
-
+  const question = props.question;
 
   let data = [];
-  allData.forEach((val, index) => {
-    const dateStr = index.toString();
-    // your code goes here 
-    val.forEach((dayVal, questionIndex) => {
-      if(data[questionIndex] === undefined) {
-        data[questionIndex] = [];
-      }
-
-      const question = DataManager.getQuestionWithId(questionIndex);
-      const visibility = DataManager.getQuestionVisibility(questionIndex);
-      if(question && visibility) {
-        const valNorm = question.normalizeValue(dayVal);
-        if(dayVal) {
-          const arrayEl = {date:DataManager.getDateFromString(dateStr), value:valNorm};
-          data[questionIndex].push(arrayEl);
-        }
-      }
-    })
-  })
+  const values = question.getArrayValues();
 
   const renderVictoryLines = () => {
     let id = 0;
     let components = [];
-    data.forEach((item, index) => {
-      if(item.length > 1) {
-        const question = DataManager.getQuestionWithId(index);
-        const colour = question.getColour() ? question.getColour() : "#c43a31";
-        id++;
-        components.push(<VictoryArea interpolation="natural" key={id} data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
-      }
-    });
-    return components;
+    const data = question.getArrayValues();
+    const colour = question.getColour() ? question.getColour() : "#c43a31";
+    return <VictoryArea key={id} data={data} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
   }
 
-
   const forceUpdate = React.useReducer(() => ({}))[1]
-  
 
   function getStringDate(ms) {
-    // date.toString();
     const date = new Date(ms);
     const humanDateFormat = date.getDay() + "/" + (date.getMonth() + 1)
     return humanDateFormat;
@@ -61,35 +31,35 @@ const DataVisualisationScreen = (props) => {
     forceUpdate();
   }
 
-    return (
-      <View style={{flex:1}}>
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={{width:400, height:200}} >
-        <View style={{width:Dimensions.get('window').width * 2, height:1200}}>
-        <VictoryChart  width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
-            <VictoryZoomContainer/>
-          }>
-        <VictoryAxis
-          tickFormat={x => getStringDate(x)}
-        />
-        <VictoryAxis
-          tickValues={[0]}
-          style={{ ticks: { size: 0 } }}
-          tickFormat={x => ''}
-          dependentAxis
-          // tickFormat specifies how ticks should be displayed
-        />
-          {renderVictoryLines()}
-          
-        </VictoryChart>
-        </View>
-        </ScrollView>
-      </SafeAreaView>
-
-      <QuestionVizzList  changeCallback={questionUpdate}/>
-
+  return (
+    <View style={{flex:1}}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={{width:400, height:200}} >
+      <View style={{width:Dimensions.get('window').width * 2, height:1200}}>
+      <VictoryChart  width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
+          <VictoryZoomContainer/>
+        }>
+      <VictoryAxis
+        tickFormat={x => getStringDate(x)}
+      />
+      <VictoryAxis
+        tickValues={[0]}
+        style={{ ticks: { size: 0 } }}
+        tickFormat={x => ''}
+        dependentAxis
+        // tickFormat specifies how ticks should be displayed
+      />
+        {renderVictoryLines()}
+        
+      </VictoryChart>
       </View>
-    );
+      </ScrollView>
+    </SafeAreaView>
+
+    <QuestionVizzList  changeCallback={questionUpdate}/>
+
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -125,4 +95,4 @@ const styles = StyleSheet.create({
   return "#"+RR+GG+BB;
 }
 
-export default DataVisualisationScreen;
+export default DataVisualisationSingleQuestion;
