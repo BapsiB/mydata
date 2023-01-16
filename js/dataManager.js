@@ -6,6 +6,7 @@ class DataManager {
     constructor() {
 
        this.listQuestions = [];
+       this.questionsSettings = [];
        this.daysData = [];
        this.questionCallback = null;
        // callback to be called when the answers data are loaded.
@@ -81,6 +82,22 @@ class DataManager {
 
        this.saveListQuestions = function() {
             _storeData("@questions", this.listQuestions);
+       }
+
+       this.setQuestionVisibility = function(questionId, visibility) {
+        this.questionsSettings[questionId] = {visibility:visibility};
+        _storeData("@questionsSettings", this.questionsSettings);
+       }
+
+       this.getQuestionVisibility = function(questionId) {
+        const lObj = this.questionsSettings[questionId];
+        if(lObj) {
+            const answer = lObj.visibility;
+            if(answer !== undefined) {
+                return answer;
+            }
+        }
+        return true;
        }
 
        function getDateString(date) {

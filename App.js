@@ -3,7 +3,7 @@ import React from 'react';
 import DataManager from './js/dataManager.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
-import DataVisualisationScreen from './js/dataVisualisationScreen.js';
+import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen';
 import HeaderDate from './js/headerDate.js';
 import QuestionButton from './js/questionButton.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'

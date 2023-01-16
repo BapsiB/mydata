@@ -3,16 +3,13 @@ import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "re
 import { VictoryArea, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import DataManager from './dataManager.js';
 import SharedConstants from './sharedConstants.js';
-import QuestionButton from './dataVizzScreen/questionButton.js';
+import QuestionVizzList from './dataVizzScreen/questionVizzList.js';
 
 const DataVisualisationScreen = (props) => {
 
   const allData = DataManager.getAllData();
 
-  const [arrayQuestions, setArrayQuestions] = React.useState([]);
-  useEffect(() => {
-    updateQuestions();
-}, []);
+
 
   let data = [];
   allData.forEach((val, index) => {
@@ -24,7 +21,8 @@ const DataVisualisationScreen = (props) => {
       }
 
       const question = DataManager.getQuestionWithId(questionIndex);
-      if(question) {
+      const visibility = DataManager.getQuestionVisibility(questionIndex);
+      if(question && visibility) {
         const valNorm = question.normalizeValue(dayVal);
         if(dayVal) {
           const arrayEl = {date:DataManager.getDateFromString(dateStr), value:valNorm};
@@ -48,13 +46,7 @@ const DataVisualisationScreen = (props) => {
     return components;
   }
 
-  const updateQuestions = () => {
-    const arrayQuestionsOrigin = DataManager.getQuestions();
-    // we remove the questions that are the notes (they will be displayed in another screen)
-    const filtered = arrayQuestionsOrigin.filter((question) => {return question.type != SharedConstants.questionTypes.QUESTION_TYPE_NOTE});
-    setArrayQuestions(filtered);
-    forceUpdate();
-  }
+
   const forceUpdate = React.useReducer(() => ({}))[1]
   
 
@@ -66,10 +58,8 @@ const DataVisualisationScreen = (props) => {
   }
 
   function questionUpdate() {
-    // here goes questions visibility in chart update.
+    forceUpdate();
   }
-
-  const listItems = arrayQuestions.map((d) => <QuestionButton title={d.text} questionId={d.id} key={d.id} navigation={props.navigation} changeCallback={updateQuestions} updateCallback={questionUpdate}></QuestionButton>);
 
     return (
       <View style={{flex:1}}>
@@ -96,14 +86,8 @@ const DataVisualisationScreen = (props) => {
         </ScrollView>
       </SafeAreaView>
 
-    
-      <SafeAreaView style={styles.container}>
-      <ScrollView style={{marginBottom:"17%", flex:3}}>
-          <View style={{height:15}}/>
-          {listItems}
-          <View style={{height:15}}/>
-      </ScrollView>
-      </SafeAreaView>
+      <QuestionVizzList  changeCallback={questionUpdate}/>
+
       </View>
     );
 }
@@ -113,7 +97,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5fcff"
   }
  });
 

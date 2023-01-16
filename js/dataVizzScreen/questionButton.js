@@ -1,59 +1,94 @@
 import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
-import { useRef } from 'react';
+import React, { useState } from 'react';
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
 import DataManager from '../dataManager.js';
 import SharedConstants from '../sharedConstants.js';
 
-export default QuestionButton = (props) => {
+export default QuestionButtonVizz = (props) => {
 
-  const itemRef = useRef(true);
+  const question = DataManager.getQuestionWithId(props.questionId);
 
-  const requestDelete = () => {
-    if(DataManager.deleteQuestion(props.questionId)) {
-        props.changeCallback();
-        itemRef.current.close();
-    }   
-  };
+  const [toggleValue, setToggleValue] = React.useState(DataManager.getQuestionVisibility());
 
   const openQuestionVisu = () => {
 
   };
 
+  const VisibilityToggled = () => {
+    const newValue = !toggleValue;
+    setToggleValue(newValue);
+    DataManager.setQuestionVisibility(question.id, newValue);
+    props.changeCallback();
+  };
+
+  function getStyleColourButton() {
+    if(toggleValue) {
+      return [styles.colourButtton, {backgroundColor:question.getColour()}];
+    }
+    else {
+      return [styles.colourButttonClosed, {backgroundColor:question.getColour()}]
+    }
+  }
+
   return (
-  <TouchableOpacity style={{height:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{openQuestionVisu();}}>
-        <Text style={{fontSize: 16, color:"black", textAlign: 'center', justifyContent: 'center'}}>
-            {props.title}
-        </Text>
-  </TouchableOpacity>
+  <View style={{flexDirection: "row", marginBottom:5, alignItems: 'center',}}>
+    <View style={{flex:1}}>
+    <TouchableOpacity onPress={VisibilityToggled}>
+      <View style={getStyleColourButton()}>
+
+      </View>
+    </TouchableOpacity>
+    </View>
+    <View style={{flex:10}}>
+    <TouchableOpacity style={[styles.questionsButtons, {textAlign: 'center', justifyContent: 'center',}]} onPress={()=>{openQuestionVisu();}}>
+          <Text style={{fontSize: 16, color:"black", textAlign:'left', justifyContent: 'center'}}>
+              {props.title}
+          </Text>
+    </TouchableOpacity>
+    </View>
+  </View>
   );
 }
 
 const styles = StyleSheet.create({
   questionsButtons: {
     marginVertical:3,
-    marginHorizontal:20,
+    marginHorizontal:5,
     paddingHorizontal:3,
     borderWidth:0,
-    borderRadius:10,
     height:50,
     flex:1,
+    borderRadius:10,
     borderColor:"black",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'left',
+    textAlign: 'left',
+    backgroundColor:"white",
+    paddingHorizontal:10,
+    paddingVertical:2,
+    height:"100%"
   },
 
-    swipeContentContainerStyle: {
-        justifyContent: 'center',
-        borderRadius: 9,
-        borderColor: 'black',
-        borderWidth:1,
-    },
+  colourButtton: {
+    borderRadius:10,
+    height:20,
+    width:20,
+    borderWidth:1,
+    borderColor:"grey",
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
 
-    notAlreadyAnswered: {
-      backgroundColor: '#ffffff',
-    },
-
-    alreadyAnswered: {
-      backgroundColor: '#e6eee6',
-    }
+  colourButttonClosed: {
+    // borderBottomRightRadius:10, 
+    // borderBottomLeftRadius:10,
+    borderRadius:10,
+    height:20,
+    width:20,
+    borderWidth:1,
+    borderColor:"white",
+    justifyContent: 'center',
+    textAlign: 'center',
+    borderTopWidth:0,
+    opacity:0.3
+  }
 });
