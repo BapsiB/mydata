@@ -26,7 +26,7 @@ export default QuestionButtonVizz = (props) => {
       return [styles.colourButtton, {backgroundColor:question.getColour()}];
     }
     else {
-      return [styles.colourButttonClosed, {backgroundColor:question.getColour()}]
+      return [styles.colourButttonClosed, {backgroundColor:"#aaa"}]
     }
   }
 
@@ -81,9 +81,11 @@ const styles = StyleSheet.create({
   colourButttonClosed: {
     // borderBottomRightRadius:10, 
     // borderBottomLeftRadius:10,
-    borderRadius:10,
-    height:20,
-    width:20,
+    borderRadius:8,
+    height:16,
+    width:16,
+    marginLeft:2,
+    marginTop:2,
     borderWidth:1,
     borderColor:"white",
     justifyContent: 'center',

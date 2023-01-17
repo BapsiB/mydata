@@ -46,7 +46,7 @@ class DataManager {
       if(data) {
         that.listQuestions = [];
         for (question of data) {
-            const questionCast = new Question(question);
+            const questionCast = new Question(question, that);
             that.listQuestions.push(questionCast);
         }
       }
@@ -176,7 +176,7 @@ class DataManager {
 
        this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colour) {
            const lId = this.findAvailableId();
-           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colour, id:lId});
+           let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colour, id:lId}, this);
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
 

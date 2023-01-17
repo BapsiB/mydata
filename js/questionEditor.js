@@ -251,25 +251,60 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
 }
 
 const QuestionColour = ({onChange, initColour}) => {
-  const [displayColours, setDisplayColours] = React.useState(false);
+  const [displayColourWheel, setDisplayColourWheel] = React.useState(false);
   
+  function onColourSelect(colour) {
+    onChange(colour);
+  }
+
+  // {displayColourWheel &&
+  //   <ColorPicker
+  //     style={{marginHorizontal:10}}
+  //     discrete={false}
+  //     swatchesOnly={false}
+  //     onColorChangeComplete={colour =>{onColourSelect(colour)}}
+  //     color={initColour}
+  //     swatches={false}
+  //     shadeWheelThumb={false}
+  //     shadeSliderThumb={false}
+  //     sliderHidden={true}
+  //   ></ColorPicker>
+  //   }
+
   return (
-    <View style={{flex: 2}}>
-    <TouchableOpacity style={[styles.button_colour, null]} onPress={()=>{setDisplayColours(!displayColours);}}>
-      <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour }} source={require("../resources/arrowLeft.png")}/>
+    <View style={{flex: 3}}>
+    <TouchableOpacity style={[styles.button_colour]} onPress={()=>{setDisplayColourWheel(!displayColourWheel);}}>
+      <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour,  }} source={require("../resources/arrowLeft.png")}/>
     </TouchableOpacity>
-    <ColorPicker
-      style={{opacity: displayColours ? 1 : 0, marginHorizontal:10}}
-      discrete={true}
-      swatchesOnly={true}
-      discreteLength={12}
-      palette={SharedConstants.coloursSet}
-      onColorChangeComplete={colour =>{onChange(colour)}}
-    ></ColorPicker>
+
+    <View style={{flexDirection:"column", alignItems:"center"}}>
+      <View style={{flexDirection:"row"}}>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[0]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[1]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[2]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[3]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[4]}/>
+      </View>
+      <View style={{flexDirection:"row"}}>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[5]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[6]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[7]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[8]}/>
+        <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[9]}/>
+      </View>
+    </View>
     </View>
   );
 }
 
+const QuestionColourSample = ({onClick, colour}) => {
+  
+  return (
+    <TouchableOpacity onPress={()=>{onClick(colour);}}>
+      <View style={[styles.colourSample, {backgroundColor:colour}]}></View>
+    </TouchableOpacity>
+  );
+}
 
 const styles = StyleSheet.create({
     input: {
@@ -284,6 +319,14 @@ const styles = StyleSheet.create({
     borderRightColor: "transparent",
     fontSize: 20,
     color: 'black',
+    },
+
+    colourSample: {
+      height:40,
+      width:60,
+      borderRadius:10,
+      borderColor:"grey",
+      margin:7
     },
 
     addButtonStyle: {

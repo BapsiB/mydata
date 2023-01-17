@@ -1,9 +1,9 @@
 //import React from 'react';
 import SharedConstants from './sharedConstants.js';
-import DataManager from './dataManager.js';
 
 class Question {
-    constructor(data) {
+    constructor(data, dataManager) {
+        this.dataManager = dataManager;
         this.text = data.text;
         // id of the question type.
         this.type = data.type;
@@ -43,7 +43,7 @@ class Question {
     }
 
     getArrayValues() {
-        const allData = DataManager.getAllData();
+        const allData = this.dataManager.getAllData();
 
         let data = [];
         allData.forEach((val, index) => {

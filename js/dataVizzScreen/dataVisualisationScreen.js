@@ -73,10 +73,10 @@ const DataVisualisationScreen = (props) => {
     return (
       <View style={{flex:1}}>
       <SafeAreaView style={styles.container}>
-        <ScrollView style={{width:400, height:200}} >
+        <ScrollView persistentScrollbar={true} horizontal={true}  style={{width:400, height:200}} width={400} height={200}>
         <View style={{width:Dimensions.get('window').width * 2, height:1200}}>
-        <VictoryChart  width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
-            <VictoryZoomContainer/>
+        <VictoryChart width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
+            <VictoryZoomContainer allowPan={false} zoomDimension="x" width={Dimensions.get('window').width * 2}/>
           }>
         <VictoryAxis
           tickFormat={x => getStringDate(x)}

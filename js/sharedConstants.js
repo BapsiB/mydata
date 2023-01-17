@@ -49,7 +49,17 @@ class SharedConstants {
           return dateStr;
        }
 
-       this.coloursSet = ['#000000','#888888','#ffffff','#d11cd5','#1633e6','#00aeef','#00c85d','#57ff0a','#ffde17','#f26522', '#ffa8b5'];
+       this.coloursSet = [
+        '#888888',
+        '#B4EECD',
+        '#ECF283',
+        '#EFD067',
+        '#F38290',
+        '#DABDE3',
+        '#7BADDC',
+        '#FEF6C9', 
+        '#F2CCF2',
+        '#A0DBA3'];
 
        this.getIndexOfColour = function(colour) {
         function isColour(c) {
