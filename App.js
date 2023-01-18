@@ -20,9 +20,9 @@ const Stack = createNativeStackNavigator();
 
 const BottomButton = (props) => {
 return (
-        <TouchableOpacity style={styles.button_footer2} onPress={()=>{props.onClick();}}>
-          <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={props.source}/>
-        </TouchableOpacity>
+  <TouchableOpacity style={styles.button_footer2} onPress={()=>{props.onClick();}}>
+    <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={props.source}/>
+  </TouchableOpacity>
 )
 }
 

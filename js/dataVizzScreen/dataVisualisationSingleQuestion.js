@@ -6,7 +6,7 @@ import SharedConstants from '../sharedConstants.js';
 
 const DataVisualisationSingleQuestion = (props) => {
 
-  const question = props.question;
+  const question = DataManager.getQuestionWithId(props.route.params.questionId);
 
   let data = [];
   const values = question.getArrayValues();
@@ -16,7 +16,7 @@ const DataVisualisationSingleQuestion = (props) => {
     let components = [];
     const data = question.getArrayValues();
     const colour = question.getColour() ? question.getColour() : "#c43a31";
-    return <VictoryArea key={id} data={data} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
+    return <VictoryArea key={id} data={data} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>;
   }
 
   const forceUpdate = React.useReducer(() => ({}))[1]
@@ -55,8 +55,6 @@ const DataVisualisationSingleQuestion = (props) => {
       </View>
       </ScrollView>
     </SafeAreaView>
-
-    <QuestionVizzList  changeCallback={questionUpdate}/>
 
     </View>
   );

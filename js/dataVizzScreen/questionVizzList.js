@@ -8,14 +8,14 @@ import QuestionButtonVizz from './questionButton.js';
 export default QuestionVizzList = (props) => {
 
   const [arrayQuestions, setArrayQuestions] = React.useState([]);
-  useEffect(() => {
-    updateQuestions();
-}, []);
+    useEffect(() => {
+      updateQuestions();
+  }, []);
 
   function getListItems() {
      const listItems = arrayQuestions.map((d) => <QuestionButtonVizz title={d.text} questionId={d.id} key={d.id} navigation={props.navigation} changeCallback={props.changeCallback}></QuestionButtonVizz>);
      return listItems;
-  }
+  } just try the single vizz.
 
   const updateQuestions = () => {
     const arrayQuestionsOrigin = DataManager.getQuestions();

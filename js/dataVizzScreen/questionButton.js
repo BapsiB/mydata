@@ -11,7 +11,7 @@ export default QuestionButtonVizz = (props) => {
   const [toggleValue, setToggleValue] = React.useState(DataManager.getQuestionVisibility());
 
   const openQuestionVisu = () => {
-
+    props.navigation.navigate(question.id + "vizz")
   };
 
   const VisibilityToggled = () => {

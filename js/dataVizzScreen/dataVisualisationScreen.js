@@ -4,8 +4,36 @@ import { VictoryArea, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContai
 import DataManager from '../dataManager.js';
 import SharedConstants from '../sharedConstants.js';
 import QuestionVizzList from './questionVizzList.js';
+import DataVisualisationSingleQuestion from './dataVisualisationSingleQuestion'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Utils from '../utils.js'
 
-const DataVisualisationScreen = (props) => {
+const DataVisualisationScreen = () => {
+  
+  function getStackNavigator() {
+    listQuestions = DataManager.getQuestions();
+    let optionsForth = Utils.horizontalScreenAnimation;
+    optionsForth.headerShown = false;
+    // let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
+    // optionsBack.headerShown = false;
+    const listItemsforth = listQuestions.map((d) => <Stack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={optionsForth} key={d.id} initialParams={{ questionId: d.id }} />);
+    // basically because i didn't find a better way, we put twice the screens with different animation.
+    // const listItemsback = listQuestions.map((d) => <StackIn.Screen name={d.id + "-back"} component={DataVisualisationSingleQuestion} options={optionsBack} key={d.id + "-back"} initialParams={{ questionId: d.id }} />);
+    return listItemsforth;//.concat(listItemsback);
+  }
+
+  const Stack = createNativeStackNavigator();
+
+  return (
+      <Stack.Navigator>
+        <Stack.Screen name="All" component={DataVisualisationAll} options={{headerShown:false}} />
+        {getStackNavigator()}
+      </Stack.Navigator>
+  )
+};
+
+const DataVisualisationAll = (props) => {
 
   const allData = DataManager.getAllData();
 
@@ -54,10 +82,8 @@ const DataVisualisationScreen = (props) => {
     });
     return components;
   }
-
-
-  const forceUpdate = React.useReducer(() => ({}))[1]
   
+  const forceUpdate = React.useReducer(() => ({}))[1]
 
   function getStringDate(ms) {
     // date.toString();
@@ -68,6 +94,10 @@ const DataVisualisationScreen = (props) => {
 
   function questionUpdate() {
     forceUpdate();
+  }
+
+  function goToQuestionVizz(questionId) {
+    props.navigate(questionID);
   }
 
     return (
@@ -95,7 +125,7 @@ const DataVisualisationScreen = (props) => {
         </ScrollView>
       </SafeAreaView>
 
-      <QuestionVizzList  changeCallback={questionUpdate}/>
+      <QuestionVizzList  changeCallback={questionUpdate} navigation={props.navigation}/>
 
       </View>
     );
