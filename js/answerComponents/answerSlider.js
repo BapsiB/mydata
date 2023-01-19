@@ -42,7 +42,7 @@ const AnswerSlider = (props) => {
     const [valueDisplay, setValueDisplay] = React.useState(answerDisplay);
 
     let answerGetData = DataManager.getAnswerForQuestion(question.id, date);
-8
+
     function onSetValue(aValue) {
         DataManager.setData(question.id, date, aValue);
         props.callback();

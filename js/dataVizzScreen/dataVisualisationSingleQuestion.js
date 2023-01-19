@@ -35,8 +35,8 @@ const DataVisualisationSingleQuestion = (props) => {
     <View style={{flex:1}}>
     <SafeAreaView style={styles.container}>
       <ScrollView style={{width:400, height:200}} >
-      <View style={{width:Dimensions.get('window').width * 2, height:1200}}>
-      <VictoryChart  width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
+      <View style={{width:Dimensions.get('window').width, height:1200}}>
+      <VictoryChart  width={Dimensions.get('window').width} theme={VictoryTheme.material}   containerComponent={
           <VictoryZoomContainer/>
         }>
       <VictoryAxis

@@ -46,14 +46,15 @@ class Question {
         const allData = this.dataManager.getAllData();
 
         let data = [];
+        const that = this;
         allData.forEach((val, index) => {
           const dateStr = index.toString();
           // your code goes here 
           val.forEach((dayVal, questionIndex) => {
-            if(this.index && questionIndex) {
+            if(that.id == questionIndex) {
               const valNorm = this.normalizeValue(dayVal);
               if(dayVal) {
-                const arrayEl = {date:DataManager.getDateFromString(dateStr), value:valNorm};
+                const arrayEl = {date:that.dataManager.getDateFromString(dateStr), value:valNorm};
                 data.push(arrayEl);
               }
             }
