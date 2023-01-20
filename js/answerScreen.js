@@ -23,57 +23,6 @@ const AnswerScreen = (props) => {
     const AnswerComponent = (props) => {
       const [localQuestion, setLocalQuestion] = React.useState(DataManager.getQuestionWithId(props.route.params.questionId));
 
-      const thisNextQuestion = props.route.params.nextQuestionCallback;
-
-      // function thisNextQuestion(goNext, onlyTakeEmptyAnswer) {
-      //   if(goNext === undefined) {
-      //       goNext = false;
-      //   }
-    
-      //   // if(!goNext) {
-      //   //   return;
-      //   // }
-    
-      //   // undefined means it comes from the answer slider.
-      //   if(onlyTakeEmptyAnswer === undefined) {
-      //       onlyTakeEmptyAnswer = true;
-      //   }
-      //   const nextQuestionToDisplay = DataManager.getNextQuestion(currentQuestion.id, goNext, onlyTakeEmptyAnswer, true, HeaderDate.getDate());
-      //   if(nextQuestionToDisplay == null) {
-      //       setModalVisible(true);
-      //       return;
-      //   }
-      //   const lPrevQuestion = localQuestion;
-      //   setCurrentQuestion(nextQuestionToDisplay);
-      //   if(goNext) { 
-      //     props.navigation.navigate(nextQuestionToDisplay.id, {questionIDNot:nextQuestionToDisplay.id}) ;
-      //   }
-      //   else {
-      //     // let state = props.navigation.getState();
-      //     // const newState = 
-      //     // {
-      //     //   index: 0,
-      //     //   routes: [
-      //     //     {
-      //     //       name:nextQuestionToDisplay.id,
-      //     //       params: { questionId: nextQuestionToDisplay.id },
-      //     //     },
-      //     //     {
-      //     //       name:lPrevQuestion.id,
-      //     //       params: { questionId: lPrevQuestion.id },
-      //     //     },
-      //     //   ],
-      //     //   stale: true,
-      //     // };
-          
-      //     // props.navigation.reset(newState);
-      //     // let state2 = props.navigation.getState();
-      //     // props.navigation.pop();
-      //     props.navigation.navigate(nextQuestionToDisplay.id + "-back", {questionIDNot:nextQuestionToDisplay.id})
-      //   }
-        // 
-      //  }
-
       return (
         <View style={{ flex: 1}}>
         <View style={{ flex: 4}}>
@@ -88,27 +37,23 @@ const AnswerScreen = (props) => {
           </View>
         </View>
           <View style={{justifyContent: 'flex-end', alignItems: 'center', flexDirection: "row", backgroundColour:"blue", marginVertical:10}}>
-          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{thisNextQuestion(false, false);}}>
+          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
               <Text style={{color:"black"}}>PREV</Text>
           </TouchableOpacity>       
           <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn();}}>
               <Text style={{color:"black"}}>BACK</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{thisNextQuestion(true, false);}}>
+          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true, false);}}>
               <Text style={{color:"black"}}>NEXT</Text>
           </TouchableOpacity>
         </View>
         </View>
       )
-
     }
 
     function nextQuestion(goNext, onlyTakeEmptyAnswer) {
-      // if(goNext === undefined) {
-      //     goNext = false;
-      // }
-  
-      if(!goNext) {
+
+      if(goNext === undefined) {
         return;
       }
   
@@ -155,9 +100,9 @@ const AnswerScreen = (props) => {
     optionsForth.headerShown = false;
     let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
     optionsBack.headerShown = false;
-    const listItemsforth = listQuestions.map((d) => <StackIn.Screen name={d.id} component={AnswerComponent} options={optionsForth} key={d.id} initialParams={{ questionId: d.id, nextQuestionCallback:nextQuestion }} />);
+    const listItemsforth = listQuestions.map((d) => <StackIn.Screen name={d.id} component={AnswerComponent} options={optionsForth} key={d.id} initialParams={{ questionId: d.id }} />);
     // basically because i didn't find a better way, we put twice the screens with different animation.
-    const listItemsback = listQuestions.map((d) => <StackIn.Screen name={d.id + "-back"} component={AnswerComponent} options={optionsBack} key={d.id + "-back"} initialParams={{ questionId: d.id, nextQuestionCallback:nextQuestion }} />);
+    const listItemsback = listQuestions.map((d) => <StackIn.Screen name={d.id + "-back"} component={AnswerComponent} options={optionsBack} key={d.id + "-back"} initialParams={{ questionId: d.id }} />);
     return listItemsforth.concat(listItemsback);
   }
 
@@ -169,8 +114,8 @@ const AnswerScreen = (props) => {
 
    HeaderDate.addChangeCallback("AnswerScreen",dateChanged);
 
-   function onReturn() {
-        props.navigation.navigate("Home");
+   function onReturn() {    
+    props.navigation.navigate("Home");
    }
 
   return (
