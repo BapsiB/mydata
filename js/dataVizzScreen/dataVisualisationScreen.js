@@ -88,8 +88,7 @@ const DataVisualisationAll = (props) => {
   function getStringDate(ms) {
     // date.toString();
     const date = new Date(ms);
-    const humanDateFormat = date.getDay() + "/" + (date.getMonth() + 1)
-    return humanDateFormat;
+    return date.toLocaleString('en-us',{day:'2-digit', month:'short'})
   }
 
   function questionUpdate() {
