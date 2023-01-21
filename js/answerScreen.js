@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
         marginVertical:0,
         marginHorizontal:20,
         color: 'black',
-        fontSize: 35,
+        fontSize: 25,
         fontWeight: '500',
         textAlignVertical:'center',
         textAlign:'center',

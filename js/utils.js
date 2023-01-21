@@ -63,6 +63,14 @@ class Utils {
                ((0|(1<<8) + g + (256 - g) * percent / 100).toString(16)).substr(1) +
                ((0|(1<<8) + b + (256 - b) * percent / 100).toString(16)).substr(1);
         }
+
+        this.getDayDifference = function(date1, date2) {
+
+            let differenceInMs = date2.getTime() - date1.getTime();
+            let differenceInDays = differenceInMs / (1000 * 3600 * 24);
+
+            return Math.abs(differenceInDays);
+        }
         
     }
 }

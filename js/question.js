@@ -42,7 +42,10 @@ class Question {
         }
     }
 
-    getArrayValues() {
+    getArrayValues(normalizeValue) {
+        if(normalizeValue === undefined) {
+            normalizeValue = true;
+        }
         const allData = this.dataManager.getAllData();
 
         let data = [];
@@ -52,7 +55,7 @@ class Question {
           // your code goes here 
           val.forEach((dayVal, questionIndex) => {
             if(that.id == questionIndex) {
-              const valNorm = this.normalizeValue(dayVal);
+              const valNorm = normalizeValue ? this.normalizeValue(dayVal) : dayVal;
               if(dayVal) {
                 const arrayEl = {date:that.dataManager.getDateFromString(dateStr), value:valNorm};
                 data.push(arrayEl);

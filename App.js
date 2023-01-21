@@ -36,9 +36,9 @@ const MyStack = () => {
           component={MainView}
           options={{ headerShown:false }}
         />
-        <Stack.Screen name="Question Editor" component={QuestionEditor} />
+        <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="Data Visualisation Screen" component={DataVisualisationScreen} />
+        <Stack.Screen name="Data Visualisation Screen" component={DataVisualisationScreen} options={{ headerShown:false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

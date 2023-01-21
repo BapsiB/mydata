@@ -17,7 +17,7 @@ const DataVisualisationScreen = () => {
     optionsForth.headerShown = false;
     // let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
     // optionsBack.headerShown = false;
-    const listItemsforth = listQuestions.map((d) => <Stack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={optionsForth} key={d.id} initialParams={{ questionId: d.id }} />);
+    const listItemsforth = listQuestions.map((d) => <Stack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={{headerShown:false}} key={d.id} initialParams={{ questionId: d.id }} />);
     // basically because i didn't find a better way, we put twice the screens with different animation.
     // const listItemsback = listQuestions.map((d) => <StackIn.Screen name={d.id + "-back"} component={DataVisualisationSingleQuestion} options={optionsBack} key={d.id + "-back"} initialParams={{ questionId: d.id }} />);
     return listItemsforth;//.concat(listItemsback);

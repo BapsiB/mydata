@@ -3,6 +3,7 @@ import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "re
 import { VictoryArea, VictoryLabel, VictoryScatter, VictoryLine, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import {Defs, LinearGradient, Stop} from "react-native-svg";
 import DataManager from '../dataManager.js';
+import Utils from '../utils.js';
 import SharedConstants from '../sharedConstants.js';
 import { parseSync } from "@babel/core";
 
@@ -10,19 +11,59 @@ const DataVisualisationSingleQuestion = (props) => {
 
   const question = DataManager.getQuestionWithId(props.route.params.questionId);
 
-  const data = question.getArrayValues();
+  const data = question.getArrayValues(false);
   const dataAv = [];
   const averagePointCount = 7;
+  let averageValue = 0;
+  let averageValue30 = 0;
+  let meanDeviation = 0;
   const colourAverage = "#833"
-  for(let i = 0; i < data.length; i++) {
-    const actualPointCount = Math.min(i, averagePointCount);
-    let valueAv = data[i].value;
-    for(let j = 1; j <= actualPointCount; j++) {
-      valueAv += data[i - j].value;
+  
+  function processAverageChart() {
+    for(let i = 0; i < data.length; i++) {
+      const actualPointCount = Math.min(i, averagePointCount);
+      let valueAv = data[i].value;
+      for(let j = 1; j <= actualPointCount; j++) {
+        valueAv += data[i - j].value;
+      }
+      valueAv = valueAv / (actualPointCount + 1);
+      dataAv.push({date:data[i].date, value:valueAv});
     }
-    valueAv = valueAv / (actualPointCount + 1);
-    dataAv.push({date:data[i].date, value:valueAv});
   }
+  processAverageChart();
+
+  function extractDatasForText() {
+    averageValue = 0;
+    for(let i = 0; i < data.length; i++) {
+      const value = data[i].value;;
+      averageValue += value;
+    }
+    averageValue = averageValue / data.length;
+
+    meanDeviation = 0;
+    for(let i = 0; i < data.length; i++) {
+      const value = data[i].value;;
+      meanDeviation += Math.abs(value - averageValue);
+    }
+    meanDeviation = meanDeviation / data.length;
+
+    let valueCount = 0;
+    const dateToday = new Date(Date.now());
+    const dataLast30Days = [];
+    for(let i = 0; i < data.length; i++) {
+      if(Utils.getDayDifference(data[i].date, dateToday ) < 31) {
+        averageValue30 += data[i].value
+        valueCount++;
+      }
+    }
+    if(valueCount <= 7) {
+      averageValue30 = "not enough data";
+    }
+    else {
+      averageValue30 = averageValue30 / valueCount;
+    }
+  }
+  extractDatasForText();
 
   const renderVictoryLines = () => {
     let id = 0;
@@ -44,7 +85,7 @@ const DataVisualisationSingleQuestion = (props) => {
       <VictoryScatter
       style={{ data: { fill: "transparent" } }}
       data={[{ value: dataAv[0].value, date: dataAv[0].date }]}
-      labels="average"
+      labels={["average"]}
       x="date" y="value"
       labelComponent={
         <VictoryLabel angle={-45} dx={10} dy={3} textAnchor="start" style={{ fill: colourAverage }}/>
@@ -66,11 +107,25 @@ const DataVisualisationSingleQuestion = (props) => {
     forceUpdate();
   }
 
+  function getTickValues() {
+    switch(question.type) {
+      case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+        return [0, 1];
+      case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+        return [0, 25, 75, 100];
+      case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
+        return [+question.options.min, +question.options.max];
+    }
+  }
+
   return (
     <View style={{flex:1}}>
+    <Text style={styles.questionText}
+        adjustsFontSizeToFit={true}
+        numberOfLines={2}
+    >{question.text}</Text>
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{width:400, height:200}} >
-      <View style={{width:Dimensions.get('window').width, height:1200}}>
+      <View style={{width:Dimensions.get('window').width}}>
       <VictoryChart  width={Dimensions.get('window').width} theme={VictoryTheme.material}   containerComponent={
           <VictoryZoomContainer/>
         }>
@@ -86,7 +141,7 @@ const DataVisualisationSingleQuestion = (props) => {
         tickCount={4} 
       />
       <VictoryAxis
-        tickValues={[0, 1]}
+        tickValues={getTickValues()}
         style={{ ticks: { size: 3 } }}
         tickFormat={x => SharedConstants.getAnswerText(x, question)}
         dependentAxis
@@ -96,9 +151,17 @@ const DataVisualisationSingleQuestion = (props) => {
         {renderAverageLabel()}
       </VictoryChart>
       </View>
-      </ScrollView>
-    </SafeAreaView>
 
+    </SafeAreaView>
+    <View style={{flex:1, marginLeft:20}}>
+    <Text style={styles.valuesText}>{"average : " + averageValue.toFixed(1)}</Text>
+    <Text style={styles.valuesText}>{"average in the last month: " + averageValue30.toFixed(1)}</Text>
+    <Text style={styles.valuesText}>{"deviation : " + meanDeviation.toFixed(1)}</Text>
+    <Text style={styles.valuesText}>{"first entry : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
+    <Text style={styles.valuesText}>{"evolution since the last 7 days : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
+    <Text style={styles.valuesText}>{"total Entry : " + data.length}</Text>
+
+    </View>
     </View>
   );
 }
@@ -106,9 +169,25 @@ const DataVisualisationSingleQuestion = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  }
+    // justifyContent: "center",
+    // alignItems: "center",
+  },
+
+  valuesText: {
+    fontSize:16,
+    color:"black"
+  },
+
+  questionText: {
+    marginVertical:0,
+    marginHorizontal:20,
+    color: 'black',
+    fontSize: 25,
+    fontWeight: '500',
+    marginTop:20,
+    textAlignVertical:'center',
+    textAlign:'center',
+},
  });
 
  function increase_brightness(hex, percent){
