@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Button } from 'react-native';
+import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
 import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
 import ColorPicker from 'react-native-wheel-color-picker'
@@ -61,6 +61,7 @@ const lDisableAddButton = questionText.length == 0;
       <View style={{ flex: 1, flexDirection: "column" }}>
       <View style={{flex: 1}}>
             <TextInput
+              numberOfLines={1} 
               style={styles.input}
               onChangeText={onChangeQuestionText}
               value={questionText}
@@ -68,13 +69,13 @@ const lDisableAddButton = questionText.length == 0;
               placeholderTextColor='#888'
             />
         </View>
-        <View style={{flex: 2}}>
+        <View style={{flex: 3}}>
           <QuestionType enabled={!fromQuestion} style={styles.questionType} onChange={(index) => {onChangeQuestionType(index);}} questionTypeId={questionType} />
-          <QuestionOptions onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
+          <QuestionOptions style={{marginTop:20}} onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
           <QuestionColour onChange={onColourChange} initColour={colour}/>
         </View>
       </View>
-        <View style={{margin: 50, height:50, bottom:30, alignItems: 'center',}}>
+        <View style={{margin: 20, height:50, bottom:10, alignItems: 'center',}}>
         <TouchableOpacity disabled={lDisableAddButton} style={[styles.addButtonStyle, {opacity: lDisableAddButton ? 0.3 : 1}]} onPress={()=>{onPressAddQuestion();}}>
             <Text style={{color:"black"}}>{fromQuestion ? "UPDATE" : "ADD"}</Text>
         </TouchableOpacity>
@@ -95,8 +96,8 @@ function getQuestionExample(questionType) {
     lYesNoQuestions.push("have you talked to a friend?");
     lQuestions.push(lYesNoQuestions);
     lQuantityQuestions.push("how many coffees today?");
-    lQuantityQuestions.push("how many hours did you spend outside?");
-    lQuantityQuestions.push("how many gram of sugar did you eat?");
+    lQuantityQuestions.push("how many hours was I outside?");
+    lQuantityQuestions.push("how many gram of sugar eaten?");
     lQuestions.push(lQuantityQuestions);
     lIntensityQuestions.push("how tense did you feel?");
     lIntensityQuestions.push("how happy did you feel?");
@@ -124,7 +125,7 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
             break;
         case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
             lTextTop = "intensity";
-            lSubText = "for things that cannot be numbered."
+            lSubText = "it cannot be numbered."
             break;
         case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
           lTextTop = "notes";
@@ -150,9 +151,9 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
           <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowLeft.png")}/>
         </TouchableOpacity>
         </View>
-        <View style={{flex:4, flexDirection: "column"}}>
+        <View style={{flex:5, flexDirection: "column"}}>
             <Text style={styles.textTop}>{lTextTop}</Text>
-            <Text style={styles.textSub}>{lSubText}</Text>
+            <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.textSub}>{lSubText}</Text>
         </View>
         <View style={{flex:1}}>
         <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{nextQuestion();}}>
@@ -168,10 +169,10 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
 
     switch(questionTypeId) {
         case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-        return (<View/>)
+        return (<View style={{flex:2}}/>)
         break;
         case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
-          return (<View/>)
+          return (<View style={{flex:2}}/>)
         break;
         case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
                 if(initOptions.intensity === undefined) {
@@ -186,7 +187,7 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
                     initOptions.intensity.max = "";
                 }
                 return (
-                <View style={{flex:2, flexDirection: "row"}}>
+                <View style={{flex:2, flexDirection: "row", marginTop:30,}}>
                     <View style={{flex:1, flexDirection: "column"}}>
                       <Text style={styles.textTopMinMax}>from</Text>
                       <TextInput
@@ -225,9 +226,9 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
         }
 
         return (
-        <View style={{flex:2, flexDirection: "row"}}>
-            <View style={{flex:1, flexDirection: "column"}}>
-              <Text style={styles.textTopMinMax}>from</Text>
+          <View style={{flex:2, flexDirection: "row", marginTop:30,}}>
+          <View style={{flex:1, flexDirection: "column"}}>
+            <Text style={styles.textTopMinMax}>from</Text>
               <TextInput
                 style={[styles.input, styles.minMaxInput]}
                 onChangeText={text =>{ initOptions.number.min = text; onChange(initOptions)}}
@@ -271,21 +272,29 @@ const QuestionColour = ({onChange, initColour}) => {
   //   ></ColorPicker>
   //   }
 
+
+  const windowWidth = Dimensions.get('window').width;
+  const widthRow = windowWidth;
+  const marginTile = 10;
+  const widthTile = (windowWidth - 6 * marginTile) / 5;
+  const heightTile = widthTile * 0.7;
+  const heightRow = heightTile;
+
   return (
     <View style={{flex: 3}}>
     <TouchableOpacity style={[styles.button_colour]} onPress={()=>{setDisplayColourWheel(!displayColourWheel);}}>
       <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour,  }} source={require("../resources/arrowLeft.png")}/>
     </TouchableOpacity>
 
-    <View style={{flexDirection:"column", alignItems:"center"}}>
-      <View style={{flexDirection:"row"}}>
+    <View style={{flexDirection:"column", alignItems:"center", height:heightRow * 2}}>
+      <View style={{flexDirection:"row", height:heightRow, margin:marginTile}}>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[0]}/>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[1]}/>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[2]}/>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[3]}/>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[4]}/>
       </View>
-      <View style={{flexDirection:"row"}}>
+      <View style={{flexDirection:"row", height:heightRow, margin:marginTile}}>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[5]}/>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[6]}/>
         <QuestionColourSample onClick={onColourSelect} colour={SharedConstants.coloursSet[7]}/>
@@ -308,12 +317,12 @@ const QuestionColourSample = ({onClick, colour}) => {
 
 const styles = StyleSheet.create({
     input: {
-    height:40,
+    height:30,
     marginTop: 50,
     marginLeft: 12,
     marginRight: 12,
     borderWidth: 1,
-    padding: 10,
+    padding: 0,
     borderTopColor: "transparent",
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
@@ -321,12 +330,22 @@ const styles = StyleSheet.create({
     color: 'black',
     },
 
+    minMaxInput: {
+      marginTop: 5,
+      marginLeft: 50,
+      marginRight: 50,
+      textAlignVertical:'center',
+      textAlign:'center',
+      bottom:0
+  },
+
     colourSample: {
-      height:40,
-      width:60,
+      height:"100%",
+      width:"80%",
       borderRadius:10,
       borderColor:"grey",
-      margin:7
+      marginHorizontal:"10%",
+      marginTop:"-5%"
     },
 
     addButtonStyle: {
@@ -344,13 +363,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    minMaxInput: {
-        marginTop: 5,
-        marginLeft: 50,
-        marginRight: 50,
-        textAlignVertical:'center',
-        textAlign:'center',
-    },
+
 
     textTopMinMax: {
         color: 'black',
@@ -394,7 +407,9 @@ const styles = StyleSheet.create({
 
         textSub: {
             fontWeight:'normal',
+            // width:"100,
             fontSize:20,
+            height:30,
             textAlignVertical:'center',
             textAlign:'center',
             color: 'black',
