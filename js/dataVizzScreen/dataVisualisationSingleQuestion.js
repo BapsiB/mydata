@@ -61,6 +61,7 @@ const DataVisualisationSingleQuestion = (props) => {
     }
     else {
       averageValue30 = averageValue30 / valueCount;
+      averageValue30 = averageValue30.toFixed(1);
     }
   }
   extractDatasForText();
@@ -155,7 +156,7 @@ const DataVisualisationSingleQuestion = (props) => {
     </SafeAreaView>
     <View style={{flex:1, marginLeft:20}}>
     <Text style={styles.valuesText}>{"average : " + averageValue.toFixed(1)}</Text>
-    <Text style={styles.valuesText}>{"average in the last month: " + averageValue30.toFixed(1)}</Text>
+    <Text style={styles.valuesText}>{"average in the last month: " + averageValue30}</Text>
     <Text style={styles.valuesText}>{"deviation : " + meanDeviation.toFixed(1)}</Text>
     <Text style={styles.valuesText}>{"first entry : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
     <Text style={styles.valuesText}>{"evolution since the last 7 days : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>

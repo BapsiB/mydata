@@ -179,22 +179,22 @@ class DataManager {
             let lDayData = this.daysData[lDateStr];
             if(lDayData === undefined ) {
                 lDayData = [];
+                this.daysData[lDateStr] = lDayData;
             }
 
             let fountIt = false;
             for(i in lDayData) {
-                if(i.id == questionID) {
-                    i.v = value;
+                if(lDayData[i].id == questionID) {
+                    lDayData[i].v = value;
                     fountIt = true;
                     break;
                 }
             }
 
             if(!fountIt) {
-                this.daysData.push({id:questionID, v:value});
+                lDayData.push({id:questionID, v:value});
             }
             // lDayData[questionID] = value;
-            
 
             _storeData(lTagStoring, lDayData);
             

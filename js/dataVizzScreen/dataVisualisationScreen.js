@@ -43,6 +43,7 @@ const DataVisualisationAll = (props) => {
     // your code goes here 
     val.forEach((dayVal, id) => {
       questionIndex = dayVal.id;
+
       if(data[questionIndex] === undefined) {
         data[questionIndex] = [];
       }
@@ -51,7 +52,7 @@ const DataVisualisationAll = (props) => {
       const visibility = DataManager.getQuestionVisibility(questionIndex);
       if(question && visibility) {
         const valNorm = question.normalizeValue(dayVal.v);
-        if(dayVal.value) {
+        if(dayVal.v) {
           const arrayEl = {date:DataManager.getDateFromString(dateStr), value:valNorm};
           data[questionIndex].push(arrayEl);
         }

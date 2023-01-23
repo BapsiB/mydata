@@ -131,7 +131,7 @@ const AnswerScreen = (props) => {
     if(goHome)
       props.navigation.navigate("Home");
     else 
-      props.navigation.goBack();
+      props.navigation.navigate("Home", { screen: 'Notes' });
    }
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, TextInput, Text, View, StyleSheet } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
@@ -11,11 +11,12 @@ const AnswerNote = (props) => {
     const date = props.date;
     const question = props.question;
     const navigation = props.navigation;
-    const maxChar = 1000;
-    navigation.addListener('beforeRemove', (e) => {
+    const maxChar = 10000;
+    // useEffect(() => {
+      navigation.addListener('beforeRemove', (e) => {
         onSaveValue();
     });
-
+  // }, []);
 
     let lAnswerForQuestion = DataManager.getAnswerForQuestion(question.id, date);
     if(lAnswerForQuestion === undefined || !lAnswerForQuestion) {
