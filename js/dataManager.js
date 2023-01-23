@@ -82,7 +82,11 @@ class DataManager {
         });
 
        this.saveListQuestions = function() {
-            _storeData("@questions", this.listQuestions);
+            const lListSavable = [];
+            for(question of this.listQuestions) {
+                lListSavable.push(question.getStringifyiableObject());
+            }
+            _storeData("@questions", lListSavable);
        }
 
        this.setQuestionVisibility = function(questionId, visibility) {

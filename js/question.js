@@ -34,6 +34,16 @@ class Question {
             return this.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE;
         }
     }
+
+    getStringifyiableObject() {
+        return  {
+            text: this.text,
+            type: this.type,
+            options:this.options,
+            colour:this.colour,
+            id:this.id
+        }
+    }
     
     setOptions(options) {
         for (const [key, value] of Object.entries(options)) {

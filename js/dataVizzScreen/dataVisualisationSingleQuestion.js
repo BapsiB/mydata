@@ -160,7 +160,6 @@ const DataVisualisationSingleQuestion = (props) => {
     <Text style={styles.valuesText}>{"first entry : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
     <Text style={styles.valuesText}>{"evolution since the last 7 days : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
     <Text style={styles.valuesText}>{"total Entry : " + data.length}</Text>
-
     </View>
     </View>
   );

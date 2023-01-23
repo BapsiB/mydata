@@ -24,6 +24,17 @@ const MeasuresScreen = ({navigation, date}) => {
     navigation.navigate("Question Editor", {questionID:questionId});
   }
 
+  function getTextEmptyQuestion() {
+    if(!listItems.length) {
+      return (      
+      <View>
+        <Text style={[styles.textEmpty, {fontSize:20, marginTop:"45%", fontWeight: 'bold'}]}>your list of questions is empty.</Text>
+        <Text style={styles.textEmpty}>Press <Text style={{color: 'black', fontWeight: 'bold', fontSize:18}}>+</Text> to add your first question.</Text>
+      </View>);
+    }
+    else return null;
+  }
+
   DataManager.setQuestionsListener(updateQuestions);
   DataManager.setAnswersUpdateListener(updateAnswer);
   HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
@@ -33,6 +44,8 @@ const MeasuresScreen = ({navigation, date}) => {
   const listItems = arrayQuestions.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
 
   return (
+    <View style={{flex:1}}>
+      {getTextEmptyQuestion()}
     <ScrollView style={{marginBottom:"17%"}}>
       <SwipeProvider>
         <View style={{height:15}}/>
@@ -40,11 +53,17 @@ const MeasuresScreen = ({navigation, date}) => {
         <View style={{height:15}}/>
       </SwipeProvider>
     </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-
+  textEmpty:{
+    color:'#333',
+    textAlign:'center',
+    marginHorizontal:3,
+    fontSize:16,
+  }
 });
 
 export default MeasuresScreen;

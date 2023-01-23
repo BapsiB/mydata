@@ -21,6 +21,7 @@ const AnswerScreen = (props) => {
     const StackIn = createStackNavigator();
 
     const AnswerComponent = (props) => {
+      const hasNextPrevButton = props.route.params.haveNextPrevButton ===  undefined ? true : props.route.params.haveNextPrevButton;
       const [localQuestion, setLocalQuestion] = React.useState(DataManager.getQuestionWithId(props.route.params.questionId));
 
       return (
@@ -37,15 +38,19 @@ const AnswerScreen = (props) => {
           </View>
         </View>
           <View style={{justifyContent: 'flex-end', alignItems: 'center', flexDirection: "row", backgroundColour:"blue", marginVertical:10}}>
+        {hasNextPrevButton &&
           <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
               <Text style={{color:"black"}}>PREV</Text>
-          </TouchableOpacity>       
-          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn();}}>
+          </TouchableOpacity>      
+        } 
+          <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn(hasNextPrevButton);}}>
               <Text style={{color:"black"}}>BACK</Text>
           </TouchableOpacity>
+        {hasNextPrevButton &&
           <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true, false);}}>
               <Text style={{color:"black"}}>NEXT</Text>
           </TouchableOpacity>
+        }
         </View>
         </View>
       )
@@ -95,12 +100,20 @@ const AnswerScreen = (props) => {
     }
 
   function getStackNavigator() {
+    // in case it's a note, we are in a different system. there will be no next and prev buttons.
+    if(lCurrentQuestion.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE) {
+      let options = {headerShown:false};
+      return <StackIn.Screen name={lCurrentQuestion.id} component={AnswerComponent} options={options} key={lCurrentQuestion.id } initialParams={{ questionId: lCurrentQuestion.id, haveNextPrevButton:false }} />
+    }
+
     listQuestions = DataManager.getQuestions();
     let optionsForth = Utils.horizontalScreenAnimation;
     optionsForth.headerShown = false;
     let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
     optionsBack.headerShown = false;
-    const listItemsforth = listQuestions.map((d) => <StackIn.Screen name={d.id} component={AnswerComponent} options={optionsForth} key={d.id} initialParams={{ questionId: d.id }} />);
+    const listItemsforth = listQuestions.map((d) => 
+      <StackIn.Screen name={d.id} component={AnswerComponent} options={optionsForth} key={d.id} initialParams={{ questionId: d.id }} />
+      );
     // basically because i didn't find a better way, we put twice the screens with different animation.
     const listItemsback = listQuestions.map((d) => <StackIn.Screen name={d.id + "-back"} component={AnswerComponent} options={optionsBack} key={d.id + "-back"} initialParams={{ questionId: d.id }} />);
     return listItemsforth.concat(listItemsback);
@@ -114,8 +127,11 @@ const AnswerScreen = (props) => {
 
    HeaderDate.addChangeCallback("AnswerScreen",dateChanged);
 
-   function onReturn() {    
-    props.navigation.navigate("Home");
+   function onReturn(goHome) {    
+    if(goHome)
+      props.navigation.navigate("Home");
+    else 
+      props.navigation.goBack();
    }
 
   return (
