@@ -12,7 +12,7 @@ class DataManager {
        this.questionCallback = null;
        // callback to be called when the answers data are loaded.
        this.answersUpdateCallback = null;
-       
+
        this.clearAll = async () => {
             try {
             await AsyncStorage.clear()
@@ -69,12 +69,39 @@ class DataManager {
          AsyncStorage.multiGet(stringDataDayArray, (error, response) => {
             const lArrayObjects = response;
             let pairData;
+            let needsNewSave = false;
             for (pairData of lArrayObjects) {
                 const key = pairData[0]
                 const object = pairData[1] != null ? JSON.parse(pairData[1]) : null;
                 const keyDateOnly = key.split("@DataDay:").pop();
-                this.daysData[keyDateOnly] = object;
+
+                const newObj = [];
+                // convertion from the old system to the new one.
+                // TODO: remove when everyone has been converted.
+                for(let i = 0; i < object.length; i++){
+                    const lObj = object[i];
+                    if(lObj === undefined) {
+                        continue;
+                    }
+                    if((lObj === null) || (lObj.id === undefined)) { // if true it's the old system, we need to migrate the datas to the new system.
+                        // for(let i = 0; i < object.length; i++){
+                            
+                        if(that.getQuestionWithId(i)) {
+                            newObj.push({v:lObj, id:i});
+                        }
+                        // }
+                    }
+                }
+                if(newObj.length) {
+                    this.daysData[keyDateOnly] = newObj;
+                    const lTagStoring = "@DataDay:" + keyDateOnly;
+                    _storeData(lTagStoring, newObj);
+                }
+                else {
+                    this.daysData[keyDateOnly] = object;
+                }
             }
+
             if(this.answersUpdateCallback) {
                 this.answersUpdateCallback();
             }
@@ -154,8 +181,20 @@ class DataManager {
                 lDayData = [];
             }
 
-            lDayData[questionID] = value;
-            this.daysData[lDateStr] = lDayData;
+            let fountIt = false;
+            for(i in lDayData) {
+                if(i.id == questionID) {
+                    i.v = value;
+                    fountIt = true;
+                    break;
+                }
+            }
+
+            if(!fountIt) {
+                this.daysData.push({id:questionID, v:value});
+            }
+            // lDayData[questionID] = value;
+            
 
             _storeData(lTagStoring, lDayData);
             
@@ -174,7 +213,13 @@ class DataManager {
                 return
             }
 
-            delete lDayData[questionID];
+            for(const i = 0; i < lDayData.length; i++) {
+                if(lDayData[i].id == questionID) {
+                    lDayData.splice(i, 1);
+                    break;
+                }
+            }
+            // delete lDayData[questionID];
 
             _storeData(lTagStoring, lDayData);
         }
@@ -253,7 +298,12 @@ class DataManager {
         const lIndex = this.getDateString(aDate);
         const dateData = this.daysData[lIndex];
         if(dateData !== undefined) {
-            return dateData[aQuestionId];
+            for(i in dateData) {
+                const lData = dateData[i];
+                if(lData.id == aQuestionId) {
+                    return lData.v;
+                }
+            }
         }
         return null;
        }
