@@ -81,6 +81,21 @@ class DataManager {
          });
         });
 
+        this.getAllDataStrorageAsString = function() {
+            var promise = new Promise( (resolve, reject) => {
+                AsyncStorage.getAllKeys().then((stringArray) => {
+        
+                    AsyncStorage.multiGet(stringArray, (error, response) => {
+                        resolve(JSON.stringify(response));
+                    });
+               
+               })
+             });
+       
+            return promise;
+
+        };
+
        this.saveListQuestions = function() {
             const lListSavable = [];
             for(question of this.listQuestions) {

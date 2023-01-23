@@ -3,6 +3,7 @@ import { Text, StyleSheet, View, TouchableOpacity, Button, ScrollView } from 're
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 import HeaderDate from '../headerDate.js';
+import QuestionButton from '../questionButton'
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
 
 const MeasuresScreen = ({navigation, date}) => {

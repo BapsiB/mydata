@@ -1,11 +1,10 @@
 import React from 'react';
 
-import DataManager from './js/dataManager.js';
+import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
 import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen';
 import HeaderDate from './js/headerDate.js';
-import QuestionButton from './js/questionButton.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
 import MeasureScreen from './js/questionsScreens/measuresScreen.js'
 import Utils from './js/utils.js'
@@ -114,7 +113,7 @@ const MainView = ({ navigation }) => {
                     source={require("./resources/curvesButton.png")}
                     onClick={function() {navigation.navigate("Data Visualisation Screen");}}/>
                     <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor");}}/>
-                    <BottomButton source={require("./resources/shareButton.png")}/>
+                    <BottomButton source={require("./resources/shareButton.png")} onClick={Backup.backup} />
                 </View>
            </View>
         </View>
