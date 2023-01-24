@@ -4,6 +4,7 @@ import { VictoryArea, VictoryLabel, VictoryScatter, VictoryLine, VictoryChart, V
 import {Defs, LinearGradient, Stop} from "react-native-svg";
 import DataManager from '../dataManager.js';
 import Utils from '../utils.js';
+import ChartVsDropdownPicker from './chartVSDropdownPicker.js'
 import SharedConstants from '../sharedConstants.js';
 import { parseSync } from "@babel/core";
 
@@ -119,6 +120,10 @@ const DataVisualisationSingleQuestion = (props) => {
     }
   }
 
+  function setExtraChart(id) {
+    // add extra chart.
+  }
+
   return (
     <View style={{flex:1}}>
     <Text style={styles.questionText}
@@ -154,6 +159,7 @@ const DataVisualisationSingleQuestion = (props) => {
       </View>
 
     </SafeAreaView>
+    <ChartVsDropdownPicker style={{marginBottom:30, marginTop:-10}} callback={setExtraChart}/>
     <View style={{flex:1, marginLeft:20}}>
     <Text style={styles.valuesText}>{"average : " + averageValue.toFixed(1)}</Text>
     <Text style={styles.valuesText}>{"average in the last month: " + averageValue30}</Text>

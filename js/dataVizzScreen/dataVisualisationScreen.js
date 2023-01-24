@@ -79,7 +79,8 @@ const DataVisualisationAll = (props) => {
         const question = DataManager.getQuestionWithId(index);
         const colour = question.getColour() ? question.getColour() : "#c43a31";
         id++;
-        components.push(<VictoryArea interpolation="monotoneX" key={id} data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
+        interpolation = (question.type == SharedConstants.questionTypes.QUESTION_TYPE_YES_NO) ? "step" : "monotoneX";
+        components.push(<VictoryArea interpolation={interpolation} key={id} data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
       }
     });
     return components;
