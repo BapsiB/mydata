@@ -15,6 +15,7 @@ const MeasuresScreen = ({navigation, date}) => {
     setArrayQuestions(filtered);
     forceUpdate();
   }
+  
   const forceUpdate = React.useReducer(() => ({}))[1]
 
   const updateAnswer = () => {

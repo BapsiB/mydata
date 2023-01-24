@@ -15,6 +15,7 @@ import {
   createStackNavigator
 } from '@react-navigation/stack';
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView } from 'react-native';
+import sharedConstants from './js/sharedConstants.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -114,7 +115,9 @@ const MainView = ({ navigation }) => {
                     <BottomButton
                     source={require("./resources/curvesButton.png")}
                     onClick={function() {navigation.navigate("Data Visualisation Screen");}}/>
-                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {navigation.navigate("Question Editor");}}/>
+                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {
+                        navigation.navigate("Question Editor", {startType:screenId == 1 ? sharedConstants.questionTypes.QUESTION_TYPE_NOTE : sharedConstants.questionTypes.QUESTION_TYPE_YES_NO});
+                      }}/>
                     <BottomButton source={require("./resources/shareButton.png")} onClick={Backup.backup} />
                 </View>
            </View>

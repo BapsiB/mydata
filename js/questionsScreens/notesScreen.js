@@ -19,6 +19,17 @@ const NotesScreen = ({navigation}) => {
     // forceUpdate();
   }
 
+  function getTextEmptyNotes() {
+    if(!arrayNotes.length) {
+      return (      
+      <View style={{flex:1}}>
+        <Text style={[styles.textEmpty, {fontSize:20, marginTop:"45%", fontWeight: 'bold'}]}>so empty!</Text>
+        <Text style={styles.textEmpty}>Press <Text style={{color: 'black', fontWeight: 'bold', fontSize:18}}>+</Text> to add your first note.</Text>
+      </View>);
+    }
+    else return null;
+  }
+
   const editQuestion = (questionId) => {
     navigation.replace("Answer Screen", questionId);
   }
@@ -102,6 +113,7 @@ const NotesScreen = ({navigation}) => {
 
   return (
     <View style={{flex:2, flexDirection: "row", width:"100%"}}>
+    {getTextEmptyNotes()}
     {listItems}
     </View>
   )
@@ -143,6 +155,13 @@ const styles = StyleSheet.create({
 
     elevation: 4,
   },
+
+  textEmpty:{
+    color:'#333',
+    textAlign:'center',
+    marginHorizontal:3,
+    fontSize:16,
+  }
 });
 
 export default NotesScreen;

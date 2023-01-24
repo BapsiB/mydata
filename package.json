@@ -19,6 +19,7 @@
     "react-native": "0.70.3",
     "react-native-device-info": "^10.3.0",
     "react-native-draggable": "^3.3.0",
+    "react-native-dropdown-picker": "^5.4.4",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-paper": "^5.0.0-rc.8",

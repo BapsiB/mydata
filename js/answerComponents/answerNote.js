@@ -12,11 +12,11 @@ const AnswerNote = (props) => {
     const question = props.question;
     const navigation = props.navigation;
     const maxChar = 10000;
-    // useEffect(() => {
+    useEffect(() => {
       navigation.addListener('beforeRemove', (e) => {
         onSaveValue();
     });
-  // }, []);
+  }, []);
 
     let lAnswerForQuestion = DataManager.getAnswerForQuestion(question.id, date);
     if(lAnswerForQuestion === undefined || !lAnswerForQuestion) {
