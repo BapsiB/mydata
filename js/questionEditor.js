@@ -7,17 +7,30 @@ import ColorPicker from 'react-native-wheel-color-picker'
 
 
 const QuestionEditor = (props) => {
+
   // the question we want to edit. null if new.
   let fromQuestion = null;
-  if(props.route.params)
-  if(props.route.params.questionID !== undefined) {
-    fromQuestion = DataManager.getQuestionWithId(props.route.params.questionID);
+  let lQuestionType = 0;
+  if(props.route.params) {
+    if(props.route.params.questionID !== undefined) {
+      fromQuestion = DataManager.getQuestionWithId(props.route.params.questionID);
+      lQuestionType = fromQuestion.type;
+    }
+    else if(props.route.params.startType !== undefined) {
+      lQuestionType =props.route.params.startType;
+    }
   }
 
   const [questionText, onChangeQuestionText] = React.useState(fromQuestion ? fromQuestion.text : "");
-  const [questionType, onChangeQuestionType] = React.useState(fromQuestion ? fromQuestion.type : 0);
+  const [questionType, onChangeQuestionType] = React.useState(lQuestionType);
   const [options, onSetOptions] = React.useState(fromQuestion ? fromQuestion.options : {});
   const [colour, onSetColour] = React.useState(fromQuestion && fromQuestion.getColour() ? fromQuestion.getColour() : getRandomColour());
+
+
+
+
+
+
 
 function getRandomColour() {
   const index = Math.round(Math.random() * SharedConstants.coloursSet.length);
@@ -103,9 +116,9 @@ function getQuestionExample(questionType) {
     lIntensityQuestions.push("how happy did you feel?");
     lIntensityQuestions.push("how easy was it to sleep?");
     lQuestions.push(lIntensityQuestions);
-    lNotesQuestions.push("dreams i remember");
-    lNotesQuestions.push("what happened today");
-    lNotesQuestions.push("general thoughts");
+    lNotesQuestions.push("choose a title for that note");
+    lNotesQuestions.push("choose a title for that note");
+    lNotesQuestions.push("choose a title for that note");
     lQuestions.push(lNotesQuestions);
     return "eg: " + lQuestions[questionType][lRandom];
 }
