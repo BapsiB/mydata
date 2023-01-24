@@ -66,7 +66,7 @@ class Question {
           val.forEach((dayVal, questionIndex) => {
             if(that.id == dayVal.id) {
               const valNorm = normalizeValue ? this.normalizeValue(dayVal.v) : dayVal.v;
-              if(dayVal.v) {
+              if(dayVal.v !== null) {
                 const arrayEl = {date:that.dataManager.getDateFromString(dateStr), value:valNorm};
                 data.push(arrayEl);
               }
