@@ -52,7 +52,7 @@ const DataVisualisationAll = (props) => {
       const visibility = DataManager.getQuestionVisibility(questionIndex);
       if(question && visibility) {
         const valNorm = question.normalizeValue(dayVal.v);
-        if(dayVal.v) {
+        if(dayVal.v !== null) {
           const arrayEl = {date:DataManager.getDateFromString(dateStr), value:valNorm};
           data[questionIndex].push(arrayEl);
         }
