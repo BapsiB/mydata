@@ -3,6 +3,7 @@ import React from 'react';
 import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
+import UpdateManager from './js/updateManager';
 import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen';
 import HeaderDate from './js/headerDate.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
@@ -82,6 +83,7 @@ const MainView = ({ navigation }) => {
     return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
+            <UpdateManager/>
             <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>
               <View style={[styles.buttonsTypeQuestions, getTopButtonStyle(0)]}>
               <TouchableOpacity style={{}} onPress={()=>{goToScreen(0)}}>
