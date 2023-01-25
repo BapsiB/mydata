@@ -4,6 +4,7 @@ import { VictoryArea, VictoryLabel, VictoryScatter, VictoryBar, VictoryLine, Vic
 import {Defs, LinearGradient, Stop} from "react-native-svg";
 import DataManager from '../dataManager.js';
 import ChartVsDropdownPicker from './chartVSDropdownPicker.js'
+import RepartitionGraph from './repartitionGraph.js'
 import TextDataExtraction from './textDataExtraction'
 import SharedConstants from '../sharedConstants.js';
 import { parseSync } from "@babel/core";
@@ -180,7 +181,7 @@ const DataVisualisationSingleQuestion = (props) => {
       </View>
       <ChartVsDropdownPicker style={{}} excludeQuestionId={question.id} callback={setExtraChart}/>
     </View>
-    
+    <RepartitionGraph data={data} question={question}/>
     <TextDataExtraction data={data} style={{
       zIndex: -1,
       elevation: -1,

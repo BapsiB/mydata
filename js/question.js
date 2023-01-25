@@ -78,6 +78,7 @@ class Question {
         if(normalizeValue === undefined) {
             normalizeValue = true;
         }
+
         const allData = this.dataManager.getAllData();
 
         let data = [];

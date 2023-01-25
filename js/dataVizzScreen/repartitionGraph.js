@@ -1,61 +1,68 @@
 import React, {useEffect, useState} from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Utils from '../utils.js';
+import SharedConstants from '../sharedConstants.js'
+import DataManager from '../dataManager'
+import LinearGradient from 'react-native-linear-gradient';
 
-const TextDataExtraction = (props) => {
+const RepartitionGraph = (props) => {
 
-    const [averageValue, setAverageValue] = useState(0);
-    const [averageValue30, setAverageValue30] = useState(0);
-    const [meanDeviation, setMeanDeviation] = useState(0);
+    const [colours, setColours] = useState(["white", "black"]);
+    const [locations, setLocations] = useState([0, 1]);
 
-    const data = props.data;
+    const question = props.question;
+    const data = question.getArrayValues(false);
 
     useEffect(() => {
-        extractDatasForText();
-    }, []);
+      switch(question.type) {
+        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO: {
+            processYesNo();
+          break;
+        }
+      }
+  
+  }, []);
 
-    function extractDatasForText() {
-        let lAverageValue = 0;
-        for(let i = 0; i < data.length; i++) {
-          const value = data[i].value;;
-          lAverageValue += value;
+    function processYesNo() {
+      if(!data.length) {
+        return;
+      }
+      let yesCount = 0;
+      let noCount = 0;
+      let nullCount = 0;
+      for(i in data) {
+        const obj = data[i];
+        const dateStr = DataManager.getDateString(obj.date);
+        if(obj.value === 1) {
+          yesCount++;
         }
-        lAverageValue = lAverageValue / data.length;
-        setAverageValue(lAverageValue);
-    
-        let lMeanDeviation = 0;
-        for(let i = 0; i < data.length; i++) {
-          const value = data[i].value;;
-          lMeanDeviation += Math.abs(value - lAverageValue);
-        }
-        setMeanDeviation(lMeanDeviation / data.length);
-    
-        let lAverageValue30 = 0;
-        let valueCount = 0;
-        const dateToday = new Date(Date.now());
-        for(let i = 0; i < data.length; i++) {
-          if(Utils.getDayDifference(data[i].date, dateToday ) < 31) {
-            lAverageValue30 += data[i].value
-            valueCount++;
-          }
-        }
-        if(valueCount <= 7) {
-            lAverageValue30 = "not enough data";
-        }
-        else {
-            lAverageValue30 = lAverageValue30 / valueCount;
-          setAverageValue30(lAverageValue30.toFixed(1));
+        else if(obj.value === 0) {
+          noCount++;
         }
       }
 
+      nullCount = Utils.getDayDifference(data[0].date, data[data.length - 1].date) - yesCount - noCount;
+
+      const colourGreen = "white";
+      const colourGrey  = "#ccc";
+      const colourRed  = "black";
+
+      const yesRatio = yesCount / (nullCount + yesCount + noCount);
+      const noRatio = (yesCount + nullCount) / (nullCount + yesCount + noCount);
+      const lLocation = [0, yesRatio, yesRatio,  noRatio, noRatio, 1];
+      const lColours = [colourGreen, colourGreen, colourGrey,  colourGrey, colourRed, colourRed];
+      setLocations(lLocation);
+      setColours(lColours);
+    }
+
     return(
         <View style={{flex:1, marginLeft:20}}>
-            <Text style={styles.valuesText}>{"average : " + averageValue.toFixed(1)}</Text>
-            <Text style={styles.valuesText}>{"average in the last month: " + averageValue30}</Text>
-            <Text style={styles.valuesText}>{"deviation : " + meanDeviation.toFixed(1)}</Text>
-            <Text style={styles.valuesText}>{"first entry : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
-            <Text style={styles.valuesText}>{"evolution since the last 7 days : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
-            <Text style={styles.valuesText}>{"total Entry : " + data.length}</Text>
+          <LinearGradient
+            start={{x: 0.0, y: 0.5}} end={{x: 1, y: 0.5}}
+            locations={locations}
+            colors={colours}
+            style={{height:20, width:"100%"}}>
+          </LinearGradient>
         </View>
     )
 }
@@ -69,4 +76,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default TextDataExtraction;
+export default RepartitionGraph;
