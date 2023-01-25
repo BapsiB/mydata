@@ -35,9 +35,11 @@ const DataVisualisationSingleQuestion = (props) => {
 
   const renderVictoryLines = () => {
     let id = 0;
-    let components = [];
+    let dataStyle = {};
     const colour = question.getColour() ? question.getColour() : "#c43a31";
-    return <VictoryArea interpolation="step" key={id} data={data} x="date" y="value" style={{ data: { fill: 'url(#gradientStroke)', fillOpacity: 0.5, stroke: colour, strokeWidth: 1 } }}/>;
+
+    dataStyle = { fill: 'url(#gradientStroke)', fillOpacity: 0.5, stroke: colour, strokeWidth: 1 }
+    return <VictoryArea interpolation="step" key={id} data={data} x="date" y="value" style={{ data:dataStyle  }}/>;
   }
 
   /*
@@ -50,7 +52,7 @@ const DataVisualisationSingleQuestion = (props) => {
 
     let components = [];
     const colour = questionToCompare.getColour() ? questionToCompare.getColour() : "#c43a31";
-    width = 0.5 * Dimensions.get('window').width / dataToCompare.length;
+    width = 0.5 * Dimensions.get('window').width / data.length;
     // return <VictoryArea interpolation="step" key={questionToCompare.id} data={dataToCompare} x="date" y="value" style={{ data: { fill: 'url(#gradientStroke)', fillOpacity: 0.3, stroke: colour, strokeWidth: 1 } }}/>;
     return (<VictoryBar
       cornerRadius={{ top: width * 0.5}}
@@ -136,11 +138,19 @@ const DataVisualisationSingleQuestion = (props) => {
         adjustsFontSizeToFit={true}
         numberOfLines={2}
     >{question.text}</Text>
-    <SafeAreaView style={styles.container}>
-      <View style={{width:Dimensions.get('window').width}}>
-      <VictoryChart  width={Dimensions.get('window').width} theme={VictoryTheme.material}   containerComponent={
-          <VictoryZoomContainer/>
-        }>
+    
+    <View style={styles.container}>
+    
+      <View style={{marginTop:0}}>
+      <VictoryChart  
+      domain={{ y: [question.getMin(), question.getMax() * 1.05] }}
+      width={Dimensions.get('window').width} 
+      theme={VictoryTheme.material}   
+      containerComponent={
+        <VictoryZoomContainer allowPan={false} zoomDimension="x"/>
+        }
+      animate={{duration: 500}}
+      >
       <Defs>
         <LinearGradient id="gradientStroke" >
           <Stop offset="0%" stopColor={question.getColour()}/>
@@ -162,23 +172,46 @@ const DataVisualisationSingleQuestion = (props) => {
         tickFormat={x => SharedConstants.getAnswerText(x, question)}
         dependentAxis
       />
-        {renderComparisonLines()}
         {renderVictoryLines()}
+        {renderComparisonLines()}
         {renderAverageLine()}
         {renderAverageLabel()}
       </VictoryChart>
       </View>
-
-    </SafeAreaView>
-    <ChartVsDropdownPicker style={{marginBottom:30, marginTop:-10}} excludeQuestionId={question.id} callback={setExtraChart}/>
-    <TextDataExtraction data={data}/>
+      <ChartVsDropdownPicker style={{}} excludeQuestionId={question.id} callback={setExtraChart}/>
+    </View>
+    
+    <TextDataExtraction data={data} style={{
+      zIndex: -1,
+      elevation: -1,
+    }}/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
+    borderColor:"grey",
+    backgroundColor:"#f8f8f8",
+    margin:5,
+    borderWidth:0,
+    borderRadius:10,
+    zIndex: 1, // 1 for stacking the element on top of the previous element and -1 
+             // for stacking the element under the above previous element.
+    elevation: 1,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+
+
     // justifyContent: "center",
     // alignItems: "center",
   },
@@ -186,6 +219,7 @@ const styles = StyleSheet.create({
   questionText: {
     marginVertical:0,
     marginHorizontal:20,
+    marginBottom:10,
     color: 'black',
     fontSize: 25,
     fontWeight: '500',
