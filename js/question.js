@@ -33,6 +33,28 @@ class Question {
         this.isNote = function() {
             return this.type == SharedConstants.questionTypes.QUESTION_TYPE_NOTE;
         }
+
+        this.getMin = function(){
+            switch(this.type) {
+                case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+                    return 0;
+                case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+                    return 0;
+                default:
+                    return this.options.min;
+            }
+        }
+
+        this.getMax = function(){
+            switch(this.type) {
+                case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+                    return 1;
+                case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+                    return 100;
+                default:
+                    return this.options.max;
+            }
+        }
     }
 
     getStringifyiableObject() {

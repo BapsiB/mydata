@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
-import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "react-native";
-import { VictoryArea, VictoryLabel, VictoryScatter, VictoryLine, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
+import React, {useState} from "react";
+import { StyleSheet, View, Dimensions, SafeAreaView, Text } from "react-native";
+import { VictoryArea, VictoryLabel, VictoryScatter, VictoryBar, VictoryLine, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import {Defs, LinearGradient, Stop} from "react-native-svg";
 import DataManager from '../dataManager.js';
-import Utils from '../utils.js';
 import ChartVsDropdownPicker from './chartVSDropdownPicker.js'
+import TextDataExtraction from './textDataExtraction'
 import SharedConstants from '../sharedConstants.js';
 import { parseSync } from "@babel/core";
 
@@ -12,12 +12,12 @@ const DataVisualisationSingleQuestion = (props) => {
 
   const question = DataManager.getQuestionWithId(props.route.params.questionId);
 
+  const [questionToCompare, setQuestionToCompare] = useState(null);
+  const [dataToCompare, setDataToCompare] = useState([]);
+
   const data = question.getArrayValues(false);
   const dataAv = [];
   const averagePointCount = 7;
-  let averageValue = 0;
-  let averageValue30 = 0;
-  let meanDeviation = 0;
   const colourAverage = "#833"
   
   function processAverageChart() {
@@ -33,40 +33,6 @@ const DataVisualisationSingleQuestion = (props) => {
   }
   processAverageChart();
 
-  function extractDatasForText() {
-    averageValue = 0;
-    for(let i = 0; i < data.length; i++) {
-      const value = data[i].value;;
-      averageValue += value;
-    }
-    averageValue = averageValue / data.length;
-
-    meanDeviation = 0;
-    for(let i = 0; i < data.length; i++) {
-      const value = data[i].value;;
-      meanDeviation += Math.abs(value - averageValue);
-    }
-    meanDeviation = meanDeviation / data.length;
-
-    let valueCount = 0;
-    const dateToday = new Date(Date.now());
-    const dataLast30Days = [];
-    for(let i = 0; i < data.length; i++) {
-      if(Utils.getDayDifference(data[i].date, dateToday ) < 31) {
-        averageValue30 += data[i].value
-        valueCount++;
-      }
-    }
-    if(valueCount <= 7) {
-      averageValue30 = "not enough data";
-    }
-    else {
-      averageValue30 = averageValue30 / valueCount;
-      averageValue30 = averageValue30.toFixed(1);
-    }
-  }
-  extractDatasForText();
-
   const renderVictoryLines = () => {
     let id = 0;
     let components = [];
@@ -74,25 +40,53 @@ const DataVisualisationSingleQuestion = (props) => {
     return <VictoryArea interpolation="step" key={id} data={data} x="date" y="value" style={{ data: { fill: 'url(#gradientStroke)', fillOpacity: 0.5, stroke: colour, strokeWidth: 1 } }}/>;
   }
 
+  /*
+  * render the secondary chart to compare values with.
+  */
+  const renderComparisonLines = () => {
+    if(!questionToCompare) {
+      return null;
+    }
+
+    let components = [];
+    const colour = questionToCompare.getColour() ? questionToCompare.getColour() : "#c43a31";
+    width = 0.5 * Dimensions.get('window').width / dataToCompare.length;
+    // return <VictoryArea interpolation="step" key={questionToCompare.id} data={dataToCompare} x="date" y="value" style={{ data: { fill: 'url(#gradientStroke)', fillOpacity: 0.3, stroke: colour, strokeWidth: 1 } }}/>;
+    return (<VictoryBar
+      cornerRadius={{ top: width * 0.5}}
+      x="date" y="value"
+      barWidth={width}
+      style={{
+        data: { fill: 'url(#gradientFillCompare)', fillOpacity: 1, stroke: colour, strokeWidth: 1 }
+      }}
+      data={dataToCompare}
+    />)
+  }
+
   const renderAverageLine = () => {
-    let id = 0;
-    
+    if(questionToCompare) {
+      return null;
+    }
+    let id = 999999;
     return (
         <VictoryLine interpolation="natural" key={id} data={dataAv} x="date" y="value" style={{ data: {  stroke: colourAverage, strokeWidth: 2 } }}/>
     )
   }
 
   const renderAverageLabel = () => {
+    if(questionToCompare) {
+      return null;
+    }
     return (
       <VictoryScatter
-      style={{ data: { fill: "transparent" } }}
-      data={[{ value: dataAv[0].value, date: dataAv[0].date }]}
-      labels={["average"]}
-      x="date" y="value"
-      labelComponent={
-        <VictoryLabel angle={-45} dx={10} dy={3} textAnchor="start" style={{ fill: colourAverage }}/>
-      }
-    />
+        style={{ data: { fill: "transparent" } }}
+        data={[{ value: dataAv[0].value, date: dataAv[0].date }]}
+        labels={["average"]}
+        x="date" y="value"
+        labelComponent={
+          <VictoryLabel angle={-45} dx={10} dy={3} textAnchor="start" style={{ fill: colourAverage }}/>
+        }
+      />
     )
   }
 
@@ -121,7 +115,19 @@ const DataVisualisationSingleQuestion = (props) => {
   }
 
   function setExtraChart(id) {
-    // add extra chart.
+    if(id > 0) {
+      const lQuestion = DataManager.getQuestionWithId(id);
+      setQuestionToCompare(lQuestion);
+      const lData = lQuestion.getArrayValues(true);
+
+      for(i in lData) {
+        lData[i].value = lData[i].value * question.getMax() * 1 + 0.2;
+      }
+      setDataToCompare(lData);
+    }
+    else {
+      setQuestionToCompare(null);
+    }
   }
 
   return (
@@ -140,6 +146,10 @@ const DataVisualisationSingleQuestion = (props) => {
           <Stop offset="0%" stopColor={question.getColour()}/>
           <Stop offset="100%" stopColor={increase_brightness(question.getColour(), 40)}/>
         </LinearGradient>
+        <LinearGradient id="gradientFillCompare" >
+          <Stop offset="0%" stopColor={questionToCompare ? questionToCompare.getColour() : "white"}/>
+          <Stop offset="100%" stopColor={questionToCompare ? increase_brightness(questionToCompare.getColour(), 40) : "white"}/>
+        </LinearGradient>
       </Defs>
       <VictoryAxis
         tickFormat={x => getStringDate(x)}
@@ -152,6 +162,7 @@ const DataVisualisationSingleQuestion = (props) => {
         tickFormat={x => SharedConstants.getAnswerText(x, question)}
         dependentAxis
       />
+        {renderComparisonLines()}
         {renderVictoryLines()}
         {renderAverageLine()}
         {renderAverageLabel()}
@@ -159,15 +170,8 @@ const DataVisualisationSingleQuestion = (props) => {
       </View>
 
     </SafeAreaView>
-    <ChartVsDropdownPicker style={{marginBottom:30, marginTop:-10}} callback={setExtraChart}/>
-    <View style={{flex:1, marginLeft:20}}>
-    <Text style={styles.valuesText}>{"average : " + averageValue.toFixed(1)}</Text>
-    <Text style={styles.valuesText}>{"average in the last month: " + averageValue30}</Text>
-    <Text style={styles.valuesText}>{"deviation : " + meanDeviation.toFixed(1)}</Text>
-    <Text style={styles.valuesText}>{"first entry : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
-    <Text style={styles.valuesText}>{"evolution since the last 7 days : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
-    <Text style={styles.valuesText}>{"total Entry : " + data.length}</Text>
-    </View>
+    <ChartVsDropdownPicker style={{marginBottom:30, marginTop:-10}} excludeQuestionId={question.id} callback={setExtraChart}/>
+    <TextDataExtraction data={data}/>
     </View>
   );
 }
@@ -177,11 +181,6 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: "center",
     // alignItems: "center",
-  },
-
-  valuesText: {
-    fontSize:16,
-    color:"black"
   },
 
   questionText: {

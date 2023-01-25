@@ -4,8 +4,6 @@ import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
 import ColorPicker from 'react-native-wheel-color-picker'
 
-
-
 const QuestionEditor = (props) => {
 
   // the question we want to edit. null if new.
