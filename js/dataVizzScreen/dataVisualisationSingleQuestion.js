@@ -148,9 +148,8 @@ const DataVisualisationSingleQuestion = (props) => {
       width={Dimensions.get('window').width} 
       theme={VictoryTheme.material}   
       containerComponent={
-        <VictoryZoomContainer allowPan={false} zoomDimension="x"/>
+        <VictoryZoomContainer allowPan={true} zoomDimension="x"/>
         }
-      animate={{duration: 500}}
       >
       <Defs>
         <LinearGradient id="gradientStroke" >

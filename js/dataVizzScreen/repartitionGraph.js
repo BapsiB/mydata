@@ -64,6 +64,12 @@ const RepartitionGraph = (props) => {
       return data.datum.colour;
     }
     
+    function getGradients() {
+    //   <LinearGradient id="colour2" >
+    //   <Stop offset="0%" stopColor={questionToCompare ? questionToCompare.getColour() : "white"}/>
+    //   <Stop offset="100%" stopColor={questionToCompare ? increase_brightness(questionToCompare.getColour(), 40) : "white"}/>
+    // </LinearGradient>
+    }
 
     return(
     <View style={{marginTop:10, paddingRight:20}}>
@@ -79,6 +85,7 @@ const RepartitionGraph = (props) => {
         style={{}}
         width={Dimensions.get('window').width * 0.98}
       >
+        {/* getGradients(); */}
         <VictoryBar
           data={locations}
           style={{
