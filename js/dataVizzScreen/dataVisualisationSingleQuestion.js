@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { StyleSheet, View, Dimensions, SafeAreaView, Text } from "react-native";
+import React, {useEffect, useState} from "react";
+import { StyleSheet, View, Dimensions, ScrollView, FlatList, Text } from "react-native";
 import { VictoryArea, VictoryLabel, VictoryScatter, VictoryBar, VictoryLine, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import {Defs, LinearGradient, Stop} from "react-native-svg";
 import DataManager from '../dataManager.js';
@@ -21,6 +21,10 @@ const DataVisualisationSingleQuestion = (props) => {
   const averagePointCount = 7;
   const colourAverage = "#833"
   
+  useEffect(() => {
+    processAverageChart();
+  }, []);
+
   function processAverageChart() {
     for(let i = 0; i < data.length; i++) {
       const actualPointCount = Math.min(i, averagePointCount);
@@ -32,7 +36,6 @@ const DataVisualisationSingleQuestion = (props) => {
       dataAv.push({date:data[i].date, value:valueAv});
     }
   }
-  processAverageChart();
 
   const renderVictoryLines = () => {
     let id = 0;
@@ -140,6 +143,7 @@ const DataVisualisationSingleQuestion = (props) => {
         numberOfLines={2}
     >{question.text}</Text>
     
+    <ScrollView style={{flex:1}} >
     <View style={[styles.container, {zIndex: 1}]}>
     
       <View style={{marginTop:0}}>
@@ -187,6 +191,7 @@ const DataVisualisationSingleQuestion = (props) => {
       zIndex: -1,
       elevation: -1,
     }}/>
+    </ScrollView>
     </View>
   );
 }

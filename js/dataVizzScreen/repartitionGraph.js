@@ -81,7 +81,7 @@ const RepartitionGraph = (props) => {
             style={{height:20, width:"100%"}}>
           </LinearGradient> */}
      <VictoryChart
-        animate={{duration: 500}}
+        domainPadding={30}
         style={{}}
         width={Dimensions.get('window').width * 0.98}
       >
@@ -92,11 +92,6 @@ const RepartitionGraph = (props) => {
             data: { fill:getColour, width:70, stroke: "black", strokeWidth: 2 }
           }}
           cornerRadius={3}
-          animate={{
-            onExit: {
-              duration: 500,
-            }
-          }}
         />
         <VictoryAxis/>
         <VictoryAxis style={{ 
