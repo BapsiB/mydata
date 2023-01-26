@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Utils from '../utils.js';
 import SharedConstants from '../sharedConstants.js'
 import DataManager from '../dataManager'
+import { VictoryBar, VictoryChart, VictoryAxis } from "victory-native";
 import LinearGradient from 'react-native-linear-gradient';
 
 const RepartitionGraph = (props) => {
 
     const [colours, setColours] = useState(["white", "black"]);
-    const [locations, setLocations] = useState([0, 1]);
+    const [locations, setLocations] = useState([]);
 
     const question = props.question;
     const data = question.getArrayValues(false);
@@ -43,27 +44,62 @@ const RepartitionGraph = (props) => {
 
       nullCount = Utils.getDayDifference(data[0].date, data[data.length - 1].date) - yesCount - noCount;
 
-      const colourGreen = "white";
-      const colourGrey  = "#ccc";
-      const colourRed  = "black";
+      const colourGreen = "#d7fdd7";
+      const colourGrey  = "#ddd";
+      const colourRed  = "#F8a3aF";
 
       const yesRatio = yesCount / (nullCount + yesCount + noCount);
-      const noRatio = (yesCount + nullCount) / (nullCount + yesCount + noCount);
-      const lLocation = [0, yesRatio, yesRatio,  noRatio, noRatio, 1];
-      const lColours = [colourGreen, colourGreen, colourGrey,  colourGrey, colourRed, colourRed];
+      const noSeRatio = nullCount / (nullCount + yesCount + noCount);
+      const noRatio = noCount / (nullCount + yesCount + noCount);
+
+      function getLabel(ratio) {
+        return Math.round(ratio * 100).toString() + "%"
+      }
+
+      const lLocation = [{y:yesRatio, x:"Yes", label:getLabel(yesRatio), colour:colourGreen }, {y:noSeRatio, x:"no data", label:getLabel(noSeRatio), colour:colourGrey},  {y:noRatio, x:"No", label:getLabel(noRatio), colour:colourRed}];
       setLocations(lLocation);
-      setColours(lColours);
     }
 
+    function getColour(data) {
+      return data.datum.colour;
+    }
+    
+
     return(
-        <View style={{flex:1, marginLeft:20}}>
-          <LinearGradient
+    <View style={{marginTop:10, paddingRight:20}}>
+      <Text style={{textAlign:"center"}}>REPARTITION</Text>
+          {/* <LinearGradient
             start={{x: 0.0, y: 0.5}} end={{x: 1, y: 0.5}}
             locations={locations}
             colors={colours}
             style={{height:20, width:"100%"}}>
-          </LinearGradient>
-        </View>
+          </LinearGradient> */}
+     <VictoryChart
+        animate={{duration: 500}}
+        style={{}}
+        width={Dimensions.get('window').width * 0.98}
+      >
+        <VictoryBar
+          data={locations}
+          style={{
+            data: { fill:getColour, width:70, stroke: "black", strokeWidth: 2 }
+          }}
+          cornerRadius={3}
+          animate={{
+            onExit: {
+              duration: 500,
+            }
+          }}
+        />
+        <VictoryAxis/>
+        <VictoryAxis style={{ 
+          axis: {stroke: "transparent"}, 
+          ticks: {stroke: "transparent"},
+          tickLabels: { fill:"transparent"} 
+      }} />
+
+      </VictoryChart>
+    </View>
     )
 }
 

@@ -53,7 +53,7 @@ const DataVisualisationSingleQuestion = (props) => {
 
     let components = [];
     const colour = questionToCompare.getColour() ? questionToCompare.getColour() : "#c43a31";
-    width = 0.5 * Dimensions.get('window').width / data.length;
+    width = 0.4 * Dimensions.get('window').width / data.length;
     // return <VictoryArea interpolation="step" key={questionToCompare.id} data={dataToCompare} x="date" y="value" style={{ data: { fill: 'url(#gradientStroke)', fillOpacity: 0.3, stroke: colour, strokeWidth: 1 } }}/>;
     return (<VictoryBar
       cornerRadius={{ top: width * 0.5}}
@@ -140,7 +140,7 @@ const DataVisualisationSingleQuestion = (props) => {
         numberOfLines={2}
     >{question.text}</Text>
     
-    <View style={styles.container}>
+    <View style={[styles.container, {zIndex: 1}]}>
     
       <View style={{marginTop:0}}>
       <VictoryChart  
@@ -181,7 +181,9 @@ const DataVisualisationSingleQuestion = (props) => {
       </View>
       <ChartVsDropdownPicker style={{}} excludeQuestionId={question.id} callback={setExtraChart}/>
     </View>
-    <RepartitionGraph data={data} question={question}/>
+    <View style={[styles.container, {zIndex:0}]}>
+      <RepartitionGraph data={data} question={question}/>
+    </View>
     <TextDataExtraction data={data} style={{
       zIndex: -1,
       elevation: -1,
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
     margin:5,
     borderWidth:0,
     borderRadius:10,
-    zIndex: 1, // 1 for stacking the element on top of the previous element and -1 
+     // 1 for stacking the element on top of the previous element and -1 
              // for stacking the element under the above previous element.
     elevation: 1,
 

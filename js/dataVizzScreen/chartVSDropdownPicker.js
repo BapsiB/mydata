@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
 import DataManager from '../dataManager.js';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,7 +20,7 @@ const ChartVsDropdownPicker = ({callback, excludeQuestionId}) => {
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState(pickerItems);
     const [value, setValue] = useState(null);
-    const [colourBackground, setColourBackground] = useState("transparent");
+    const [colourBackground, setColourBackground] = useState("#ffffff");
 
     const onChangeValue= (value) => {
         callback(value);
@@ -50,12 +50,12 @@ const ChartVsDropdownPicker = ({callback, excludeQuestionId}) => {
 
     return (
         <View style={{flexDirection:'row', height:30}}>
-            <View style={{marginLeft:"7%", paddingTop:10, marginTop:-30}}>
+            <View style={{marginLeft:"7%", paddingTop:10, marginTop:-30, height:20, width:20, borderRadius:10,}}>
                 <LinearGradient
                 start={{x: 0.0, y: 0.25}} end={{x: 0.5, y: 1.0}}
                 locations={[0,0.7]}
                 colors={[colourBackground == "transparent" ? colourBackground : Utils.increase_brightness(colourBackground, 40), colourBackground]}
-                style={{height:20, width:20, borderRadius:10}}>
+                style={styles.circleButton}>
                 </LinearGradient>
             </View>
             <View>
@@ -77,5 +77,22 @@ const ChartVsDropdownPicker = ({callback, excludeQuestionId}) => {
         </View>
       );
 }
+
+const styles = StyleSheet.create({
+    circleButton: {
+        height:20,
+        width:20,
+        borderRadius:10,
+        shadowColor: "#000",
+        shadowOffset: {
+        width: 0,
+        height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 1,
+    }
+})
 
 export default ChartVsDropdownPicker;
