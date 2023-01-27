@@ -9,6 +9,7 @@ const UpdateManager = (props) => {
     console.log("buildNumber " + this.buildNumber);
 
     const [modalVisible, setModalVisible] = React.useState(false);
+    const [compText, setCompText] = React.useState("better backup my friend");
 
     React.useEffect(() => {
         checkIfUpdateAvailable();
@@ -21,7 +22,11 @@ const UpdateManager = (props) => {
     }
 
     const checkIfUpdateAvailable = async () => {
-        let response = await fetch('https://lebaptiste.com/toshare/myDataCurrentVersion.html');
+        let response = await fetch('https://lebaptiste.com/toshare/myDataCurrentVersion.html', {
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         if(!response) {
             return;
         }
@@ -37,6 +42,9 @@ const UpdateManager = (props) => {
         }
         
         if(responseObject.android > +this.buildNumber) {
+          if(responseObject.description) {
+            setCompText(responseObject.description);
+          }
             setModalVisible(true);
         }
     }
@@ -53,6 +61,7 @@ const UpdateManager = (props) => {
         <View style={styles.centeredView}>
             <View style={styles.modalView}>
                 <Text style={styles.modalText}>Baptiste just released a newer version!! 🥳</Text>
+                <Text style={[styles.modalText, {color:"grey", marginBottom:20}]}>{compText}</Text>
                 <View style={{flexDirection: "row"}}>
                     <Pressable
                     style={[styles.button, styles.buttonClose]}
@@ -124,7 +133,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
       },
       modalText: {
-        marginBottom: 15,
+        color:"black",
         textAlign: "center"
       }
  });

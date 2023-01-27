@@ -159,7 +159,7 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
     <View style={[styles.questionTypeContainer]}>
         <View style={{flex:1}}>
         <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{prevQuestion();}}>
-          <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowLeft.png")}/>
+          <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowL.png")}/>
         </TouchableOpacity>
         </View>
         <View style={{flex:5, flexDirection: "column"}}>
@@ -168,7 +168,7 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
         </View>
         <View style={{flex:1}}>
         <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{nextQuestion();}}>
-          <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowRight.png")}/>
+          <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/>
         </TouchableOpacity>
         </View>
     </View>
@@ -294,7 +294,7 @@ const QuestionColour = ({onChange, initColour}) => {
   return (
     <View style={{flex: 3}}>
     <TouchableOpacity style={[styles.button_colour]} onPress={()=>{setDisplayColourWheel(!displayColourWheel);}}>
-      <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour,  }} source={require("../resources/arrowLeft.png")}/>
+      <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour,  }} source={require("../resources/arrowL.png")}/>
     </TouchableOpacity>
 
     <View style={{flexDirection:"column", alignItems:"center", height:heightRow * 2}}>

@@ -9,7 +9,7 @@ const ChartVsDropdownPicker = ({callback, excludeQuestionId}) => {
 
     const questions = DataManager.getQuestions();
     const pickerItems = [];
-    for(i in questions) {
+    for(let i in questions) {
         const question = questions[i];
         if(question.id != excludeQuestionId) {
             pickerItems.push({label:question.text, value:question.id});

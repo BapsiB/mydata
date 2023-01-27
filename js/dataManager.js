@@ -2,13 +2,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SharedConstants from './sharedConstants.js';
 import Question from './question.js';
+import Datas from './datas'
 
 class DataManager {
     constructor() {
 
        this.listQuestions = [];
        this.questionsSettings = [];
-       this.daysData = [];
+       this.daysData = Datas;
        this.questionCallback = null;
        // callback to be called when the answers data are loaded.
        this.answersUpdateCallback = null;
@@ -76,30 +77,8 @@ class DataManager {
                 const keyDateOnly = key.split("@DataDay:").pop();
 
                 const newObj = [];
-                // convertion from the old system to the new one.
-                // TODO: remove when everyone has been converted.
-                for(let i = 0; i < object.length; i++){
-                    const lObj = object[i];
-                    if(lObj === undefined) {
-                        continue;
-                    }
-                    if((lObj === null) || (lObj.id === undefined)) { // if true it's the old system, we need to migrate the datas to the new system.
-                        // for(let i = 0; i < object.length; i++){
-                            
-                        if(that.getQuestionWithId(i)) {
-                            newObj.push({v:lObj, id:i});
-                        }
-                        // }
-                    }
-                }
-                if(newObj.length) {
-                    this.daysData[keyDateOnly] = newObj;
-                    const lTagStoring = "@DataDay:" + keyDateOnly;
-                    _storeData(lTagStoring, newObj);
-                }
-                else {
-                    this.daysData[keyDateOnly] = object;
-                }
+
+                this.daysData.set(keyDateOnly, object);
             }
 
             if(this.answersUpdateCallback) {
@@ -176,14 +155,13 @@ class DataManager {
             const lDateStr = this.getDateString(date);
             const lTagStoring = "@DataDay:" + lDateStr;
 
-            let lDayData = this.daysData[lDateStr];
-            if(lDayData === undefined ) {
+            let lDayData = this.daysData.getValuesForDate(lDateStr);
+            if(lDayData === null ) {
                 lDayData = [];
-                this.daysData[lDateStr] = lDayData;
             }
 
             let fountIt = false;
-            for(i in lDayData) {
+            for(let i in lDayData) {
                 if(lDayData[i].id == questionID) {
                     lDayData[i].v = value;
                     fountIt = true;
@@ -194,7 +172,6 @@ class DataManager {
             if(!fountIt) {
                 lDayData.push({id:questionID, v:value});
             }
-            // lDayData[questionID] = value;
 
             _storeData(lTagStoring, lDayData);
             
@@ -208,20 +185,21 @@ class DataManager {
             const lDateStr = this.getDateString(date);
             const lTagStoring = "@DataDay:" + lDateStr;
 
-            let lDayData = this.daysData[lDateStr];
-            if(lDayData === undefined ) {
+            let lDayData = this.daysData.getValuesForDate(lDateStr);
+            if(lDayData === null ) {
                 return
             }
 
-            for(const i = 0; i < lDayData.length; i++) {
+            for(let i = 0; i < lDayData.length; i++) {
                 if(lDayData[i].id == questionID) {
                     lDayData.splice(i, 1);
                     break;
                 }
             }
-            // delete lDayData[questionID];
 
             _storeData(lTagStoring, lDayData);
+
+            this.answersUpdateCallback();
         }
 
        this.findAvailableId = function() {
@@ -295,21 +273,13 @@ class DataManager {
         * return the answer at the given date, to the question matching the question id.
         */
        this.getAnswerForQuestion = function(aQuestionId, aDate) {
-        const lIndex = this.getDateString(aDate);
-        const dateData = this.daysData[lIndex];
-        if(dateData !== undefined) {
-            for(i in dateData) {
-                const lData = dateData[i];
-                if(lData.id == aQuestionId) {
-                    return lData.v;
-                }
-            }
-        }
-        return null;
+        const lDate = this.getDateString(aDate);
+        const dateData = this.daysData.getValue(lDate, aQuestionId);
+        return dateData;
        }
 
        this.getAllData = function() {
-        return this.daysData;
+        return this.daysData.getAllData();
        }
 
        this.getQuestionWithId = function(aId) {

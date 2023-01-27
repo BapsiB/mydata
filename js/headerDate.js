@@ -19,7 +19,7 @@ class HeaderDate {
 
     this.setDate = function(date) {
         this.date = date;
-        for (const i in this.changeCallbacks) {
+        for (let i in this.changeCallbacks) {
             this.changeCallbacks[i]();
         }
     }
@@ -50,7 +50,7 @@ class HeaderDate {
             <View style={{height:40, flexDirection: "row", marginVertical:0, marginBottom:20}}>
                 <View style={{flex:1, marginLeft:0}}>
                     <TouchableOpacity style={{width:50, height:60, paddingTop:20}} onPress={()=>{setDate(incrementDate(this.date, -1));}}>
-                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowLeft.png")}/>
+                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowL.png")}/>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flex: 10, marginRight:-20, height:60, paddingTop:20}}>
@@ -58,12 +58,12 @@ class HeaderDate {
                 </View>
                 <View style={{flex:1}}>
                     <TouchableOpacity style={{width:50, height:60, paddingLeft:20, paddingTop:20, marginLeft:-15}} onPress={()=>{setDate(incrementDate(this.date, 1));}}>
-                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowRight.png")}/>
+                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/>
                     </TouchableOpacity>
                 </View>
                 <View style={{flex:1}}>
                     <TouchableOpacity style={{width:50, height:60, paddingRight:20, paddingTop:20}} onPress={()=>{setDate(new Date());}}>
-                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowDoubleRight.png")}/>
+                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowDouble.png")}/>
                     </TouchableOpacity>
                 </View>
             </View>

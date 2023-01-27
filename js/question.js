@@ -83,19 +83,20 @@ class Question {
 
         let data = [];
         const that = this;
-        allData.forEach((val, index) => {
-          const dateStr = index.toString();
-          // your code goes here 
-          val.forEach((dayVal, questionIndex) => {
-            if(that.id == dayVal.id) {
-              const valNorm = normalizeValue ? this.normalizeValue(dayVal.v) : dayVal.v;
-              if(dayVal.v !== null) {
-                const arrayEl = {date:that.dataManager.getDateFromString(dateStr), value:valNorm};
-                data.push(arrayEl);
-              }
+        for(let i in allData) {
+            dataDay = allData[i];
+            const dateStr = dataDay.date;
+            for(let j in dataDay.values) {
+                dayVal = dataDay.values[j];
+                if(that.id == dayVal.id) {
+                const valNorm = normalizeValue ? this.normalizeValue(dayVal.v) : dayVal.v;
+                if(dayVal.v !== null) {
+                    const arrayEl = {date:that.dataManager.getDateFromString(dateStr), value:valNorm};
+                    data.push(arrayEl);
+                }
+                }
             }
-          })
-        })
+        }
         return data;
     }
 

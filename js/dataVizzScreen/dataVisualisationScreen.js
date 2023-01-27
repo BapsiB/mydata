@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useRef, useEffect} from "react";
 import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "react-native";
 import { VictoryArea, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import DataManager from '../dataManager.js';
@@ -8,9 +8,11 @@ import DataVisualisationSingleQuestion from './dataVisualisationSingleQuestion'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Utils from '../utils.js'
+import dataManager from "../dataManager.js";
 
 const DataVisualisationScreen = () => {
-  
+
+
   function getStackNavigator() {
     listQuestions = DataManager.getQuestions();
     let optionsForth = Utils.horizontalScreenAnimation;
@@ -35,57 +37,45 @@ const DataVisualisationScreen = () => {
 
 const DataVisualisationAll = (props) => {
 
-  const allData = DataManager.getAllData();
+  const questions = DataManager.getQuestions();
 
   let data = [];
-  allData.forEach((val, index) => {
-    const dateStr = index.toString();
-    // your code goes here 
-    val.forEach((dayVal, id) => {
-      questionIndex = dayVal.id;
-
-      if(data[questionIndex] === undefined) {
-        data[questionIndex] = [];
+  for(let i in questions) {
+    const question = questions[i];
+    if(dataManager.getQuestionVisibility(question.id)) {
+      const values = question.getArrayValues();
+      const mult = 0.1 + 0.9 * ((questions.length - i) / questions.length);
+      for(let j in values) {
+        values[j].value *= mult;
       }
-
-      const question = DataManager.getQuestionWithId(questionIndex);
-      const visibility = DataManager.getQuestionVisibility(questionIndex);
-      if(question && visibility) {
-        const valNorm = question.normalizeValue(dayVal.v);
-        if(dayVal.v !== null) {
-          const arrayEl = {date:DataManager.getDateFromString(dateStr), value:valNorm};
-          data[questionIndex].push(arrayEl);
-        }
-      }
-    })
-  })
-
-  data.forEach((item, index) => {
-    item.sort(function(a, b){
-      if(a.date.getTime() === b.date.getTime()) {
-        return 0;
-      }
-      else {
-        a.date > b.date ? 1 : -1;
-      }
-    });
-  });
+      data.push({questionId:question.id, values:values});
+    }
+  }
 
   const renderVictoryLines = () => {
     let id = 0;
     let components = [];
-    data.forEach((item, index) => {
+    for(let i in data) {
+      const questionData = data[i];
+      const item = questionData.values;
+      const coeff = 0.1 + 0.85 * (data.length - i) / data.length;
       if(item.length > 1) {
-        const question = DataManager.getQuestionWithId(index);
+        const question = DataManager.getQuestionWithId(questionData.questionId);
         const colour = question.getColour() ? question.getColour() : "#c43a31";
         id++;
         interpolation = (question.type == SharedConstants.questionTypes.QUESTION_TYPE_YES_NO) ? "step" : "monotoneX";
-        components.push(<VictoryArea interpolation={interpolation} key={id} data={item} x="date" y="value" style={{ data: { fill: colour, fillOpacity: 0.5, stroke: shadeColor(colour, -40), strokeWidth: 3 } }}/>);
+        components.push(<VictoryArea interpolation={interpolation} key={id} data={item} x="date" y="value" style={{ data: { fill: Utils.increase_brightness(colour, coeff * 90), fillOpacity: 1, stroke: Utils.increase_brightness(colour, coeff * 60), strokeWidth: 3 } }}/>);
       }
-    });
+    }
     return components;
   }
   
+  const scrollRef = useRef();
+
+  useEffect(() => {
+    // scrollRef.current.scrollToEnd({animated: true})
+  }, []);
+
   const forceUpdate = React.useReducer(() => ({}))[1]
 
   function getStringDate(ms) {
@@ -105,7 +95,7 @@ const DataVisualisationAll = (props) => {
     return (
       <View style={{flex:1}}>
       <SafeAreaView style={styles.container}>
-        <ScrollView persistentScrollbar={true} horizontal={true}  style={{width:400, height:200}} width={400} height={200}>
+        <ScrollView ref={scrollRef} contentOffset={{x:300, y:0}} persistentScrollbar={true} horizontal={true}  style={{width:400, height:200}} width={400} height={200}>
         <View style={{width:Dimensions.get('window').width * 2, height:1200}}>
         <VictoryChart width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
             <VictoryZoomContainer allowPan={false} zoomDimension="x" width={Dimensions.get('window').width * 2}/>

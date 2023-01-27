@@ -80,7 +80,7 @@ const DataVisualisationSingleQuestion = (props) => {
   }
 
   const renderAverageLabel = () => {
-    if(questionToCompare) {
+    if(questionToCompare || !dataAv.length) {
       return null;
     }
     return (
@@ -126,7 +126,7 @@ const DataVisualisationSingleQuestion = (props) => {
       setQuestionToCompare(lQuestion);
       const lData = lQuestion.getArrayValues(true);
 
-      for(i in lData) {
+      for(let i in lData) {
         lData[i].value = lData[i].value * question.getMax() * 1 + 0.2;
       }
       setDataToCompare(lData);
@@ -134,7 +134,7 @@ const DataVisualisationSingleQuestion = (props) => {
     else {
       setQuestionToCompare(null);
     }
-  }
+  } 
 
   return (
     <View style={{flex:1}}>

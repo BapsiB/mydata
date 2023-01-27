@@ -10,6 +10,8 @@ const RepartitionGraph = (props) => {
 
     const [colours, setColours] = useState(["white", "black"]);
     const [locations, setLocations] = useState([]);
+    const [widthBars, setWidthBars] = useState([70]);
+    const [groupValues, setGroupValues] = useState(false);
 
     const question = props.question;
     const data = question.getArrayValues(false);
@@ -17,12 +19,96 @@ const RepartitionGraph = (props) => {
     useEffect(() => {
       switch(question.type) {
         case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO: {
-            processYesNo();
+          processYesNo();
+          break;
+        }
+        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER: {
+          processNumber();
+          break;
+        }
+        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY: {
+          processNumber();
           break;
         }
       }
   
   }, []);
+
+  function processNumber() {
+    if(!data.length) {
+      return;
+    }
+
+    const min = question.getMin();
+    const max = question.getMax();
+    const useAllValuesAsX = (max - min) < 20;
+    const lLocation = [];
+    if(!useAllValuesAsX) {
+      for(let i = 0; i < 8; i++) {
+        let xValue = "";
+        switch(i) {
+          case 0:
+          xValue = "very low";
+          break;
+          case 2:
+          xValue = "low";
+          break;
+          case 4:
+          xValue = "medium";
+          break;
+          case 6:
+          xValue = "high";
+          break;
+          case 8:
+          xValue = "very high";
+          break;
+          default:
+            xValue = i.toString();
+        }
+        lLocation.push({y:0, x:xValue, label:"", colour:"white"});
+      }
+    }
+    else {
+      for(let i = +min; i <= +max; i++) {
+        lLocation.push({y:0, x:i.toString(), label:"", colour:"white"});
+      }
+    }
+
+    const addVal = 100 / data.length;
+    for(let i in data) {
+      const obj = data[i];
+      if(useAllValuesAsX) {
+        const index = Math.min(obj.value - min, lLocation.length - 1);
+        lLocation[index].y += addVal;
+      }
+      else {
+        let index = (obj.value - question.getMin()) / question.getMax();
+        index *= lLocation.length;
+        index = Math.floor(index);
+        index = Math.min(index, lLocation.length - 1);
+        lLocation[index].y += addVal;
+      }
+    }
+
+    let maxIndex = 0;
+    let maxValue = 0;
+    for(let j in lLocation) {
+      if(lLocation[j].y > maxValue) {
+        maxValue = lLocation[j].y;
+        maxIndex = j;
+      }
+    }
+    
+    lLocation[maxIndex].label = Math.round(lLocation[maxIndex].y).toString() + "%";
+    const questionColour = question.colour;
+    for(let k in lLocation) {
+      const lColour = Utils.increase_brightness(questionColour, 40 * (maxValue - lLocation[k].y) / maxValue);
+      lLocation[k].colour = lColour;
+    }
+    setWidthBars(Dimensions.get('window').width * 0.5 / lLocation.length);
+    setLocations(lLocation);
+    setGroupValues(!useAllValuesAsX);
+  }
 
     function processYesNo() {
       if(!data.length) {
@@ -31,7 +117,7 @@ const RepartitionGraph = (props) => {
       let yesCount = 0;
       let noCount = 0;
       let nullCount = 0;
-      for(i in data) {
+      for(let i in data) {
         const obj = data[i];
         const dateStr = DataManager.getDateString(obj.date);
         if(obj.value === 1) {
@@ -58,6 +144,7 @@ const RepartitionGraph = (props) => {
 
       const lLocation = [{y:yesRatio, x:"Yes", label:getLabel(yesRatio), colour:colourGreen }, {y:noSeRatio, x:"no data", label:getLabel(noSeRatio), colour:colourGrey},  {y:noRatio, x:"No", label:getLabel(noRatio), colour:colourRed}];
       setLocations(lLocation);
+      setWidthBars(70);
     }
 
     function getColour(data) {
@@ -71,9 +158,21 @@ const RepartitionGraph = (props) => {
     // </LinearGradient>
     }
 
+    function getTickDisplay(x) {
+      if(groupValues) {
+        if(isNaN(x)) {
+          return x;
+        }
+        else {
+          return "";
+        }
+      }
+      return x;
+    }
+
     return(
     <View style={{marginTop:10, paddingRight:20}}>
-      <Text style={{textAlign:"center"}}>REPARTITION</Text>
+      <Text style={{textAlign:"center", color:"grey"}}>REPARTITION</Text>
           {/* <LinearGradient
             start={{x: 0.0, y: 0.5}} end={{x: 1, y: 0.5}}
             locations={locations}
@@ -89,11 +188,13 @@ const RepartitionGraph = (props) => {
         <VictoryBar
           data={locations}
           style={{
-            data: { fill:getColour, width:70, stroke: "black", strokeWidth: 2 }
+            data: { fill:getColour, width:widthBars, stroke: "black", strokeWidth: 2 }
           }}
           cornerRadius={3}
         />
-        <VictoryAxis/>
+        <VictoryAxis
+        tickFormat={x => getTickDisplay(x)}
+        />
         <VictoryAxis style={{ 
           axis: {stroke: "transparent"}, 
           ticks: {stroke: "transparent"},
