@@ -26,7 +26,6 @@ const MySlider = (props) => {
       const updatePanValue = (aValue) => {
         aValue = (-aValue + maximumValue) - minimumValue;
         const TopShouldBe = aValue * (height - sizeKnob) / (step - 1);
-        console.log(TopShouldBe + " " + pan.y._value + " " + pan.y._offset);
         pan.setValue({x:0, y:TopShouldBe})
       }
 
@@ -52,8 +51,6 @@ const MySlider = (props) => {
             pan.setValue({x:gestureState.dx, y:Math.max(-lOffset, Math.min(height - lOffset - sizeKnob, gestureState.dy))});
 
             const currentStepValue = step * (pan.y._value + pan.y._offset) / (height - sizeKnob);
-
-            console.log("onPanResponderMove " + pan.y._value + " " + pan.y._offset);
 
             onValueChanged(getCurrentDataValueFromPosition())
             

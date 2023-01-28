@@ -15,14 +15,23 @@ const DataVisualisationSingleQuestion = (props) => {
 
   const [questionToCompare, setQuestionToCompare] = useState(null);
   const [dataToCompare, setDataToCompare] = useState([]);
+  const [firstRender, setFirstRender] = useState(true);
 
   const data = question.getArrayValues(false);
   const dataAv = [];
   const averagePointCount = 7;
   const colourAverage = "#833"
+  let timeElapsed = Date.now();
+  console.log("start loading DataVisualisationSingleQuestion.");
   
   useEffect(() => {
     processAverageChart();
+    timeElapsed = Date.now() - timeElapsed;
+    console.log("finish loading DataVisualisationSingleQuestion.")
+    console.log(`milli seconds elapsed = ${Math.floor(timeElapsed)}`);
+    setTimeout(() => {
+      setFirstRender(false);
+    }, 0);
   }, []);
 
   function processAverageChart() {
@@ -146,7 +155,9 @@ const DataVisualisationSingleQuestion = (props) => {
     <ScrollView style={{flex:1}} >
     <View style={[styles.container, {zIndex: 1}]}>
     
-      <View style={{marginTop:0}}>
+      <View style={{marginTop:0, height:Dimensions.get('window').width * 0.9}}>
+      { firstRender && <Text>Loading...</Text> }
+      { !firstRender && 
       <VictoryChart  
       domain={{ y: [question.getMin(), question.getMax() * 1.05] }}
       width={Dimensions.get('window').width} 
@@ -180,7 +191,7 @@ const DataVisualisationSingleQuestion = (props) => {
         {renderComparisonLines()}
         {renderAverageLine()}
         {renderAverageLabel()}
-      </VictoryChart>
+      </VictoryChart>}
       </View>
       <ChartVsDropdownPicker style={{}} excludeQuestionId={question.id} callback={setExtraChart}/>
     </View>

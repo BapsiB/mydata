@@ -8,7 +8,6 @@ class Question {
         // id of the question type.
         this.type = data.type;
         this.options = data.options;
-        console.log("data.colour bef " + data.colour);
         if(data.colour !== undefined) {
             if(String(data.colour).length <= 2) {
                 data.colour = SharedConstants.coloursSet[+data.colour];
@@ -17,7 +16,6 @@ class Question {
         else {
             data.colour = SharedConstants.coloursSet[0];
         }
-        console.log("data.colour aft " + data.colour);
         this.colour = data.colour;
         // unique id of the question.
         this.id = data.id;

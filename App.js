@@ -48,10 +48,8 @@ const MyStack = () => {
 const MainView = ({ navigation }) => {
 
     const [screenId, setScreenId] = React.useState(0);
-
     const unsubscribe = navigation.addListener('state', (e) => {
       // You can get the raw navigation state (partial state object of the root navigator)
-      console.log(e.data.state);
       if(e.data.state.routeNames[e.data.state.index] == "Home") {
         forceUpdate();
       }

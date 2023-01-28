@@ -65,7 +65,7 @@ const UpdateManager = (props) => {
                 <View style={{flexDirection: "row"}}>
                     <Pressable
                     style={[styles.button, styles.buttonClose]}
-                    onPress={this.downloadNewVersion}
+                    onPress={downloadNewVersion}
                     >
                     <Text style={styles.textStyle}>DOWNLOAD IT</Text>
                     </Pressable>

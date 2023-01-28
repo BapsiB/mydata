@@ -172,7 +172,7 @@ class DataManager {
             if(!fountIt) {
                 lDayData.push({id:questionID, v:value});
             }
-
+            this.daysData.set(lDateStr, lDayData);
             _storeData(lTagStoring, lDayData);
             
             this.answersUpdateCallback();

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import React, {useEffect, useState, useRef} from "react";
+import { View, Text, StyleSheet, Dimensions, Animated } from "react-native";
 import Utils from '../utils.js';
 import SharedConstants from '../sharedConstants.js'
 import DataManager from '../dataManager'
@@ -12,6 +12,9 @@ const RepartitionGraph = (props) => {
     const [locations, setLocations] = useState([]);
     const [widthBars, setWidthBars] = useState([70]);
     const [groupValues, setGroupValues] = useState(false);
+    const [firstRender, setFirstRender] = useState(true);
+
+    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
     const question = props.question;
     const data = question.getArrayValues(false);
@@ -31,8 +34,21 @@ const RepartitionGraph = (props) => {
           break;
         }
       }
+      setTimeout(() => {
+        setFirstRender(false);
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start();
+      }, 0);
+
+
   
-  }, []);
+  
+      // 
+  
+  }, [fadeAnim]);
 
   function processNumber() {
     if(!data.length) {
@@ -128,7 +144,7 @@ const RepartitionGraph = (props) => {
         }
       }
 
-      nullCount = Utils.getDayDifference(data[0].date, data[data.length - 1].date) - yesCount - noCount;
+      nullCount = Math.abs(Utils.getDayDifference(data[0].date, data[data.length - 1].date) - yesCount - noCount);
 
       const colourGreen = "#d7fdd7";
       const colourGrey  = "#ddd";
@@ -171,7 +187,8 @@ const RepartitionGraph = (props) => {
     }
 
     return(
-    <View style={{marginTop:10, paddingRight:20}}>
+    <View style={{marginTop:10, paddingRight:20, height:Dimensions.get('window').width * 0.9}}>
+
       <Text style={{textAlign:"center", color:"grey"}}>REPARTITION</Text>
           {/* <LinearGradient
             start={{x: 0.0, y: 0.5}} end={{x: 1, y: 0.5}}
@@ -179,6 +196,12 @@ const RepartitionGraph = (props) => {
             colors={colours}
             style={{height:20, width:"100%"}}>
           </LinearGradient> */}
+      { firstRender && <Text>Loading...</Text> }
+      { !firstRender && 
+      <Animated.View // Special animatable View
+      style={{
+        opacity: fadeAnim, // Bind opacity to animated value
+      }}>
      <VictoryChart
         domainPadding={30}
         style={{}}
@@ -202,6 +225,7 @@ const RepartitionGraph = (props) => {
       }} />
 
       </VictoryChart>
+      </Animated.View>}
     </View>
     )
 }

@@ -1,0 +1,6 @@
+
+const SngleQuestionTimeGraph = (props) => {
+
+}
+
+export default SngleQuestionTimeGraph;
