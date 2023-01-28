@@ -38,15 +38,10 @@ const RepartitionGraph = (props) => {
         setFirstRender(false);
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 1000,
+          duration: 700,
           useNativeDriver: true,
         }).start();
-      }, 0);
-
-
-  
-  
-      // 
+      }, 200);
   
   }, [fadeAnim]);
 
