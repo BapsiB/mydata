@@ -11,18 +11,89 @@ import MeasureScreen from './js/questionsScreens/measuresScreen.js'
 import Utils from './js/utils.js'
 import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+
 import {
   createStackNavigator
 } from '@react-navigation/stack';
-import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, Pressable, View, SafeAreaView } from 'react-native';
+import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, VStack, HStack, Divider } from 'react-native';
 import sharedConstants from './js/sharedConstants.js';
 
+
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const BottomButton = (props) => {
+
+  const anim = React.useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+
+  function getStyle() {
+    // if(props.isSelected) {
+    //   return {
+    //     backgroundColor:"#ffe9e5",
+    //     borderRadius:25,
+    //     height:50,
+    //     width:50,
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     shadowOffset: {
+    //       width: 1,
+    //       height: 1,
+    //     },
+    //     shadowOpacity: 0.25,
+    //     shadowRadius: 3.84,
+    //     elevation: 0,
+    //   }
+    // }
+    // else {
+      return {
+        backgroundColor:"white",
+        shadowColor: "#000",
+        borderRadius:25,
+        height:50,
+        width:50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowOffset: {
+          width: 2,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    
+        elevation: 2,
+      }
+    // }
+  }
+
+  function onClick() {
+    props.onClick();
+    
+    Animated.timing(anim, {
+      toValue: props.isSelected ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  // Next, interpolate beginning and end values (in this case 0 and 1)
+  const spin = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg']
+  })
+
 return (
-  <TouchableOpacity style={styles.button_footer2} onPress={()=>{props.onClick();}}>
-    <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={props.source}/>
+  <TouchableOpacity style={[styles.button_footer2]} onPress={()=>{onClick(); }}>
+    <View style={[getStyle()] }>
+    <Animated.View style={ {transform: [{rotateY: spin}]}}>
+    <Image style={[{ width:40, height:40, resizeMode: 'stretch'}]} source={props.isSelected ? props.source1 : props.source0}/>
+    </Animated.View>
+    </View>
   </TouchableOpacity>
 )
 }
@@ -31,19 +102,76 @@ const MyStack = () => {
   
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+       <Drawer.Navigator
+          drawerContent={(props) => <CustomDrawerContent {...props} />}
+        >
         <Stack.Screen
-          name="Home"
-          component={MainView}
-          options={{ headerShown:false }}
-        />
+            name="Home"
+            component={MainView}
+            options={{ headerShown:true }}
+
+          />
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="Data Visualisation Screen" component={DataVisualisationScreen} options={{ headerShown:false }}/>
-      </Stack.Navigator>
+        <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
+
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItem
+        icon={({ focused, color, size }) => <Icon color={"#555"} size={20} name={focused ? 'pluscircleo' : 'plus'} />}
+        label="Add New Question"
+        onPress={() => props.navigation.navigate("Question Editor", {startType: sharedConstants.questionTypes.QUESTION_TYPE_YES_NO})}
+      />
+      <DrawerItem
+        style={{opacity:0.5}}
+        icon={({ focused, color, size }) => <Icon color={"#555"} size={20} name={'edit'} />}
+        label="Edit Questions"
+        onPress={()=>{}}
+      />
+      <View
+        style= {{
+            borderBottomWidth: 1,
+            borderColor: '#E2E4E8',
+        }}
+      />
+      <DrawerItem
+        style={{opacity:0.5}}
+        icon={() => <Fontisto color={"#555"} size={20} name={'laboratory'} />}
+        label="Laboratory (coming up)"
+        onPress={()=>{}}
+      />
+      <DrawerItem
+        style={{opacity:0.5}}
+        icon={() => <Icon color={"#555"} size={20} name={'robot'} />}
+        label="AI (coming up)"
+        onPress={()=>{}}
+      />
+      <View
+        style= {{
+            borderBottomWidth: 1,
+            borderColor: '#E2E4E8',
+        }}
+      />
+      <DrawerItem
+        icon={({ focused, color, size }) => <MaterialIcons color={"#555"} size={20} name={'backup'} />}
+        label="Backup"
+        onPress={()=>{Backup.backup();}}
+      />
+      <DrawerItem
+        icon={({ focused, color, size }) => <MaterialIcons color={"#555"} size={20} name={'settings-backup-restore'} />}
+        label="Restore"
+        onPress={()=>{}}
+      />
+    </DrawerContentScrollView>
+  );
+}
+
 
 const MainView = ({ navigation }) => {
 
@@ -55,15 +183,9 @@ const MainView = ({ navigation }) => {
       }
     });
 
-    function getTopButtonStyle(buttonScreenId) {
-      if(screenId == buttonScreenId)  {
-        return {backgroundColor:"#fff", borderColor: "#000",}
-      }
-      return null;
-    }
-
-    function goToScreen(aScreenId) {
-      switch(aScreenId) {
+    function switchScreen() {
+      let lScreenId = (screenId + 1) % 2;
+      switch(lScreenId) {
         case 0:
           navigation.navigate("Measures");
           break;
@@ -71,19 +193,19 @@ const MainView = ({ navigation }) => {
           navigation.navigate("Notes");
           break;
       }
-      setScreenId(aScreenId);
+      setScreenId(lScreenId);
     }
 
     const forceUpdate = React.useReducer(() => ({}))[1]
 
-    const lSizeFooter = "8%";
+    const lSizeFooter = 60;
     const StackIn = createStackNavigator();
 
     return (
         <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
             <UpdateManager/>
-            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>
+            {/* <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>
               <View style={[styles.buttonsTypeQuestions, getTopButtonStyle(0)]}>
               <TouchableOpacity style={{}} onPress={()=>{goToScreen(0)}}>
                 <Image style={{ width:32, height:32,  resizeMode: 'stretch' }} source={require("./resources/measuresButton.png")}/>
@@ -94,8 +216,8 @@ const MainView = ({ navigation }) => {
                 <Image style={{ width:32, height:32,  resizeMode: 'stretch' }} source={require("./resources/notesbutton.png")}/>
               </TouchableOpacity>
               </View>
-          </View>
-
+          </View> */}
+            <View style={{height:60}}></View>
             <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
               <StackIn.Screen
                 name="Measures"
@@ -109,14 +231,17 @@ const MainView = ({ navigation }) => {
             </StackIn.Navigator>
 
             <View style={{ position:'absolute', bottom:0, height:lSizeFooter, width:"100%"}}>
-                <View style={{   flex: 1, flexDirection: "row"}}>
-                    <BottomButton
-                    source={require("./resources/curvesButton.png")}
-                    onClick={function() {navigation.navigate("Data Visualisation Screen");}}/>
-                    <BottomButton source={require("./resources/plusButton.png")} onClick={function() {
-                        navigation.navigate("Question Editor", {startType:screenId == 1 ? sharedConstants.questionTypes.QUESTION_TYPE_NOTE : sharedConstants.questionTypes.QUESTION_TYPE_YES_NO});
-                      }}/>
-                    <BottomButton source={require("./resources/shareButton.png")} onClick={Backup.backup} />
+                <View style={{   height:lSizeFooter * 1, flexDirection: "row"}}>
+                    <BottomButton 
+                    source0={require("./resources/measuresButton.png")} 
+                    source1={require("./resources/notesButton.png")} 
+                    onClick={()=>{switchScreen()}}
+                    isSelected = {screenId == 0}
+                    />
+                    {/* <BottomButton
+                    isSelected = {screenId == 1}
+                    source={require("./resources/notesbutton.png")}
+                    onClick={function() {navigation.navigate("Data Visualisation Screen");}} onClick={()=>{goToScreen(1)}}/> */}
                 </View>
            </View>
         </View>
@@ -141,8 +266,8 @@ buttonsTypeQuestions: {
   button_footer2: {
     justifyContent: 'center',
     alignItems: 'center',
-        backgroundColor: "white",
-      flex: 1,
+    backgroundColor: "white",
+    flex: 1,
   }
 });
 
