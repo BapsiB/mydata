@@ -166,7 +166,7 @@ function CustomDrawerContent(props) {
       <DrawerItem
         icon={({ focused, color, size }) => <MaterialIcons color={"#555"} size={20} name={'settings-backup-restore'} />}
         label="Restore"
-        onPress={()=>{}}
+        onPress={() => props.navigation.navigate("Restore")}
       />
     </DrawerContentScrollView>
   );

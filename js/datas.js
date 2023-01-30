@@ -25,6 +25,10 @@ class Datas {
             return null;
        }
 
+       this.clear = function() {
+        this.daysData = [];
+       }
+
        this.getAllData = function() {
             return this.daysData;
        }

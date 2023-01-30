@@ -41,51 +41,60 @@ class DataManager {
            // error reading value
          }
        }
+       
+       const that = this;
+       /*
+       * init all the data values stored in the local storage.
+       */
+       function init() {
+            getData("@questions").then((data) => {
+            if(data) {
+              that.listQuestions = [];
+              for (question of data) {
+                  const questionCast = new Question(question, that);
+                  that.listQuestions.push(questionCast);
+              }
+            }
+      
+             if(that.questionCallback) {
+                 that.questionCallback();
+             }
+            });
 
-      const that = this;
-      getData("@questions").then((data) => {
-      if(data) {
-        that.listQuestions = [];
-        for (question of data) {
-            const questionCast = new Question(question, that);
-            that.listQuestions.push(questionCast);
-        }
-      }
-
-       if(that.questionCallback) {
-           that.questionCallback();
+      
+            AsyncStorage.getAllKeys().then((stringArray) => {
+            let stringDataDayArray = [];
+    
+            for (s of stringArray) {
+                const key = s;
+                if(key.includes("@DataDay:")) {
+                    stringDataDayArray.push(key);
+                }
+            }
+    
+            AsyncStorage.multiGet(stringDataDayArray, (error, response) => {
+                const lArrayObjects = response;
+                let pairData;
+                let needsNewSave = false;
+                that.daysData.clear();
+                for (pairData of lArrayObjects) {
+                    const key = pairData[0]
+                    const object = pairData[1] != null ? JSON.parse(pairData[1]) : null;
+                    const keyDateOnly = key.split("@DataDay:").pop();
+    
+                    const newObj = [];
+    
+                    that.daysData.set(keyDateOnly, object);
+                }
+    
+                if(this.answersUpdateCallback) {
+                    that.answersUpdateCallback();
+                }
+            });
+            });
        }
-      });
-
-        AsyncStorage.getAllKeys().then((stringArray) => {
-        let stringDataDayArray = [];
-
-         for (s of stringArray) {
-            const key = s;
-            if(key.includes("@DataDay:")) {
-                stringDataDayArray.push(key);
-            }
-         }
-
-         AsyncStorage.multiGet(stringDataDayArray, (error, response) => {
-            const lArrayObjects = response;
-            let pairData;
-            let needsNewSave = false;
-            for (pairData of lArrayObjects) {
-                const key = pairData[0]
-                const object = pairData[1] != null ? JSON.parse(pairData[1]) : null;
-                const keyDateOnly = key.split("@DataDay:").pop();
-
-                const newObj = [];
-
-                this.daysData.set(keyDateOnly, object);
-            }
-
-            if(this.answersUpdateCallback) {
-                this.answersUpdateCallback();
-            }
-         });
-        });
+      
+       init();
 
         this.getAllDataStrorageAsString = function() {
             var promise = new Promise( (resolve, reject) => {
@@ -290,6 +299,15 @@ class DataManager {
                 }
             }
             return null;
+       }
+
+       this.restore = function(objectToStore) {
+        AsyncStorage.clear();
+        for(let i in objectToStore) {
+            const object = objectToStore[i];
+            AsyncStorage.setItem(object[0], object[1]);
+        }
+        init();
        }
 
        /*
