@@ -1,41 +1,91 @@
-import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
-import { useRef } from 'react';
-import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
+import { Text, StyleSheet, TouchableOpacity, Image, View, Animated } from 'react-native';
+import { useRef, useState, useEffect } from 'react';
+import { SwipeItem, SwipeButtonsContainer } from 'react-native-swipe-item';
 import DataManager from './dataManager.js';
 import SharedConstants from './sharedConstants.js';
+import LinearGradient from 'react-native-linear-gradient';
+import HeaderDate from './headerDate';
+import Utils from './utils'
+import { Data } from 'victory-core';
 
 export default QuestionButton = (props) => {
 
     const itemRef = useRef(true);
+    const valueAnim = useRef(new Animated.Value(0)).current;
+    
+    const [answerText, setAnswerText] = useState("");
+    const [isAnswered, setIsAnswered] = useState(false);
+    const [answerNorm, setAnswerNorm] = useState(0);
+    const [question, setQuestion] = useState(null);
 
-const goToQuestion = () => props.navigation.navigate("Answer Screen", props.questionId);
+    useEffect(() => {
+      HeaderDate.addChangeCallback("QuestionButton" + props.questionID, dateChange);
+      setQuestion(DataManager.getQuestionWithId(props.questionId))
+      dateChange();
+    })
+
+    function dateChange() {
+
+      const date = HeaderDate.getDate();
+      if(date !== undefined) {
+        const answer = DataManager.getAnswerForQuestion(props.questionId, date);
+        const lIsAnswered = (answer != null) && (answer !== undefined);
+        setIsAnswered(lIsAnswered);
+        
+        if(lIsAnswered) {
+          const question = DataManager.getQuestionWithId(props.questionId);
+          const lAnswerNorm = question.normalizeValue(answer);
+          setAnswerNorm(lAnswerNorm);
+          // Will change fadeAnim value to 1 in 5 seconds
+          Animated.timing(valueAnim, {
+            toValue: lAnswerNorm,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+          setAnswerText(SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId)));
+        }
+        else {
+          setAnswerNorm(0);
+          // Will change fadeAnim value to 1 in 5 seconds
+          Animated.timing(valueAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        }
+      }
+    }
+
+    // Next, interpolate beginning and end values (in this case 0 and 1)
+    const animInterpol = valueAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [60, 0]
+    })
+
+
+  const openQuestionVisu = () => {
+    props.navigation.navigate(question.id + "vizz")
+  }
+
+  const goToQuestion = () => {
+    props.navigation.navigate("Answer Screen", props.questionId);
+  }
 
   const requestDelete = () => {
     if(DataManager.deleteQuestion(props.questionId)) {
         props.changeCallback();
         itemRef.current.close();
     }   
-  };
+  }
 
   const requestEdit = () => {
     props.editCallback(props.questionId);
     itemRef.current.close();
-  };
-
-  let answerText = "";
-  let isAnswered = false;
-
-  if(props.date !== undefined) {
-    const answer = DataManager.getAnswerForQuestion(props.questionId, props.date);
-    isAnswered = (answer != null) && (answer !== undefined);
-    
-    if(isAnswered) {
-      answerText = SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId));
-    }
   }
 
-  const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
 
+
+  const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
 
   const leftButton = (
     <SwipeButtonsContainer
@@ -87,27 +137,40 @@ const rightButton = (
 );
 
   return (
+  <View style={{marginVertical:5}}>
   <SwipeItem
       style={styles.questionsButtons}
       swipeContainerStyle={[styles.swipeContentContainerStyle, styleAns]}
       leftButtons={leftButton}
       rightButtons={rightButton}
       ref={itemRef} 
-      onPress={()=>{goToQuestion;}}
+      onPress={()=>{goToQuestion();}}
   >
-  <TouchableOpacity style={{height:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{goToQuestion();}}>
+  <TouchableOpacity style={{height:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{openQuestionVisu();}}>
         <Text style={{fontSize: 16, color:"black", textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
-      <Text style={{fontSize: 16, color:"grey", textAlign:"right", position:"absolute", width:'100%', paddingRight:10}}>
-          {answerText}
-      </Text>
+
+        <TouchableOpacity style={[styles.animatedContainer]} onPress={()=>{goToQuestion();}}>
+        <Animated.View style={{transform: [{translateY: animInterpol}]}}>
+          <LinearGradient
+              start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
+              locations={[0, 1, 1]}
+              colors={["white", question ? Utils.increase_brightness(question.colour, 40) : "white", "#fff"]}
+              style={[styles.answerContainer]}>
+          </LinearGradient>
+        </Animated.View>
+        <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center'}}>
+          {/* <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color:"#555"}}> */}
+                {/* {answerText} */}
+          {/* </Text> */}
+        </View>
+      </TouchableOpacity>
+
   </TouchableOpacity>
   </SwipeItem>
-
+  </View>
   );
-
-  
 }
 
 const styles = StyleSheet.create({
@@ -124,12 +187,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-    swipeContentContainerStyle: {
-        justifyContent: 'center',
-        borderRadius: 9,
-        borderColor: 'black',
-        borderWidth:1,
-    },
+  answerContainer: {
+    fontSize: 16,
+    color:"grey",
+    textAlign:"right",
+    width:30,
+    height:30,
+    paddingRight:0,
+
+    justifyContent: 'center',
+    textAlign:"center",
+    backgroundColor:"white"
+  },
+
+  animatedContainer: {
+    width:30,
+    position:"absolute",
+    right:5,
+    borderRadius:15,
+    borderWidth:1,
+    borderColor:"grey",
+    overflow: 'hidden',
+    backgroundColor:"white"
+  },
+
+  swipeContentContainerStyle: {
+      justifyContent: 'center',
+      borderRadius: 9,
+      borderColor: 'black',
+      borderWidth:1,
+  },
 
     notAlreadyAnswered: {
       backgroundColor: '#ffffff',

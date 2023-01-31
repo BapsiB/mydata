@@ -13,9 +13,6 @@ const DataVisualisationSingleQuestion = (props) => {
 
   const data = question.getArrayValues(false);
   
-  // let timeElapsed = Date.now();
-  // console.log("start loading DataVisualisationSingleQuestion.");
-
   return (
     <View style={{flex:1}}>
     <Text style={styles.questionText}
@@ -23,15 +20,17 @@ const DataVisualisationSingleQuestion = (props) => {
         numberOfLines={2}
     >{question.text}</Text>
     
-    <ScrollView style={{flex:1}} >
+    <ScrollView style={{flex:1}} scrollEnabled={false}>
     <SingleQuestionTimeGraph data={data} questionId={question.id}/>
     <View style={[styles.container, {zIndex:0}]}>
       <RepartitionGraph data={data} question={question}/>
     </View>
+    <View style={[styles.container, {zIndex:0, padding:20}]}>
     <TextDataExtraction data={data} style={{
       zIndex: -1,
       elevation: -1,
     }}/>
+    </View>
     </ScrollView>
     </View>
   );

@@ -4,11 +4,13 @@ import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
 import UpdateManager from './js/updateManager';
-import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen';
+// import DataVisualisationSingleQuestion from './dataVisualisationSingleQuestion'
+import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
 import HeaderDate from './js/headerDate.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
 import MeasureScreen from './js/questionsScreens/measuresScreen.js'
 import Utils from './js/utils.js'
+import DataManager from './js/dataManager'
 import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
@@ -113,17 +115,28 @@ const MyStack = () => {
           />
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="Data Visualisation Screen" component={DataVisualisationScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
+        {getStackNavigator()}
       </Drawer.Navigator>
     </NavigationContainer>
   );
 };
 
+function getStackNavigator() {
+  listQuestions = DataManager.getQuestions();
+  let optionsForth = Utils.horizontalScreenAnimation;
+  optionsForth.headerShown = false;
+  // let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
+  // optionsBack.headerShown = false;
+  const listItemsforth = listQuestions.map((d) => <Stack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={{headerShown:false}} key={d.id} initialParams={{ questionId: d.id }} />);
+  // basically because i didn't find a better way, we put twice the screens with different animation.
+  return listItemsforth;//.concat(listItemsback);
+}
+
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerItem
+      <DrawerItem 
         icon={({ focused, color, size }) => <Icon color={"#555"} size={20} name={focused ? 'pluscircleo' : 'plus'} />}
         label="Add New Question"
         onPress={() => props.navigation.navigate("Question Editor", {startType: sharedConstants.questionTypes.QUESTION_TYPE_YES_NO})}
@@ -198,7 +211,7 @@ const MainView = ({ navigation }) => {
 
     const forceUpdate = React.useReducer(() => ({}))[1]
 
-    const lSizeFooter = 60;
+    const lSizeFooter = 65;
     const StackIn = createStackNavigator();
 
     return (
@@ -217,7 +230,7 @@ const MainView = ({ navigation }) => {
               </TouchableOpacity>
               </View>
           </View> */}
-            <View style={{height:60}}></View>
+            <View style={{height:20}}></View>
             <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
               <StackIn.Screen
                 name="Measures"
@@ -231,7 +244,7 @@ const MainView = ({ navigation }) => {
             </StackIn.Navigator>
 
             <View style={{ position:'absolute', bottom:0, height:lSizeFooter, width:"100%"}}>
-                <View style={{   height:lSizeFooter * 1, flexDirection: "row"}}>
+                <View style={{   width:"100%", height:lSizeFooter * 1, flexDirection: "row", justifyContent: 'center',}}>
                     <BottomButton 
                     source0={require("./resources/measuresButton.png")} 
                     source1={require("./resources/notesButton.png")} 
@@ -250,7 +263,7 @@ const MainView = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   button_footer: {
-    backgroundColor: "white",
+    backgroundColor: "transparent",
 //      bottom: 0 ,
     flex: 1,
   },
@@ -266,8 +279,9 @@ buttonsTypeQuestions: {
   button_footer2: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "white",
-    flex: 1,
+    backgroundColor: "transparent",
+    width:"40%",
+    borderRadius:60
   }
 });
 

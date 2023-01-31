@@ -185,12 +185,6 @@ const RepartitionGraph = (props) => {
     <View style={{marginTop:10, paddingRight:20, height:Dimensions.get('window').width * 0.9}}>
 
       <Text style={{textAlign:"center", color:"grey"}}>REPARTITION</Text>
-          {/* <LinearGradient
-            start={{x: 0.0, y: 0.5}} end={{x: 1, y: 0.5}}
-            locations={locations}
-            colors={colours}
-            style={{height:20, width:"100%"}}>
-          </LinearGradient> */}
       { firstRender && <Text>Loading...</Text> }
       { !firstRender && 
       <Animated.View // Special animatable View
