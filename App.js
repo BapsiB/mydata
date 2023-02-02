@@ -125,7 +125,7 @@ const MyStack = () => {
             options={{ headerShown:true }}
         />
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
-        <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false }}/>
+        <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
         <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
         {getStackNavigator()}
       </Drawer.Navigator>

@@ -68,7 +68,7 @@ export default QuestionButton = (props) => {
   }
 
   const goToQuestion = () => {
-    props.navigation.navigate("Answer Screen",  { screen: question.id });
+    props.navigation.navigate("Answer Screen", props.questionId);
   }
 
   const requestDelete = () => {
