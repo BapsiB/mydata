@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Button, ScrollView } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
@@ -7,6 +7,10 @@ import QuestionButton from '../questionButton'
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
 
 const MeasuresScreen = ({navigation, date}) => {
+
+  useEffect(() => {
+    updateQuestions();
+}, []);
 
   const updateQuestions = () => {
     const arrayQuestionsOrigin = DataManager.getQuestions();
@@ -37,7 +41,6 @@ const MeasuresScreen = ({navigation, date}) => {
     else return null;
   }
 
-  DataManager.setQuestionsListener(updateQuestions);
   DataManager.setAnswersUpdateListener(updateAnswer);
   HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
 

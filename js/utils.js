@@ -42,6 +42,19 @@ class Utils {
             },
         };
 
+        this.getShadowStyle = function() {
+            return {
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 2,
+                  height: 2,
+                },
+                shadowOpacity: 0.45,
+                shadowRadius: 3.84,
+                elevation: 3,
+            }
+        }
+
         this.increase_brightness = function(hex, percent){
             if(hex === undefined) {
                 return "#fff";

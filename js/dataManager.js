@@ -373,6 +373,9 @@ class DataManager {
        }
 
         this.setQuestionsListener = function(callback){
+            if(this.listQuestions.length) {
+                callback();
+            }
             this.questionCallback = callback;
         }
 

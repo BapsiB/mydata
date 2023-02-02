@@ -48,7 +48,7 @@ export default QuestionButton = (props) => {
           setAnswerNorm(0);
           // Will change fadeAnim value to 1 in 5 seconds
           Animated.timing(valueAnim, {
-            toValue: 0,
+            toValue: -1,
             duration: 300,
             useNativeDriver: true,
           }).start();
@@ -59,7 +59,7 @@ export default QuestionButton = (props) => {
     // Next, interpolate beginning and end values (in this case 0 and 1)
     const animInterpol = valueAnim.interpolate({
       inputRange: [0, 1],
-      outputRange: [60, 0]
+      outputRange: [25, 0]
     })
 
 
@@ -68,7 +68,7 @@ export default QuestionButton = (props) => {
   }
 
   const goToQuestion = () => {
-    props.navigation.navigate("Answer Screen", props.questionId);
+    props.navigation.navigate("Answer Screen",  { screen: question.id });
   }
 
   const requestDelete = () => {
@@ -137,7 +137,7 @@ const rightButton = (
 );
 
   return (
-  <View style={{marginVertical:5}}>
+  <View style={{marginVertical:0}}>
   <SwipeItem
       style={styles.questionsButtons}
       swipeContainerStyle={[styles.swipeContentContainerStyle, styleAns]}
@@ -151,22 +151,23 @@ const rightButton = (
             {props.title}
         </Text>
 
-        <TouchableOpacity style={[styles.animatedContainer]} onPress={()=>{goToQuestion();}}>
+        <View style={[styles.shadowView, !isAnswered ? Utils.getShadowStyle() : null]}>
+        <TouchableOpacity style={[styles.animatedContainer, !isAnswered ? styles.animatedContainerAnswered : null]} onPress={()=>{goToQuestion();}}>
         <Animated.View style={{transform: [{translateY: animInterpol}]}}>
           <LinearGradient
               start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
               locations={[0, 1, 1]}
-              colors={["white", question ? Utils.increase_brightness(question.colour, 40) : "white", "#fff"]}
+              colors={["white", question ? Utils.increase_brightness(question.colour, 60) : "white", "#fff"]}
               style={[styles.answerContainer]}>
           </LinearGradient>
         </Animated.View>
-        <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center'}}>
-          {/* <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color:"#555"}}> */}
-                {/* {answerText} */}
-          {/* </Text> */}
-        </View>
+        {!isAnswered && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center'}}>
+          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color:"#999"}}>
+                ?
+          </Text>
+        </View>}
       </TouchableOpacity>
-
+      </View>
   </TouchableOpacity>
   </SwipeItem>
   </View>
@@ -197,18 +198,35 @@ const styles = StyleSheet.create({
 
     justifyContent: 'center',
     textAlign:"center",
-    backgroundColor:"white"
+    backgroundColor:"white",
+
   },
 
   animatedContainer: {
     width:30,
-    position:"absolute",
-    right:5,
     borderRadius:15,
     borderWidth:1,
     borderColor:"grey",
     overflow: 'hidden',
-    backgroundColor:"white"
+    backgroundColor:"white",
+  },
+
+  animatedContainerAnswered: {
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 0,
+  },
+
+  shadowView: {
+    right:5,
+    width:30,
+    position:"absolute",
+    right:5,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    borderBottomRightRadius: 15,
+    borderBottomLeftRadius: 15,
   },
 
   swipeContentContainerStyle: {
@@ -223,6 +241,6 @@ const styles = StyleSheet.create({
     },
 
     alreadyAnswered: {
-      backgroundColor: '#e6eee6',
+      backgroundColor: '#ffffff',
     }
 });

@@ -10,13 +10,13 @@ const SngleQuestionTimeGraph = (props) => {
 
     const question = DataManager.getQuestionWithId(props.questionId);
     data = props.data;
-    const dataAv = [];
     const averagePointCount = 7;
     const colourAverage = "#833";
 
     const [questionToCompare, setQuestionToCompare] = useState(null);
     const [dataToCompare, setDataToCompare] = useState([]);
     const [firstRender, setFirstRender] = useState(true);
+    const [dataAv, setDataAv] = useState(true);
 
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
@@ -35,6 +35,7 @@ const SngleQuestionTimeGraph = (props) => {
       }, [fadeAnim]);
 
       function processAverageChart() {
+        const dataAv = [];
         for(let i = 0; i < data.length; i++) {
           const actualPointCount = Math.min(i, averagePointCount);
           let valueAv = data[i].value;
@@ -44,6 +45,7 @@ const SngleQuestionTimeGraph = (props) => {
           valueAv = valueAv / (actualPointCount + 1);
           dataAv.push({date:data[i].date, value:valueAv});
         }
+        setDataAv(dataAv);
       }
 
       const renderVictoryLines = () => {
@@ -67,12 +69,12 @@ const SngleQuestionTimeGraph = (props) => {
     const colour = questionToCompare.getColour() ? questionToCompare.getColour() : "#c43a31";
     width = 0.4 * Dimensions.get('window').width / data.length;
     // return <VictoryArea interpolation="step" key={questionToCompare.id} data={dataToCompare} x="date" y="value" style={{ data: { fill: 'url(#gradientStroke)', fillOpacity: 0.3, stroke: colour, strokeWidth: 1 } }}/>;
-    return (<VictoryBar
-      cornerRadius={{ top: width * 0.5}}
+    return (<VictoryArea
       x="date" y="value"
       barWidth={width}
+      interpolation="step"
       style={{
-        data: { fill: 'url(#gradientFillCompare)', fillOpacity: 1, stroke: colour, strokeWidth: 1 }
+        data: { fill: 'white', fillOpacity: 0.2, stroke: colour, strokeWidth: 1 }
       }}
       data={dataToCompare}
     />)
@@ -89,7 +91,7 @@ const SngleQuestionTimeGraph = (props) => {
   }
 
   const renderAverageLabel = () => {
-    if(questionToCompare || !dataAv.length) {
+    if(questionToCompare || !firstRender) {
       return null;
     }
     return (
@@ -161,7 +163,7 @@ const SngleQuestionTimeGraph = (props) => {
         <Stop offset="100%" stopColor={increase_brightness(question.getColour(), 40)}/>
       </LinearGradient>
       <LinearGradient id="gradientFillCompare" >
-        <Stop offset="0%" stopColor={questionToCompare ? questionToCompare.getColour() : "white"}/>
+        <Stop offset="0%" stopColor={questionToCompare ? "#ffffff00" : "white"}/>
         <Stop offset="100%" stopColor={questionToCompare ? increase_brightness(questionToCompare.getColour(), 40) : "white"}/>
       </LinearGradient>
     </Defs>

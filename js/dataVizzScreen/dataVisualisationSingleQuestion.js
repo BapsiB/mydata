@@ -20,7 +20,7 @@ const DataVisualisationSingleQuestion = (props) => {
         numberOfLines={2}
     >{question.text}</Text>
     
-    <ScrollView style={{flex:1}} scrollEnabled={false}>
+    <ScrollView style={{flex:1}} scrollEnabled={true}>
     <SingleQuestionTimeGraph data={data} questionId={question.id}/>
     <View style={[styles.container, {zIndex:0}]}>
       <RepartitionGraph data={data} question={question}/>

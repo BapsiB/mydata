@@ -4,7 +4,6 @@ import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
 import UpdateManager from './js/updateManager';
-// import DataVisualisationSingleQuestion from './dataVisualisationSingleQuestion'
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
 import HeaderDate from './js/headerDate.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
@@ -21,7 +20,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import {
   createStackNavigator
 } from '@react-navigation/stack';
-import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, VStack, HStack, Divider } from 'react-native';
+import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, HStack, Divider } from 'react-native';
 import sharedConstants from './js/sharedConstants.js';
 
 
@@ -55,19 +54,19 @@ const BottomButton = (props) => {
     // else {
       return {
         backgroundColor:"white",
-        shadowColor: "#000",
+        
         borderRadius:25,
         height:50,
         width:50,
         justifyContent: 'center',
         alignItems: 'center',
+        shadowColor: "#000",
         shadowOffset: {
           width: 2,
           height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-    
         elevation: 2,
       }
     // }
@@ -101,24 +100,38 @@ return (
 }
 
 const MyStack = () => {
+
+  const [questionLoaded, setQuestionsLoaded] = React.useState(false);
+
+  function updateQuestions() {
+    setQuestionsLoaded(true);
+  }
   
+  React.useEffect(() => {
+    DataManager.setQuestionsListener(updateQuestions);
+}, []);
+
   return (
+    <View style={{height:"100%", width:"100%"}}>
+    {!questionLoaded && <Image style={{resizeMode: 'cover', width:"100%", height:"100%"}} source={require("./resources/splash.jpg")}></Image>}
+    {questionLoaded &&
     <NavigationContainer>
        <Drawer.Navigator
-          drawerContent={(props) => <CustomDrawerContent {...props} />}
+          drawerContent={(props) => <CustomDrawerContent {...props} initialRouteName="Home" />}
         >
         <Stack.Screen
             name="Home"
             component={MainView}
             options={{ headerShown:true }}
-
-          />
+        />
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
         {getStackNavigator()}
       </Drawer.Navigator>
     </NavigationContainer>
+    }
+    </View>
   );
 };
 
