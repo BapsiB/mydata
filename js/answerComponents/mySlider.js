@@ -24,7 +24,7 @@ const MySlider = (props) => {
     }, []);
 
       const updatePanValue = (aValue) => {
-        aValue = (-aValue + maximumValue) - minimumValue;
+        aValue = (-aValue + maximumValue);
         const TopShouldBe = aValue * (height - sizeKnob) / (step - 1);
         pan.setValue({x:0, y:TopShouldBe})
       }
@@ -32,8 +32,7 @@ const MySlider = (props) => {
       const getCurrentDataValueFromPosition = () => {
         const currentStepValue = step * (pan.y._value + pan.y._offset) / (height - sizeKnob);
         const currentValue = Math.min(step - 1, Math.floor(currentStepValue));
-
-        const currentValueConsideringMinMax = minimumValue + (maximumValue - currentValue);
+        const currentValueConsideringMinMax = (maximumValue - currentValue);
         return currentValueConsideringMinMax;
       }
 
