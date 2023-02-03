@@ -278,6 +278,10 @@ class DataManager {
         return filtered;
       }
 
+      this.getAppInfo = async () => {
+        return await getData("@appstate")
+      }
+
         /*
         * return the answer at the given date, to the question matching the question id.
         */

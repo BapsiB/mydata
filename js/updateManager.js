@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
+import DataManager from './dataManager';
 import React from 'react';
 import {  Modal, View, StyleSheet, Text, Pressable, Linking } from 'react-native';
 
@@ -6,10 +7,14 @@ const UpdateManager = (props) => {
 
     this.buildNumber = DeviceInfo.getBuildNumber();
     this.needsUpdate = false;
-    console.log("buildNumber " + this.buildNumber);
 
     const [modalVisible, setModalVisible] = React.useState(false);
+    const [appInfo, setAppInfo] = React.useState({});
     const [compText, setCompText] = React.useState("better backup my friend");
+
+    DataManager.getAppInfo().then(() => {
+      
+    })
 
     React.useEffect(() => {
         checkIfUpdateAvailable();
