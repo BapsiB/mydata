@@ -4,8 +4,8 @@ import SharedConstants from './sharedConstants';
 import React, {useState, useEffect, useRef} from "react";
 import { StyleSheet, Text, TextInput, View, Image, Animated, Easing, TouchableOpacity, Dimensions, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import QuestionType from './questionsEditor/questionEditorType';
-import QuestionOptions from './questionsEditor/questionEditorOptions';
+import QuestionType from './questionEditor/questionEditorType';
+import QuestionOptions from './questionEditor/questionEditorOptions';
 
 export default  Intro = (props) => {
     const currentIntroIndex = 1;
@@ -14,6 +14,7 @@ export default  Intro = (props) => {
     const [questionText, setQuestionText] = useState("");
     const [tutorialStep, setTutorialStep] = useState(0);
     const [questionType, setQuestionType] = useState(0);
+    const [options, onSetOptions] = React.useState({});
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
 
@@ -94,7 +95,7 @@ export default  Intro = (props) => {
                     <View>
                     <Text style={[styles.styleBottom, {marginTop:"10%"}]}>you'll define of a series of <Text style={{fontWeight:"bold"}}>questions</Text>, and you will reply to them, <Text style={{fontWeight:"bold"}}>every day.</Text></Text>
                     <Text style={[styles.styleBottom, {marginTop:"5%", fontSize:20, color:"#6F9699"}]}>(you can also figure them out later, along the way)</Text>
-                    <Text style={[styles.styleBottom, {marginTop:"20%", fontSize:24, fontWeight:"bold"}]}>let's create your first question</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"20%", fontSize:24, fontWeight:"bold", color:"#605820"}]}>let's create your first question!</Text>
                     </View>
                 )
             case 3:

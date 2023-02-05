@@ -1,6 +1,6 @@
 import React, {  } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import SharedConstants from './sharedConstants.js';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
+import SharedConstants from '../sharedConstants.js';
 
 const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
 
@@ -123,4 +123,4 @@ input: {
 
 })
 
-export default QuestionType;
+export default QuestionOptions;

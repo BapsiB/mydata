@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
-import SharedConstants from './sharedConstants.js';
-import DataManager from './dataManager.js';
+import SharedConstants from '../sharedConstants.js';
+import DataManager from '../dataManager.js';
 import QuestionType from './questionEditorType';
+import QuestionOptions from './questionEditorOptions';
 
 const QuestionEditor = (props) => {
 
@@ -115,92 +116,6 @@ function getQuestionExample(questionType) {
     return "eg: " + lQuestions[questionType][lRandom];
 }
 
-const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
-
-    switch(questionTypeId) {
-        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-        return (<View style={{flex:2}}/>)
-        break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
-          return (<View style={{flex:2}}/>)
-        break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                if(initOptions.intensity === undefined) {
-                    initOptions.intensity = {};
-                }
-
-                if(initOptions.intensity.min === undefined) {
-                    initOptions.intensity.min = "";
-                }
-
-                if(initOptions.intensity.max === undefined) {
-                    initOptions.intensity.max = "";
-                }
-                return (
-                <View style={{flex:2, flexDirection: "row", marginTop:30,}}>
-                    <View style={{flex:1, flexDirection: "column"}}>
-                      <Text style={styles.textTopMinMax}>from</Text>
-                      <TextInput
-                        style={[styles.input, styles.minMaxInput]}
-                        onChangeText={text =>{ initOptions.intensity.min = text; onChange(initOptions)}}
-                        defaultValue={initOptions.intensity.min}
-                        placeholder="optional"
-                        placeholderTextColor='#888'
-                        keyboardType="characters"
-                      />
-                    </View>
-                    <View style={{flex:1, flexDirection: "column"}}>
-                      <Text style={styles.textTopMinMax}>to</Text>
-                      <TextInput
-                        style={[styles.input, styles.minMaxInput]}
-                        onChangeText={text =>{ initOptions.intensity.max = text; onChange(initOptions)}}
-                        defaultValue={initOptions.intensity.max}
-                        placeholder="optional"
-                        placeholderTextColor='#888'
-                        keyboardType="characters"
-                      />
-                    </View>
-                </View>
-                )
-        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-        if(initOptions.number === undefined) {
-            initOptions.number = {};
-        }
-
-        if(initOptions.number.min === undefined) {
-            initOptions.number.min = "0";
-        }
-
-        if(initOptions.number.max === undefined) {
-            initOptions.number.max = "10";
-        }
-
-        return (
-          <View style={{flex:2, flexDirection: "row", marginTop:30,}}>
-          <View style={{flex:1, flexDirection: "column"}}>
-            <Text style={styles.textTopMinMax}>from</Text>
-              <TextInput
-                style={[styles.input, styles.minMaxInput]}
-                onChangeText={text =>{ initOptions.number.min = text; onChange(initOptions)}}
-                defaultValue={initOptions.number.min}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={{flex:1, flexDirection: "column"}}>
-              <Text style={styles.textTopMinMax}>to</Text>
-              <TextInput
-                style={[styles.input, styles.minMaxInput]}
-                onChangeText={text =>{ initOptions.number.max = text; onChange(initOptions)}}
-                defaultValue={initOptions.number.max}
-                keyboardType="numeric"
-              />
-            </View>
-        </View>
-        )
-        break;
-    }
-}
-
 const QuestionColour = ({onChange, initColour}) => {
   const [displayColourWheel, setDisplayColourWheel] = React.useState(false);
   
@@ -233,7 +148,7 @@ const QuestionColour = ({onChange, initColour}) => {
   return (
     <View style={{flex: 3}}>
     <TouchableOpacity style={[styles.button_colour]} onPress={()=>{setDisplayColourWheel(!displayColourWheel);}}>
-      <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour,  }} source={require("../resources/arrowL.png")}/>
+      <View style={{ width:50, height:50,  borderRadius:25, backgroundColor:initColour,  }} source={require("../../resources/arrowL.png")}/>
     </TouchableOpacity>
 
     <View style={{flexDirection:"column", alignItems:"center", height:heightRow * 2}}>

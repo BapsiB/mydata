@@ -1,6 +1,6 @@
 import React, {  } from 'react';
 import { Text, Image, View, TouchableOpacity, StyleSheet } from 'react-native';
-import SharedConstants from './sharedConstants.js';
+import SharedConstants from '../sharedConstants.js';
 
 const QuestionType = ({questionTypeId, onChange, enabled}) => {
 
@@ -40,7 +40,7 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
   <View style={[styles.questionTypeContainer]}>
       <View style={{flex:1}}>
       <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{prevQuestion();}}>
-        <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowL.png")}/>
+        <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../../resources/arrowL.png")}/>
       </TouchableOpacity>
       </View>
       <View style={{flex:5, flexDirection: "column"}}>
@@ -49,7 +49,7 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
       </View>
       <View style={{flex:1}}>
       <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{nextQuestion();}}>
-        <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/>
+        <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../../resources/arrowR.png")}/>
       </TouchableOpacity>
       </View>
   </View>
