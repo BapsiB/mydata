@@ -7,6 +7,7 @@ import UpdateManager from './js/updateManager';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
 import HeaderDate from './js/headerDate.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
+import Intro from './js/Intro.js'
 import MeasureScreen from './js/questionsScreens/measuresScreen.js'
 import Utils from './js/utils.js'
 import DataManager from './js/dataManager'
@@ -102,6 +103,7 @@ return (
 const MyStack = () => {
 
   const [questionLoaded, setQuestionsLoaded] = React.useState(false);
+  const [introFinished, setIntroFinished] = React.useState(false);
 
   function updateQuestions() {
     setQuestionsLoaded(true);
@@ -114,6 +116,7 @@ const MyStack = () => {
   return (
     <View style={{height:"100%", width:"100%"}}>
     {!questionLoaded && <Image style={{resizeMode: 'cover', width:"100%", height:"100%"}} source={require("./resources/splash.jpg")}></Image>}
+    {!introFinished && <Intro style={{position:"absolute", width:"100%", height:"100%", zIndex: 10, elevation:3 }} callback={() => {setIntroFinished(true)}}/>}
     {questionLoaded &&
     <NavigationContainer>
        <Drawer.Navigator

@@ -12,9 +12,7 @@ const UpdateManager = (props) => {
     const [appInfo, setAppInfo] = React.useState({});
     const [compText, setCompText] = React.useState("better backup my friend");
 
-    DataManager.getAppInfo().then(() => {
-      
-    })
+
 
     React.useEffect(() => {
         checkIfUpdateAvailable();

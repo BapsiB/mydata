@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
-import SharedConstants from './sharedConstants.js';
-import DataManager from './dataManager.js';
-import ColorPicker from 'react-native-wheel-color-picker'
+import SharedConstants from '../sharedConstants.js';
+import DataManager from '../dataManager.js';
+import QuestionType from './questionEditorType';
+import QuestionOptions from './questionEditorOptions';
 
 const QuestionEditor = (props) => {
 
@@ -23,12 +24,6 @@ const QuestionEditor = (props) => {
   const [questionType, onChangeQuestionType] = React.useState(lQuestionType);
   const [options, onSetOptions] = React.useState(fromQuestion ? fromQuestion.options : {});
   const [colour, onSetColour] = React.useState(fromQuestion && fromQuestion.getColour() ? fromQuestion.getColour() : getRandomColour());
-
-
-
-
-
-
 
 function getRandomColour() {
   const index = Math.round(Math.random() * SharedConstants.coloursSet.length);
@@ -81,7 +76,7 @@ const lDisableAddButton = questionText.length == 0;
             />
         </View>
         <View style={{flex: 3}}>
-          <QuestionType enabled={!fromQuestion} style={styles.questionType} onChange={(index) => {onChangeQuestionType(index);}} questionTypeId={questionType} />
+          <QuestionType enabled={!fromQuestion} style={styles.questionType} onChange={onChangeQuestionType} questionTypeId={questionType} />
           <QuestionOptions style={{marginTop:20}} onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
           <QuestionColour onChange={onColourChange} initColour={colour}/>
         </View>
@@ -119,147 +114,6 @@ function getQuestionExample(questionType) {
     lNotesQuestions.push("choose a title for that note");
     lQuestions.push(lNotesQuestions);
     return "eg: " + lQuestions[questionType][lRandom];
-}
-
-const QuestionType = ({questionTypeId, onChange, enabled}) => {
-
-    let lTextTop;
-    let lSubText;
-    switch(questionTypeId) {
-        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-            lTextTop = "yes/no";
-            lSubText = "the answer can be yes or no."
-            break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-            lTextTop = "quantity";
-            lSubText = "the answer is a number."
-            break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-            lTextTop = "intensity";
-            lSubText = "it cannot be numbered."
-            break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
-          lTextTop = "notes";
-          lSubText = "classic journal content."
-          break;
-    }
-
-    const nextQuestion = () =>
-    {
-        const value = (questionTypeId + 1) % SharedConstants.questionTypes.QUESTION_TYPE_COUNT;
-        onChange(value);
-    }
-
-    const prevQuestion = function() {
-        const value = (questionTypeId == 0) ? SharedConstants.questionTypes.QUESTION_TYPE_COUNT - 1 : questionTypeId - 1;
-        onChange(value);
-    }
-
-    return (
-    <View style={[styles.questionTypeContainer]}>
-        <View style={{flex:1}}>
-        <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{prevQuestion();}}>
-          <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowL.png")}/>
-        </TouchableOpacity>
-        </View>
-        <View style={{flex:5, flexDirection: "column"}}>
-            <Text style={styles.textTop}>{lTextTop}</Text>
-            <Text numberOfLines={1} adjustsFontSizeToFit={true} style={styles.textSub}>{lSubText}</Text>
-        </View>
-        <View style={{flex:1}}>
-        <TouchableOpacity style={[styles.button_footer,  enabled ? null : styles.disabled]} disabled={!enabled} onPress={()=>{nextQuestion();}}>
-          <Image style={{ width:50, height:50,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/>
-        </TouchableOpacity>
-        </View>
-    </View>
-
-        )
-}
-
-const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
-
-    switch(questionTypeId) {
-        case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-        return (<View style={{flex:2}}/>)
-        break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
-          return (<View style={{flex:2}}/>)
-        break;
-        case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                if(initOptions.intensity === undefined) {
-                    initOptions.intensity = {};
-                }
-
-                if(initOptions.intensity.min === undefined) {
-                    initOptions.intensity.min = "";
-                }
-
-                if(initOptions.intensity.max === undefined) {
-                    initOptions.intensity.max = "";
-                }
-                return (
-                <View style={{flex:2, flexDirection: "row", marginTop:30,}}>
-                    <View style={{flex:1, flexDirection: "column"}}>
-                      <Text style={styles.textTopMinMax}>from</Text>
-                      <TextInput
-                        style={[styles.input, styles.minMaxInput]}
-                        onChangeText={text =>{ initOptions.intensity.min = text; onChange(initOptions)}}
-                        defaultValue={initOptions.intensity.min}
-                        placeholder="optional"
-                        placeholderTextColor='#888'
-                        keyboardType="characters"
-                      />
-                    </View>
-                    <View style={{flex:1, flexDirection: "column"}}>
-                      <Text style={styles.textTopMinMax}>to</Text>
-                      <TextInput
-                        style={[styles.input, styles.minMaxInput]}
-                        onChangeText={text =>{ initOptions.intensity.max = text; onChange(initOptions)}}
-                        defaultValue={initOptions.intensity.max}
-                        placeholder="optional"
-                        placeholderTextColor='#888'
-                        keyboardType="characters"
-                      />
-                    </View>
-                </View>
-                )
-        case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-        if(initOptions.number === undefined) {
-            initOptions.number = {};
-        }
-
-        if(initOptions.number.min === undefined) {
-            initOptions.number.min = "0";
-        }
-
-        if(initOptions.number.max === undefined) {
-            initOptions.number.max = "10";
-        }
-
-        return (
-          <View style={{flex:2, flexDirection: "row", marginTop:30,}}>
-          <View style={{flex:1, flexDirection: "column"}}>
-            <Text style={styles.textTopMinMax}>from</Text>
-              <TextInput
-                style={[styles.input, styles.minMaxInput]}
-                onChangeText={text =>{ initOptions.number.min = text; onChange(initOptions)}}
-                defaultValue={initOptions.number.min}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={{flex:1, flexDirection: "column"}}>
-              <Text style={styles.textTopMinMax}>to</Text>
-              <TextInput
-                style={[styles.input, styles.minMaxInput]}
-                onChangeText={text =>{ initOptions.number.max = text; onChange(initOptions)}}
-                defaultValue={initOptions.number.max}
-                keyboardType="numeric"
-              />
-            </View>
-        </View>
-        )
-        break;
-    }
 }
 
 const QuestionColour = ({onChange, initColour}) => {
@@ -341,15 +195,6 @@ const styles = StyleSheet.create({
     color: 'black',
     },
 
-    minMaxInput: {
-      marginTop: 5,
-      marginLeft: 50,
-      marginRight: 50,
-      textAlignVertical:'center',
-      textAlign:'center',
-      bottom:0
-  },
-
     colourSample: {
       height:"100%",
       width:"80%",
@@ -374,14 +219,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-
-
-    textTopMinMax: {
-        color: 'black',
-        fontWeight:'normal',
-        fontSize:20,
-        textAlignVertical:'center',
-        textAlign:'center',
+    button_colour: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 50,
+      marginBottom: 20,
     },
 
     questionType: {
@@ -391,51 +233,6 @@ const styles = StyleSheet.create({
       bottom:0,
       flex: 2,
     },
-
-    button_footer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 50,
-
-    },
-
-    button_colour: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 50,
-      marginBottom: 20,
-    },
-
-    textTop: {
-        fontWeight:'bold',
-        fontSize:30,
-        textAlignVertical:'center',
-        textAlign:'center',
-        color: 'black',
-//        justifyContent: 'center',
-//        alignItems: 'center',
-    },
-
-        textSub: {
-            fontWeight:'normal',
-            // width:"100,
-            fontSize:20,
-            height:30,
-            textAlignVertical:'center',
-            textAlign:'center',
-            color: 'black',
-    //        justifyContent: 'center',
-    //        alignItems: 'center',
-        },
-
-    questionTypeContainer: {
-        flex: 1,
-        flexDirection: "row",
-    },
-
-    disabled: {
-      opacity:0
-  }
 });
 
 export default QuestionEditor;
