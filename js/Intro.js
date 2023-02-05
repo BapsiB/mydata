@@ -6,6 +6,7 @@ import { StyleSheet, Text, TextInput, View, Image, Animated, Easing, TouchableOp
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import QuestionType from './questionEditor/questionEditorType';
 import QuestionOptions from './questionEditor/questionEditorOptions';
+import QuestionColour from './questionEditor/questionEditorColour';
 
 export default  Intro = (props) => {
     const currentIntroIndex = 1;
@@ -16,13 +17,18 @@ export default  Intro = (props) => {
     const [questionType, setQuestionType] = useState(0);
     const [options, onSetOptions] = React.useState({});
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+    const [colour, onSetColour] = React.useState(getRandomColour());
 
+    function getRandomColour() {
+        const index = Math.round(Math.random() * SharedConstants.coloursSet.length);
+        return SharedConstants.coloursSet[index]
+      }
 
     React.useEffect(() => {
         AppState.getAppInfo().then((data) => {
             let lNeedsDisplay = true;
             if(data) {
-                if(data.lastTutoDone >= currentIntroIndex) {
+                if(data.introVersion >= currentIntroIndex) {
                     lNeedsDisplay = false;
                 }
             }
@@ -45,7 +51,7 @@ export default  Intro = (props) => {
             "did i eat bread?",
             "what colour was i wearing today?",
             "how many hours did i spend in front of a screen?",
-            "how social am i?",
+            "how social am i today?",
             "did i remember my dream?",
         ]
         const index = Math.floor(lQuestions.length * Math.random());
@@ -58,6 +64,30 @@ export default  Intro = (props) => {
     }
 
     function next() {
+        // end of question editing, we add it.
+        if(tutorialStep == 5) {
+            let lOption;
+            switch(questionType) {
+                case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+                    lOption = {};
+                break;
+                case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
+                    lOption = options.number;
+                break;
+                case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+                    lOption = options.intensity;
+                break;
+                case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
+                  lOption = {};
+                break;
+            }
+            DataManager.addQuestion(questionText, questionType, lOption, colour);
+            // if the user already has questions.
+            if(DataManager.getQuestions().length > 1) {
+                skip();
+                return;
+            }
+        }
         const lNextStep = tutorialStep + 1;
         Animated.timing(fadeAnim, {
             toValue: -1,
@@ -94,8 +124,8 @@ export default  Intro = (props) => {
                 return(
                     <View>
                     <Text style={[styles.styleBottom, {marginTop:"10%"}]}>you'll define of a series of <Text style={{fontWeight:"bold"}}>questions</Text>, and you will reply to them, <Text style={{fontWeight:"bold"}}>every day.</Text></Text>
-                    <Text style={[styles.styleBottom, {marginTop:"5%", fontSize:20, color:"#6F9699"}]}>(you can also figure them out later, along the way)</Text>
-                    <Text style={[styles.styleBottom, {marginTop:"20%", fontSize:24, fontWeight:"bold", color:"#605820"}]}>let's create your first question!</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%", fontSize:20, color:"#6F9699"}]}>(you can also figure them out later)</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"20%", fontSize:24, fontWeight:"bold"}]}>let's create your first question!</Text>
                     </View>
                 )
             case 3:
@@ -108,7 +138,7 @@ export default  Intro = (props) => {
                         multiline
                         style={styles.input}
                         value={questionText}
-                        placeholder={"question goes here"}
+                        placeholder={"write your question here"}
                         placeholderTextColor='#888'
                         adjustsFontSizeToFit={true}
                         onChangeText={setQuestionText}
@@ -123,10 +153,24 @@ export default  Intro = (props) => {
             case 4:
                 return(
                     <View>
-                    <Text style={styles.styleTop}>now we need to know <Text style={{color:"#B47B7C", fontWeight:"bold"}}>what kind of answer</Text> is expected for that question.</Text>
+                    <Text style={styles.styleBottom}>now we need to know <Text style={{color:"#B47B7C", fontWeight:"bold"}}>what kind of answer</Text> is expected for your question:{"\n"}<Text style={{fontWeight:"bold"}}>{'"' + questionText + '"' }</Text></Text>
                     <Text style={[styles.styleBottom, {marginTop:"4%", fontSize:20, marginBottom:"20%"}]}>it will help the app to visualize and analyse your answers later on.</Text>
                     <QuestionType style={styles.questionType} onChange={setQuestionType} questionTypeId={questionType} enabled={true}/>
                     <QuestionOptions style={{marginTop:20}} onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
+                    </View>
+                )
+            case 5:
+                return(
+                    <View>
+                    <Text style={styles.styleTop}>and finally a <Text style={{color:"#B47B7C", fontWeight:"bold"}}>colour</Text></Text>
+                    <Text style={[styles.styleBottom, {marginTop:"4%", fontSize:20, marginBottom:"20%"}]}>it will be used for the charts and other visual markers.</Text>
+                    <QuestionColour onChange={onSetColour} initColour={colour}/>
+                    </View>
+                )
+            case 6:
+                return(
+                    <View>
+                    <Text style={styles.styleTop}>and finally a <Text style={{color:"#B47B7C", fontWeight:"bold"}}>colour</Text></Text>
                     </View>
                 )
         }
@@ -143,6 +187,8 @@ export default  Intro = (props) => {
             case 3:
             case 4:
                 return "done...";
+            case 5:
+                return "nice and pretty";
             default:
                 return "";
         }
@@ -153,6 +199,8 @@ export default  Intro = (props) => {
             case 3:
             case 4:
                 return require("../resources/splashNoMountains.jpg");
+            case 6:
+                return null;
             default:
                 return require("../resources/splash.jpg");
         }
@@ -172,7 +220,7 @@ export default  Intro = (props) => {
 
     return(
         
-        <View style={{width:"100%", height:"100%"}}>
+        <View style={{position:"absolute", width:"100%", height:"100%"}}>
             {needToDisplay &&
             <View>
                 <Image style={{resizeMode: 'cover', width:"100%", height:"100%"}} source={getBackgroundImage()}></Image>

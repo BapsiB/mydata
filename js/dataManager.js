@@ -282,6 +282,10 @@ class DataManager {
         return await getData("@appstate")
       }
 
+      this.saveAppInfo = (appInfoData) => {
+        _storeData("@appstate", appInfoData);
+      }
+
         /*
         * return the answer at the given date, to the question matching the question id.
         */

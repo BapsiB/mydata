@@ -116,7 +116,6 @@ const MyStack = () => {
   return (
     <View style={{height:"100%", width:"100%"}}>
     {!questionLoaded && <Image style={{resizeMode: 'cover', width:"100%", height:"100%"}} source={require("./resources/splash.jpg")}></Image>}
-    {!introFinished && <Intro style={{position:"absolute", width:"100%", height:"100%", zIndex: 10, elevation:3 }} callback={() => {setIntroFinished(true)}}/>}
     {questionLoaded &&
     <NavigationContainer>
        <Drawer.Navigator
@@ -134,6 +133,7 @@ const MyStack = () => {
       </Drawer.Navigator>
     </NavigationContainer>
     }
+    {!introFinished && <Intro style={{position:"absolute", width:"100%", height:"100%", zIndex: 10, elevation:3 }} callback={() => {setIntroFinished(true)}}/>}
     </View>
   );
 };
