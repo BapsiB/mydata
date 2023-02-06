@@ -8,6 +8,10 @@ export default DebugScreen = () => {
         AppState.resetIntro();
     }
 
+    function onResetData() {
+        DataManager.clearAll();
+    }
+
     return(
         <View style={styles.mainView}>
             <TouchableOpacity style={styles.buttonStyle} onPress={()=>{onResetIntro(); }}>

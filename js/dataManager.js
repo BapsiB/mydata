@@ -3,14 +3,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SharedConstants from './sharedConstants.js';
 import Question from './question.js';
 import Datas from './datas'
+import { call } from 'react-native-reanimated';
 
 class DataManager {
     constructor() {
 
+       this.questionsLoaded = false;
        this.listQuestions = [];
        this.questionsSettings = [];
        this.daysData = Datas;
-       this.questionCallback = null;
+       this.questionCallback = [];
        // callback to be called when the answers data are loaded.
        this.answersUpdateCallback = null;
 
@@ -56,9 +58,9 @@ class DataManager {
               }
             }
       
-             if(that.questionCallback) {
-                 that.questionCallback();
-             }
+            that.questionsLoaded = true;
+            that.callQuestionsCallbacks();
+
             });
 
       
@@ -110,6 +112,12 @@ class DataManager {
             return promise;
 
         };
+
+        this.callQuestionsCallbacks = () => {
+            for(let i in this.questionCallback) {
+                this.questionCallback[i]();
+            }
+        }
 
        this.saveListQuestions = function() {
             const lListSavable = [];
@@ -231,8 +239,7 @@ class DataManager {
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
 
-           if(this.questionCallback)
-            this.questionCallback();
+            this.callQuestionsCallbacks();
        }
 
        this.updateQuestion = function(aQuestionId, aQuestionText, questionType, options, colour) {
@@ -248,8 +255,7 @@ class DataManager {
 
         this.saveListQuestions();
 
-        if(this.questionCallback)
-         this.questionCallback();
+        this.callQuestionsCallbacks();
     }
 
        /*
@@ -380,11 +386,11 @@ class DataManager {
         return null;
        }
 
-        this.setQuestionsListener = function(callback){
-            if(this.listQuestions.length) {
+        this.addQuestionsListener = function(stringId, callback){
+            if(this.questionsLoaded) {
                 callback();
             }
-            this.questionCallback = callback;
+            this.questionCallback[stringId] = callback;
         }
 
         this.setAnswersUpdateListener = function(callback){

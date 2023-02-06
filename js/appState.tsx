@@ -28,7 +28,9 @@ class AppState {
     private async collectAppInfo() {
         const promise = DataManager.getAppInfo();
         promise.then((data:Data) => {
-            this.data = data;
+            if(data) {
+                this.data = data;
+            }
         })
         return promise;
     }

@@ -71,8 +71,9 @@ export default  Intro = (props) => {
     }
 
     function next(goBack) {
+        const lNextStep = tutorialStep + (goBack ? -1 : 1);
         if(!goBack) {
-            if(tutorialStep == 5) {// end of question editing, we add it.
+            if(lNextStep == 7) {// end of question editing, we add it.
                 let lOption;
                 switch(questionType) {
                     case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
@@ -96,7 +97,6 @@ export default  Intro = (props) => {
                 }
             }
         }
-        const lNextStep = tutorialStep + (goBack ? -1 : 1);
         setButtonEnabled(lNextStep != 4);
         Animated.timing(fadeAnim, {
             toValue: -1,

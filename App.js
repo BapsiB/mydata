@@ -34,26 +34,7 @@ const BottomButton = (props) => {
   const anim = React.useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
   function getStyle() {
-    // if(props.isSelected) {
-    //   return {
-    //     backgroundColor:"#ffe9e5",
-    //     borderRadius:25,
-    //     height:50,
-    //     width:50,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     shadowOffset: {
-    //       width: 1,
-    //       height: 1,
-    //     },
-    //     shadowOpacity: 0.25,
-    //     shadowRadius: 3.84,
-    //     elevation: 0,
-    //   }
-    // }
-    // else {
+
       return {
         backgroundColor:"white",
         
@@ -71,7 +52,6 @@ const BottomButton = (props) => {
         shadowRadius: 3.84,
         elevation: 2,
       }
-    // }
   }
 
   function onClick() {
@@ -111,7 +91,7 @@ const MyStack = () => {
   }
   
   React.useEffect(() => {
-    DataManager.setQuestionsListener(updateQuestions);
+    DataManager.addQuestionsListener("MyStack", updateQuestions);
 }, []);
 
   return (

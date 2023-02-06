@@ -9,8 +9,8 @@ import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-sw
 const MeasuresScreen = ({navigation, date}) => {
 
   useEffect(() => {
-    updateQuestions();
-}, []);
+    DataManager.addQuestionsListener("MeasuresScreen", updateQuestions);
+  }, []);
 
   const updateQuestions = () => {
     const arrayQuestionsOrigin = DataManager.getQuestions();
