@@ -5,6 +5,7 @@ import DataManager from '../dataManager.js';
 import Draggable from 'react-native-draggable';
 import Utils from '../utils.js'
 import HeaderDate from '../headerDate.js';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const NotesScreen = ({navigation}) => {
 
@@ -23,8 +24,9 @@ const NotesScreen = ({navigation}) => {
     if(!arrayNotes.length) {
       return (      
       <View style={{flex:1}}>
-        <Text style={[styles.textEmpty, {fontSize:20, marginTop:"45%", fontWeight: 'bold'}]}>so empty!</Text>
-        <Text style={styles.textEmpty}>Press <Text style={{color: 'black', fontWeight: 'bold', fontSize:18}}>+</Text> to add your first note.</Text>
+        <Text style={[styles.textEmpty, {fontSize:20, marginTop:"45%", fontWeight: 'bold'}]}>whoa so empty!</Text>
+        <Text style={[styles.textEmpty, {fontSize:20, fontWeight: 'normal', marginBottom:20}]}>you can make notes too. they'll appear here.</Text>
+        <Text style={styles.textEmpty}>Go to <Text style={{color: 'black', fontWeight: 'bold', fontSize:16}}><Icon color={"#555"} size={16} name={'plus'} />  Add New Question</Text> to add your first note.</Text>
       </View>);
     }
     else return null;

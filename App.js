@@ -142,7 +142,7 @@ function CustomDrawerContent(props) {
       <DrawerItem
         style={{opacity:0.5}}
         icon={({ focused, color, size }) => <Icon color={"#555"} size={20} name={'edit'} />}
-        label="Edit Questions"
+        label="Edit Questions (coming up)"
         onPress={()=>{}}
       />
       <View

@@ -62,7 +62,8 @@ export default  Intro = (props) => {
             generateQuesion();
             return;
         }
-        setQuestionText(newQuestion); 
+        setQuestionText(newQuestion);
+        setButtonEnabled(true);
     }
 
     function updateQuestionText(aText) {
@@ -72,6 +73,10 @@ export default  Intro = (props) => {
 
     function next(goBack) {
         const lNextStep = tutorialStep + (goBack ? -1 : 1);
+        if(lNextStep > 7) {
+            skip();
+            return;
+        }
         if(!goBack) {
             if(lNextStep == 7) {// end of question editing, we add it.
                 let lOption;
@@ -90,11 +95,6 @@ export default  Intro = (props) => {
                     break;
                 }
                 DataManager.addQuestion(questionText, questionType, lOption, colour);
-                // if the user already has questions.
-                if(DataManager.getQuestions().length > 1) {
-                    skip();
-                    return;
-                }
             }
         }
         setButtonEnabled(lNextStep != 4);
@@ -176,7 +176,7 @@ export default  Intro = (props) => {
             case 5:
                 return(
                     <View>
-                    <Text style={styles.styleBottom}>now we need to know <Text style={{color:"#B47B7C", fontWeight:"bold"}}>what kind of answer</Text> is expected for your question:{"\n"}<Text style={{fontWeight:"bold"}}>{'"' + questionText + '"' }</Text></Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%"}]}>now we need to know <Text style={{color:"#B47B7C", fontWeight:"bold"}}>what kind of answer</Text> is expected for your question:{"\n"}<Text style={{fontWeight:"bold"}}>{'"' + questionText + '"' }</Text></Text>
                     <Text style={[styles.styleBottom, {marginTop:"4%", fontSize:20, marginBottom:"20%"}]}>it will help the app to visualize and analyse your answers later on.</Text>
                     <QuestionType style={styles.questionType} onChange={setQuestionType} questionTypeId={questionType} enabled={true}/>
                     <QuestionOptions style={{marginTop:20}} onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
@@ -192,8 +192,10 @@ export default  Intro = (props) => {
                 )
             case 7:
                 return(
-                    <View>
-                    <Text style={styles.styleTop}>and finally a <Text style={{color:"#B47B7C", fontWeight:"bold"}}>colour</Text></Text>
+                    <View style={{width:"90%", height:250, marginHorizontal:"5%", top:250, backgroundColor:SharedConstants.coloursSet[6], borderRadius:10}}>
+                    <Text style={[styles.styleBottom, {color:"white", marginTop:20, fontSize:20}]}>your questions will be displayed in this screen.</Text>
+                    <Text style={[styles.styleBottom, {color:"white", marginTop:20, fontSize:20}]}>press the <View style={styles.buttonQuestion}><Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color:"#999"}}>?</Text></View> button to edit the answer of the day.</Text>
+                    <Text style={[styles.styleBottom, {color:"white", marginTop:20, fontSize:20}]}>please let me know if some things are not clear 🙏</Text>
                     </View>
                 )
         }
@@ -214,6 +216,8 @@ export default  Intro = (props) => {
                 return "done...";
             case 6:
                 return "nice and pretty";
+            case 7:
+                return "thank you Bapsi!";
             default:
                 return "";
         }
@@ -254,7 +258,7 @@ export default  Intro = (props) => {
                 </Animated.View>
                 <View style={{position:"absolute", bottom:150, width:"100%", justifyContent: 'center', alignItems: 'center'}}>
                     <TouchableOpacity style={[styles.nextButton, {textAlign: 'center', justifyContent: 'center', }, buttonEnabled ? {} : {opacity:0.5}]} onPress={() => {next(false)}} disabled={!buttonEnabled}>
-                        <Text style={{fontSize: 24, color:"#ddd", textAlign:'center', justifyContent: 'center', fontWeight:'bold'}}>
+                        <Text style={{fontSize: 24, color:"#fff", textAlign:'center', justifyContent: 'center', fontWeight:'bold'}}>
                             {getButtonText()}
                         </Text>
                     </TouchableOpacity>
@@ -266,7 +270,7 @@ export default  Intro = (props) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                {(tutorialStep > 1) && <View style={{position:"absolute", bottom:10, width:"20%", justifyContent: 'flex-start'}}>
+                {(tutorialStep > 1 && tutorialStep < 7) && <View style={{position:"absolute", bottom:10, width:"20%", justifyContent: 'flex-start'}}>
                     <TouchableOpacity style={[{justifyContent: 'center'}]} onPress={() => {next(true)}}>
                         <Text style={{fontSize: 18, color:"#333", textAlign:'center', justifyContent: 'center', color:"#777"}}>
                             {"<< back"}
@@ -315,6 +319,21 @@ const styles = StyleSheet.create({
         color:"white",
         backgroundColor:SharedConstants.coloursSet[6],
         position:"absolute"
+      },
+
+      buttonQuestion: {
+        fontSize: 16,
+        color:"grey",
+        textAlign:"right",
+        width:20,
+        height:20,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 0,
+        justifyContent: 'center',
+        textAlign:"center",
+        backgroundColor:"white",
       },
 
         input: {
