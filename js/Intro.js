@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import QuestionType from './questionEditor/questionEditorType';
 import QuestionOptions from './questionEditor/questionEditorOptions';
 import QuestionColour from './questionEditor/questionEditorColour';
+import DataManager from './dataManager';
 
 export default  Intro = (props) => {
     const currentIntroIndex = 1;
@@ -15,6 +16,7 @@ export default  Intro = (props) => {
     const [questionText, setQuestionText] = useState("");
     const [tutorialStep, setTutorialStep] = useState(0);
     const [questionType, setQuestionType] = useState(0);
+    const [buttonEnabled, setButtonEnabled] = useState(true);
     const [options, onSetOptions] = React.useState({});
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
     const [colour, onSetColour] = React.useState(getRandomColour());
@@ -63,32 +65,39 @@ export default  Intro = (props) => {
         setQuestionText(newQuestion); 
     }
 
-    function next() {
-        // end of question editing, we add it.
-        if(tutorialStep == 5) {
-            let lOption;
-            switch(questionType) {
-                case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+    function updateQuestionText(aText) {
+        setQuestionText(aText);
+        setButtonEnabled(aText.length > 0);
+    }
+
+    function next(goBack) {
+        if(!goBack) {
+            if(tutorialStep == 5) {// end of question editing, we add it.
+                let lOption;
+                switch(questionType) {
+                    case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+                        lOption = {};
+                    break;
+                    case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
+                        lOption = options.number;
+                    break;
+                    case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+                        lOption = options.intensity;
+                    break;
+                    case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
                     lOption = {};
-                break;
-                case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-                    lOption = options.number;
-                break;
-                case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-                    lOption = options.intensity;
-                break;
-                case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
-                  lOption = {};
-                break;
-            }
-            DataManager.addQuestion(questionText, questionType, lOption, colour);
-            // if the user already has questions.
-            if(DataManager.getQuestions().length > 1) {
-                skip();
-                return;
+                    break;
+                }
+                DataManager.addQuestion(questionText, questionType, lOption, colour);
+                // if the user already has questions.
+                if(DataManager.getQuestions().length > 1) {
+                    skip();
+                    return;
+                }
             }
         }
-        const lNextStep = tutorialStep + 1;
+        const lNextStep = tutorialStep + (goBack ? -1 : 1);
+        setButtonEnabled(lNextStep != 4);
         Animated.timing(fadeAnim, {
             toValue: -1,
             duration: 300,
@@ -116,19 +125,33 @@ export default  Intro = (props) => {
             case 1:
                 return(
                     <View>
-                    <Text style={[styles.styleBottom, {marginTop:"5%"}]}>this app is like a <Text style={{fontWeight:"bold"}}>journal</Text>, but using <Text style={{color:"#749B9C", fontWeight:"bold"}}>numbers</Text>, <Text style={{color:"#749B9C", fontWeight:"bold"}}>colours</Text> and more!</Text>
-                    <Text style={[styles.styleBottom, {marginTop:"15%"}]}>you can <Text style={{color:"#E07880", fontWeight:"bold"}}>keep track</Text> of what you want, <Text style={{color:"#E07880", fontWeight:"bold"}}>analyse it</Text>, <Text style={{color:"#E07880", fontWeight:"bold"}}>visualise it</Text>.{"\n"}{"\n"}I'll provide you nice tools for that. </Text>
+                    <Text style={[styles.styleBottom, {marginTop:"10%"}]}>this app is like a <Text style={{fontWeight:"bold"}}>journal</Text>, but using <Text style={{color:"#749B9C", fontWeight:"bold"}}>numbers</Text>, <Text style={{color:"#749B9C", fontWeight:"bold"}}>colours</Text> and more!</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%"}]}>you can <Text style={{color:"#E07880", fontWeight:"bold"}}>keep track</Text> of what you want, <Text style={{color:"#E07880", fontWeight:"bold"}}>analyse it</Text>, <Text style={{color:"#E07880", fontWeight:"bold"}}>visualise it</Text>.{"\n"}{"\n"}I'll provide you nice tools for that.</Text>
                     </View>
                 )
             case 2:
                 return(
                     <View>
-                    <Text style={[styles.styleBottom, {marginTop:"10%"}]}>you'll define of a series of <Text style={{fontWeight:"bold"}}>questions</Text>, and you will reply to them, <Text style={{fontWeight:"bold"}}>every day.</Text></Text>
-                    <Text style={[styles.styleBottom, {marginTop:"5%", fontSize:20, color:"#6F9699"}]}>(you can also figure them out later)</Text>
-                    <Text style={[styles.styleBottom, {marginTop:"20%", fontSize:24, fontWeight:"bold"}]}>let's create your first question!</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%", fontWeight:"bold", color:"#749B9C"}]}>it can help you if:</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%", fontWeight:"bold", color:"#3F6669"}]}>you are curious about how you work</Text>
+                    <Text style={[styles.styleBottom, {marginTop:10, fontWeight:"normal", fontSize:20}]}>it will include tools to help you see patterns and relations between the things you measure</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%", fontWeight:"bold", color:"#3F6669"}]}>you want to relflect on yourself</Text>
+                    <Text style={[styles.styleBottom, {marginTop:10, fontWeight:"normal", fontSize:20}]}>it bring you to think about what are the right questions, and do a daily check up.</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%", fontWeight:"bold", color:"#3F6669"}]}>you simply like to collect and visualize</Text>
+                    <Text style={[styles.styleBottom, {marginTop:10, fontWeight:"normal", fontSize:20}]}>it does that.</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%", fontWeight:"bold", color:"#3F6669"}]}>you have other ideas</Text>
+                    <Text style={[styles.styleBottom, {marginTop:10, fontWeight:"normal", fontSize:20}]}>you can export your data anytime, in common formats and use them with other apps, like Excel</Text>
                     </View>
                 )
             case 3:
+                return(
+                    <View>
+                    <Text style={[styles.styleBottom, {marginTop:"10%"}]}>you'll define of a series of <Text style={{fontWeight:"bold"}}>questions</Text>, and you will reply to them, <Text style={{fontWeight:"bold"}}>every day.</Text></Text>
+                    <Text style={[styles.styleBottom, {marginTop:"5%", fontSize:20, color:"#6F9699"}]}>(you can also figure them out later)</Text>
+                    <Text style={[styles.styleBottom, {marginTop:"20%", fontSize:24, fontWeight:"bold"}]}>let's create your first question?</Text>
+                    </View>
+                )
+            case 4:
                 return(
                     <View>
                     <Text style={styles.styleTop}>is there something you'd like to observe?{"\n"}</Text>
@@ -141,7 +164,7 @@ export default  Intro = (props) => {
                         placeholder={"write your question here"}
                         placeholderTextColor='#888'
                         adjustsFontSizeToFit={true}
-                        onChangeText={setQuestionText}
+                        onChangeText={updateQuestionText}
                         />
                     <Text style={[styles.styleBottom, {fontSize:20, marginTop:"0%"}]}>no idea? no problem! {"\n"}generate a random question.</Text>
                     <TouchableOpacity style={[{width:"100%", justifyContent: 'center', textAlign:'center', alignItems: 'center'}]} onPress={generateQuesion}>
@@ -150,7 +173,7 @@ export default  Intro = (props) => {
                     </TouchableOpacity>
                     </View>
                 )
-            case 4:
+            case 5:
                 return(
                     <View>
                     <Text style={styles.styleBottom}>now we need to know <Text style={{color:"#B47B7C", fontWeight:"bold"}}>what kind of answer</Text> is expected for your question:{"\n"}<Text style={{fontWeight:"bold"}}>{'"' + questionText + '"' }</Text></Text>
@@ -159,7 +182,7 @@ export default  Intro = (props) => {
                     <QuestionOptions style={{marginTop:20}} onChange={(options) => {onSetOptions(options);}} questionTypeId={questionType} initOptions={options}/>
                     </View>
                 )
-            case 5:
+            case 6:
                 return(
                     <View>
                     <Text style={styles.styleTop}>and finally a <Text style={{color:"#B47B7C", fontWeight:"bold"}}>colour</Text></Text>
@@ -167,7 +190,7 @@ export default  Intro = (props) => {
                     <QuestionColour onChange={onSetColour} initColour={colour}/>
                     </View>
                 )
-            case 6:
+            case 7:
                 return(
                     <View>
                     <Text style={styles.styleTop}>and finally a <Text style={{color:"#B47B7C", fontWeight:"bold"}}>colour</Text></Text>
@@ -181,13 +204,15 @@ export default  Intro = (props) => {
             case 0:
                 return "take your hand";
             case 1:
-                return "yes";
+                return "why do that?";
             case 2:
-                return "aye!";
+                return "how does it work?";
             case 3:
+                return "let's!"
             case 4:
-                return "done...";
             case 5:
+                return "done...";
+            case 6:
                 return "nice and pretty";
             default:
                 return "";
@@ -196,10 +221,10 @@ export default  Intro = (props) => {
 
     function getBackgroundImage() {
         switch(tutorialStep) {
-            case 3:
+            case 2:
             case 4:
                 return require("../resources/splashNoMountains.jpg");
-            case 6:
+            case 7:
                 return null;
             default:
                 return require("../resources/splash.jpg");
@@ -228,7 +253,7 @@ export default  Intro = (props) => {
                     {getContent()}
                 </Animated.View>
                 <View style={{position:"absolute", bottom:150, width:"100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableOpacity style={[styles.nextButton, {textAlign: 'center', justifyContent: 'center',}]} onPress={next}>
+                    <TouchableOpacity style={[styles.nextButton, {textAlign: 'center', justifyContent: 'center', }, buttonEnabled ? {} : {opacity:0.5}]} onPress={() => {next(false)}} disabled={!buttonEnabled}>
                         <Text style={{fontSize: 24, color:"#ddd", textAlign:'center', justifyContent: 'center', fontWeight:'bold'}}>
                             {getButtonText()}
                         </Text>
@@ -241,6 +266,13 @@ export default  Intro = (props) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                {(tutorialStep > 1) && <View style={{position:"absolute", bottom:10, width:"20%", justifyContent: 'flex-start'}}>
+                    <TouchableOpacity style={[{justifyContent: 'center'}]} onPress={() => {next(true)}}>
+                        <Text style={{fontSize: 18, color:"#333", textAlign:'center', justifyContent: 'center', color:"#777"}}>
+                            {"<< back"}
+                        </Text>
+                    </TouchableOpacity>
+                </View>}
             </View>
             }
         </View>
@@ -251,8 +283,8 @@ export default  Intro = (props) => {
 const styles = StyleSheet.create({
     styleAnimatedView:{
         position:"absolute",
-        width:"90%",
-        margin:"5%"
+        width:"94%",
+        margin:"3%"
     },
 
     styleTop: {

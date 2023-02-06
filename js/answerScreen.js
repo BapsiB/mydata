@@ -156,7 +156,7 @@ const AnswerScreen = (props) => {
                 </Pressable>
                 <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => onReturn()}
+                onPress={() => onReturn(true)}
                 >
                 <Text style={styles.textStyle}>HOME</Text>
                 </Pressable>

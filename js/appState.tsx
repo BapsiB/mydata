@@ -41,6 +41,10 @@ class AppState {
         this.data.introVersion = aVersion;
         this.save();
     }
+
+    public resetIntro() {
+        this.setIntroVersion(-1);
+    }
 }
 
 export default new AppState();

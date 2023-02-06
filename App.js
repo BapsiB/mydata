@@ -9,6 +9,7 @@ import HeaderDate from './js/headerDate.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
 import Intro from './js/Intro.js'
 import MeasureScreen from './js/questionsScreens/measuresScreen.js'
+import DebugScreen from './js/debugScreen'
 import Utils from './js/utils.js'
 import DataManager from './js/dataManager'
 import { NavigationContainer, useRoute } from '@react-navigation/native';
@@ -129,6 +130,7 @@ const MyStack = () => {
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
         <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
+        <Stack.Screen name="Debug" component={DebugScreen} options={{ headerShown:true }}/>
         {getStackNavigator()}
       </Drawer.Navigator>
     </NavigationContainer>
@@ -196,6 +198,17 @@ function CustomDrawerContent(props) {
         icon={({ focused, color, size }) => <MaterialIcons color={"#555"} size={20} name={'settings-backup-restore'} />}
         label="Restore"
         onPress={() => props.navigation.navigate("Restore")}
+      />
+      <View
+        style= {{
+            borderBottomWidth: 1,
+            borderColor: '#E2E4E8',
+        }}
+      />
+      <DrawerItem
+        icon={({ focused, color, size }) => <MaterialIcons color={"#555"} size={20} name={'bug-report'} />}
+        label="Debug"
+        onPress={() => props.navigation.navigate("Debug")}
       />
     </DrawerContentScrollView>
   );
