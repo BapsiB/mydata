@@ -110,6 +110,7 @@ const MyStack = () => {
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
         <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
+        <Stack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
         <Stack.Screen name="Debug" component={DebugScreen} options={{ headerShown:true }}/>
         {getStackNavigator()}
       </Drawer.Navigator>
@@ -171,8 +172,8 @@ function CustomDrawerContent(props) {
       />
       <DrawerItem
         icon={({ focused, color, size }) => <MaterialIcons color={"#555"} size={20} name={'backup'} />}
-        label="Backup"
-        onPress={()=>{Backup.backup();}}
+        label="Backup/Export"
+        onPress={()=>{props.navigation.navigate("Backup")}}
       />
       <DrawerItem
         icon={({ focused, color, size }) => <MaterialIcons color={"#555"} size={20} name={'settings-backup-restore'} />}

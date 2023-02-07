@@ -1,9 +1,10 @@
-import {Share, Alert} from 'react-native';
 import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
-import { SafeAreaView, TextInput, Text, Pressable, Modal, View, StyleSheet } from 'react-native';
+import { SafeAreaView, TextInput, Text, Pressable, Modal, View, StyleSheet, Share, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import React, {useState} from "react";
+var RNFS = require('react-native-fs');
+
 
 class Backup {
     constructor() {
@@ -14,29 +15,54 @@ class Backup {
 
       const onShare = async () => {
         DataManager.getAllDataStrorageAsString().then((lMessage) => {
-        try {
-          Share.share({
-            message:lMessage,
-          }).then((result) => {
-            if (result.action === Share.sharedAction) {
-              if (result.activityType) {
-                // shared with activity type of result.activityType
-              } else {
-                // shared
+          var path = RNFS.DocumentDirectoryPath + '/test.json';
+          // write the file
+          RNFS.writeFile(path, lMessage, 'utf8')
+            .then((success) => {
+              console.log('FILE WRITTEN!');
+              try {
+                Share.share({
+                  url: 'file://' + path,
+                  title: 'Export Data'
+                }).then((result) => {
+                  if (result.action === Share.sharedAction) {
+                    if (result.activityType) {
+                      // shared with activity type of result.activityType
+                    } else {
+                      // shared
+                    }
+                  } else if (result.action === Share.dismissedAction) {
+                    // dismissed
+                  }
+                })
+                
+              } catch (error) {
+                Alert.alert();
               }
-            } else if (result.action === Share.dismissedAction) {
-              // dismissed
-            }
-          })
-          
-        } catch (error) {
-          Alert.alert();
-        }
+            })
+            .catch((err) => {
+              console.log(err.message);
+            });
       })
       };
 
+      this.backupView = function() {
+        return (
+          <SafeAreaView>
+            <View style={[styles.inputContainer, {backgroundColor:"#fff"}]}>
+                <Text style={styles.backupScreenText}>You can export your data for backup purpose:</Text>
+                <Button style={styles.confirmButton} icon="backup-restore" mode="contained" >
+                  BACKUP 
+                </Button>
+                <Text style={styles.backupScreenText}>or to use in external application (Excel, Number):</Text>
+                <Button style={styles.confirmButton} icon="share" mode="contained" >
+                  SAVE IN .CSV
+                </Button>
+            </View>
+          </SafeAreaView>
+        );
+      }
 
-    
       this.restoreView = function() {
         const [objectToStore, setObjectToStore] = useState(null);
         const [modalVisible, setModalVisible] = useState(false);
@@ -163,6 +189,12 @@ const styles = StyleSheet.create({
     margin:30,
     color:"white",
     backgroundColor:SharedConstants.coloursSet[6],
+  },
+
+  backupScreenText: {
+    marginLeft:20,
+    marginTop:20,
+    fontSize:18,
   },
 
   inputContainer: {
