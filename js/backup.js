@@ -1,9 +1,10 @@
 import SharedConstants from './sharedConstants.js';
 import DataManager from './dataManager.js';
-import { SafeAreaView, TextInput, Text, Pressable, Modal, View, StyleSheet, Share, Alert } from 'react-native';
+import { SafeAreaView, TextInput, Text, Pressable, Modal, View, StyleSheet, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import React, {useState} from "react";
-var RNFS = require('react-native-fs');
+import Share from 'react-native-share';
+var { DocumentDirectoryPath, writeFile, readDir }  = require('react-native-fs');
 
 
 class Backup {
@@ -13,35 +14,42 @@ class Backup {
         onShare();
       }
 
-      const onShare = async () => {
+      // const saveFile = async () => {
+      //   const path = `${DocumentDirectoryPath}/${Date.now()}.txt`;
+      
+      //   try {
+      //     await writeFile(path, "hello", 'utf8');
+      //     Alert.alert('File saved', null, [{ text: 'OK' }]);
+      //     const filesArr = await readDir(DocumentDirectoryPath);
+      //     console.log(filesArr.length);
+      //   } catch (e) {
+      //     console.log('error', e);
+      //   }
+      // };
+      
+
+      const onShare = () => {
         DataManager.getAllDataStrorageAsString().then((lMessage) => {
-          var path = RNFS.DocumentDirectoryPath + '/test.json';
+          var path = DocumentDirectoryPath + '/test.json';
+          
           // write the file
-          RNFS.writeFile(path, lMessage, 'utf8')
+          writeFile(path, lMessage, 'utf8')
             .then((success) => {
               console.log('FILE WRITTEN!');
-              try {
-                Share.share({
-                  url: 'file://' + path,
-                  title: 'Export Data'
-                }).then((result) => {
-                  if (result.action === Share.sharedAction) {
-                    if (result.activityType) {
-                      // shared with activity type of result.activityType
-                    } else {
-                      // shared
-                    }
-                  } else if (result.action === Share.dismissedAction) {
-                    // dismissed
-                  }
-                })
+
+              Share.open({
+                url:"file://" + path,
+                title: 'Backup Data'
                 
-              } catch (error) {
-                Alert.alert();
-              }
+              }).then((result) => {
+
+              }).catch((error) => {
+                // throw error;
+              })
+
             })
-            .catch((err) => {
-              console.log(err.message);
+            .catch((error) => {
+              throw error;
             });
       })
       };
@@ -50,12 +58,12 @@ class Backup {
         return (
           <SafeAreaView>
             <View style={[styles.inputContainer, {backgroundColor:"#fff"}]}>
-                <Text style={styles.backupScreenText}>You can export your data for backup purpose:</Text>
-                <Button style={styles.confirmButton} icon="backup-restore" mode="contained" >
+                <Text style={styles.backupScreenText}>Export backup:</Text>
+                <Button style={styles.confirmButton} icon="backup-restore" mode="contained" onPress={onShare}>
                   BACKUP 
                 </Button>
-                <Text style={styles.backupScreenText}>or to use in external application (Excel, Number):</Text>
-                <Button style={styles.confirmButton} icon="share" mode="contained" >
+                <Text style={styles.backupScreenText}>Export for external use:</Text>
+                <Button style={styles.confirmButton} icon="share" mode="contained" disabled={true}>
                   SAVE IN .CSV
                 </Button>
             </View>
@@ -70,12 +78,16 @@ class Backup {
         textChanged = function(text) {
           if(text.length) {
             const lObject = isObject(text);
+            if(!lObject) {
+              return;
+            }
             setObjectToStore(lObject);
           }
         }
   
         function isObject(text) {
   
+          try {
           const obj = JSON.parse(text);
           if(obj.length) {
             return obj;
@@ -83,6 +95,12 @@ class Backup {
           else {
             return null;
           }
+          }
+          catch (error) {
+            Alert.alert("not the right format.");
+            return null;
+          }
+ 
         }
 
         function doubleCheckPopUp() {
@@ -195,6 +213,7 @@ const styles = StyleSheet.create({
     marginLeft:20,
     marginTop:20,
     fontSize:18,
+    color:"grey"
   },
 
   inputContainer: {

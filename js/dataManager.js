@@ -121,7 +121,7 @@ class DataManager {
 
        this.saveListQuestions = function() {
             const lListSavable = [];
-            for(question of this.listQuestions) {
+            for(const question of this.listQuestions) {
                 lListSavable.push(question.getStringifyiableObject());
             }
             _storeData("@questions", lListSavable);
@@ -335,9 +335,9 @@ class DataManager {
            let indexReturn = 0;
            let i;
            for (i=0; i<len; ++i) {
-               const s = this.listQuestions[i];
+               const currentQuestion = this.listQuestions[i];
 
-               if(s.id == questionId) {
+               if(currentQuestion.id == questionId) {
                    if(i == (this.listQuestions.length - 1) && goForward) {
                        indexReturn = 0;
                    }
@@ -351,7 +351,7 @@ class DataManager {
                    const lQuestion = this.listQuestions[indexReturn];
                    // discard the notes cards if that's what we want.
                    if(discardNotes && lQuestion.isNote()) {
-                     return this.getNextQuestion(indexReturn, goForward, onlyTakeUnreplied, discardNotes, date);
+                     return this.getNextQuestion(lQuestion.id, goForward, onlyTakeUnreplied, discardNotes, date);
                    }
 
                    if(onlyTakeUnreplied) {
