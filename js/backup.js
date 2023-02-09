@@ -5,13 +5,13 @@ import { Button } from 'react-native-paper';
 import React, {useState} from "react";
 import Share from 'react-native-share';
 var { DocumentDirectoryPath, writeFile, readDir }  = require('react-native-fs');
-
+import { jsonToCSV } from 'react-native-csv'
 
 class Backup {
     constructor() {
-
+      const that = this;
       this.backup = function() {
-        onShare();
+        onShareBackup();
       }
 
       // const saveFile = async () => {
@@ -26,14 +26,12 @@ class Backup {
       //     console.log('error', e);
       //   }
       // };
-      
 
-      const onShare = () => {
-        DataManager.getAllDataStrorageAsString().then((lMessage) => {
-          var path = DocumentDirectoryPath + '/test.json';
+      this.shareTextAsFile = function(aFileName, message) {
+          var path = DocumentDirectoryPath + '/' + aFileName;
           
           // write the file
-          writeFile(path, lMessage, 'utf8')
+          writeFile(path, message, 'utf8')
             .then((success) => {
               console.log('FILE WRITTEN!');
 
@@ -51,7 +49,18 @@ class Backup {
             .catch((error) => {
               throw error;
             });
-      })
+      }
+      
+
+      const onShareBackup = () => {
+        DataManager.getAllDataStrorageAsString().then((text) => that.shareTextAsFile('backup.json', text));
+      };
+
+      const onShareCSV = () => {
+        const obj = DataManager.getQuestionsDataLinear();
+        const objStr = JSON.stringify(obj);
+        const text = jsonToCSV(objStr);
+        this.shareTextAsFile('data.csv', text);
       };
 
       this.backupView = function() {
@@ -59,11 +68,11 @@ class Backup {
           <SafeAreaView>
             <View style={[styles.inputContainer, {backgroundColor:"#fff"}]}>
                 <Text style={styles.backupScreenText}>Export backup:</Text>
-                <Button style={styles.confirmButton} icon="backup-restore" mode="contained" onPress={onShare}>
+                <Button style={styles.confirmButton} icon="backup-restore" mode="contained" onPress={onShareBackup}>
                   BACKUP 
                 </Button>
                 <Text style={styles.backupScreenText}>Export for external use:</Text>
-                <Button style={styles.confirmButton} icon="share" mode="contained" disabled={true}>
+                <Button style={styles.confirmButton} icon="share" mode="contained" onPress={onShareCSV}>
                   SAVE IN .CSV
                 </Button>
             </View>

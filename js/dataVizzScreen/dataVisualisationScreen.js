@@ -43,7 +43,7 @@ const DataVisualisationAll = (props) => {
   for(let i in questions) {
     const question = questions[i];
     if(dataManager.getQuestionVisibility(question.id)) {
-      const values = question.getArrayValues();
+      const values = question.getArrayValues({normalizeValue:true, writeDateInString:false});
       const mult = 0.1 + 0.9 * ((questions.length - i) / questions.length);
       for(let j in values) {
         values[j].value *= mult;

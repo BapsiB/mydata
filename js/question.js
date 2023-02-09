@@ -72,7 +72,7 @@ class Question {
         }
     }
 
-    getArrayValues(normalizeValue) {
+    getArrayValues({normalizeValue}) {
         if(normalizeValue === undefined) {
             normalizeValue = true;
         }
@@ -87,11 +87,11 @@ class Question {
             for(let j in dataDay.values) {
                 dayVal = dataDay.values[j];
                 if(that.id == dayVal.id) {
-                const valNorm = normalizeValue ? this.normalizeValue(dayVal.v) : dayVal.v;
-                if(dayVal.v !== null) {
-                    const arrayEl = {date:that.dataManager.getDateFromString(dateStr), value:valNorm};
-                    data.push(arrayEl);
-                }
+                    const valNorm = normalizeValue ? this.normalizeValue(dayVal.v) : dayVal.v;
+                    if(dayVal.v !== null) {
+                        const arrayEl = {date:that.dataManager.getDateFromString(dateStr), value:valNorm};
+                        data.push(arrayEl);
+                    }
                 }
             }
         }

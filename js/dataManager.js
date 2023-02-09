@@ -11,7 +11,7 @@ class DataManager {
        this.questionsLoaded = false;
        this.listQuestions = [];
        this.questionsSettings = [];
-       this.daysData = Datas;
+       this.daysData = new Datas(this);
        this.questionCallback = [];
        // callback to be called when the answers data are loaded.
        this.answersUpdateCallback = null;
@@ -111,6 +111,56 @@ class DataManager {
        
             return promise;
 
+        };
+
+        /*
+        * return the datas as arrays ordered with time.
+        */
+        this.getQuestionsDataLinear = function() {
+            const container = {fields:["questions"], data:[]};
+
+            const dateLimite = this.daysData.getMinMaxDates();
+            var difference = dateLimite.max.getTime() - dateLimite.min.getTime();
+            var days = Math.min(Math.ceil(difference / (1000 * 3600 * 24)), 10000);
+
+            for(let i = 0; i < days; i++) {
+                const lDate = new Date(dateLimite.min);
+                const newDateStr = dateLimite.min.getDate() + i;
+                lDate.setDate(newDateStr);
+                const newDateStrDMFormat = this.getDateString(lDate);
+                const test = lDate + 0;
+                container.fields.push(newDateStrDMFormat);
+            }
+
+            for(let i in this.listQuestions) {
+                let objQuestionI = [];
+                // we add the question text column.
+                objQuestionI.push(this.listQuestions[i].text);
+
+                const dataQI = this.listQuestions[i].getArrayValues({normalizeValue:false});                
+                for(let z = 1; z < container.fields.length; z++) {
+                    const lDate = container.fields[z];
+                    let foundIt = false;
+                    for(let j in dataQI) {
+                        const xx = dataQI[j];
+                        if(!xx.date) {
+                            continue;
+                        }
+                        const date = this.getDateString(xx.date);
+                        if(date == lDate) {
+                            objQuestionI.push(xx.value);
+                            foundIt = true;
+                        }
+                    }
+                    if(!foundIt) {
+                        objQuestionI.push("unknown");
+                    }
+                }
+                container.data.push(objQuestionI);
+
+            }
+            return container;
+            
         };
 
         this.callQuestionsCallbacks = () => {

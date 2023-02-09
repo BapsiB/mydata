@@ -11,7 +11,7 @@ const DataVisualisationSingleQuestion = (props) => {
 
   const question = DataManager.getQuestionWithId(props.route.params.questionId);
 
-  const data = question.getArrayValues(false);
+  const data = question.getArrayValues({normalizeValue:false, writeDateInString:false});
   
   return (
     <View style={{flex:1}}>

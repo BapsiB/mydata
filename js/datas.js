@@ -2,8 +2,9 @@ import { supported32BitAbis } from "react-native-device-info";
 
 
 class Datas {
-    constructor() {
+    constructor(dataManager) {
         this.daysData = [];
+        this.dataManager = dataManager;
 
         this.set = function(date, values) {
             for(let i in this.daysData) {
@@ -24,6 +25,23 @@ class Datas {
             }
             return null;
        }
+
+       this.getMinMaxDates = function() {
+        let returnObject = {min:new Date(Date.now()), max:new Date(1995, 11, 17) }
+        for(let i in this.daysData) {
+            const lDate = this.dataManager.getDateFromString(this.daysData[i].date);
+            if(lDate < returnObject.min) {
+                returnObject.min = lDate;
+            }
+
+            if(lDate > returnObject.max) {
+                returnObject.max = lDate;
+            }
+
+        }
+
+        return returnObject;
+   }
 
        this.clear = function() {
         this.daysData = [];
@@ -61,4 +79,4 @@ class Datas {
     }
 }
 
-export default new Datas();
+export default Datas

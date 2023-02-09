@@ -128,7 +128,7 @@ const SngleQuestionTimeGraph = (props) => {
     if(id > 0) {
       const lQuestion = DataManager.getQuestionWithId(id);
       setQuestionToCompare(lQuestion);
-      const lData = lQuestion.getArrayValues(true);
+      const lData = lQuestion.getArrayValues({normalizeValue:true, writeDateInString:false});
 
       for(let i in lData) {
         lData[i].value = lData[i].value * question.getMax() * 1 + 0.2;

@@ -17,7 +17,7 @@ const RepartitionGraph = (props) => {
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
     const question = props.question;
-    const data = question.getArrayValues(false);
+    const data = question.getArrayValues({normalizeValue:false, writeDateInString:false});
 
     useEffect(() => {
       switch(question.type) {
