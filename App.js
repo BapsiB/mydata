@@ -225,7 +225,7 @@ const MainView = ({ navigation }) => {
     const StackIn = createStackNavigator();
 
     return (
-        <View style={{ flex: 1}}>
+        <View style={{ flex: 1, backgroundColor:"white"}}>
             {HeaderDate.getHeader()}
             <UpdateManager/>
             {/* <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>

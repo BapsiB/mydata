@@ -58,8 +58,8 @@ export default QuestionButton = (props) => {
 
     // Next, interpolate beginning and end values (in this case 0 and 1)
     const animInterpol = valueAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: [25, 0]
+      inputRange: [-1, 0, 1],
+      outputRange: ["0deg", "75deg", "195deg"]
     })
 
 
@@ -83,7 +83,20 @@ export default QuestionButton = (props) => {
     itemRef.current.close();
   }
 
-
+function getTextAnswer() {
+  if(!isAnswered) {
+    return "?"
+  }
+  else if(question.type === SharedConstants.questionTypes.QUESTION_TYPE_YES_NO) {
+    if(answerNorm > 0.5) {
+      return "y";
+    }
+    else {
+      return "n"
+    }
+  }
+  return "";
+}
 
   const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
 
@@ -99,7 +112,7 @@ export default QuestionButton = (props) => {
             paddingTop:2,
             borderRadius: 9,
             borderColor: 'black',
-            borderWidth:1
+            borderWidth:0
         }}
     >
         <TouchableOpacity
@@ -124,7 +137,7 @@ const rightButton = (
             onPress={() => {requestEdit();}}
             style={{              borderRadius: 9,
                                   borderColor: 'black',
-                                  borderWidth:1,
+                                  borderWidth:0,
                                   height:50,
                                   backgroundColor:"#bfb",
                                   justifyContent: 'center',
@@ -147,25 +160,32 @@ const rightButton = (
       onPress={()=>{goToQuestion();}}
   >
   <TouchableOpacity style={{height:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{openQuestionVisu();}}>
-        <Text style={{fontSize: 16, color:"black", textAlign: 'center', justifyContent: 'center'}}>
+        <Text style={{fontSize: 16, color:"#555", textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
+        <View style={[styles.shadowView]}>
+        
+        <TouchableOpacity style={[]} onPress={()=>{goToQuestion();}}>
 
-        <View style={[styles.shadowView, !isAnswered ? Utils.getShadowStyle() : null]}>
-        <TouchableOpacity style={[styles.animatedContainer, !isAnswered ? styles.animatedContainerAnswered : null]} onPress={()=>{goToQuestion();}}>
-        <Animated.View style={{transform: [{translateY: animInterpol}]}}>
+        {isAnswered && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
+          <View style={[styles.line, {transform: [{rotateZ:"30deg"}, {translateX:-20}]}]}></View>
+          <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
+          <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
+        </View>}
+        <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.8}]}, isAnswered ? Utils.getShadowStyle() : null]}>
           <LinearGradient
               start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
               locations={[0, 1, 1]}
-              colors={["white", question ? Utils.increase_brightness(question.colour, 60) : "white", "#fff"]}
+              colors={[ "white", "white", "#fff"]}
               style={[styles.answerContainer]}>
           </LinearGradient>
         </Animated.View>
-        {!isAnswered && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center'}}>
-          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color:"#999"}}>
-                ?
+        <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15}}>
+          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color: "#999"}}>
+                {getTextAnswer()}
           </Text>
-        </View>}
+        </View>
+
       </TouchableOpacity>
       </View>
   </TouchableOpacity>
@@ -188,6 +208,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  line:{
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width:4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   answerContainer: {
     fontSize: 16,
     color:"grey",
@@ -205,8 +233,8 @@ const styles = StyleSheet.create({
   animatedContainer: {
     width:30,
     borderRadius:15,
-    borderWidth:1,
-    borderColor:"grey",
+    borderWidth:0,
+    borderColor:"#333",
     overflow: 'hidden',
     backgroundColor:"white",
   },
@@ -216,6 +244,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 0,
+    borderColor:"#bbb",
+    borderWidth:1,
+    overflow: 'hidden',
   },
 
   shadowView: {
@@ -226,21 +257,30 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15,
+    borderBottomLeftRadius: 0,
   },
 
   swipeContentContainerStyle: {
       justifyContent: 'center',
       borderRadius: 9,
       borderColor: 'black',
-      borderWidth:1,
+      borderWidth:0,
   },
 
     notAlreadyAnswered: {
-      backgroundColor: '#ffffff',
+      shadowColor: "#fff",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+  
+      elevation: 3,
+      backgroundColor: '#f7f7f7',
     },
 
     alreadyAnswered: {
-      backgroundColor: '#ffffff',
+      backgroundColor: '#f7f7f7',
     }
 });

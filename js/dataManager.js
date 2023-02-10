@@ -128,7 +128,6 @@ class DataManager {
                 const newDateStr = dateLimite.min.getDate() + i;
                 lDate.setDate(newDateStr);
                 const newDateStrDMFormat = this.getDateString(lDate);
-                const test = lDate + 0;
                 container.fields.push(newDateStrDMFormat);
             }
 
@@ -153,7 +152,7 @@ class DataManager {
                         }
                     }
                     if(!foundIt) {
-                        objQuestionI.push("unknown");
+                        objQuestionI.push("");
                     }
                 }
                 container.data.push(objQuestionI);

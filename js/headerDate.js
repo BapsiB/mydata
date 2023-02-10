@@ -47,7 +47,7 @@ class HeaderDate {
         }
 
         return (
-            <View style={{height:40, flexDirection: "row", marginVertical:0, marginBottom:20}}>
+            <View style={{height:36, width:"90%", marginLeft:"5%", flexDirection: "row", marginVertical:0, marginBottom:0}}>
                 <View style={{flex:1, marginLeft:0}}>
                     <TouchableOpacity style={{width:50, height:60, paddingTop:20}} onPress={()=>{setDate(incrementDate(this.date, -1));}}>
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowL.png")}/>
@@ -77,7 +77,7 @@ class HeaderDate {
 const styles = StyleSheet.create({
         dateText: {
             color: 'black',
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: '500',
             textAlignVertical:'center',
             textAlign:'center',

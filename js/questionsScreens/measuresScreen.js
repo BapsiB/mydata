@@ -49,7 +49,7 @@ const MeasuresScreen = ({navigation, date}) => {
   const listItems = arrayQuestions.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
 
   return (
-    <View style={{flex:1}}>
+    <View style={{flex:1, backgroundColor:"white"}}>
       {getTextEmptyQuestion()}
     <ScrollView style={{marginBottom:"17%"}}>
       <SwipeProvider>
