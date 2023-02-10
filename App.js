@@ -257,7 +257,7 @@ const MainView = ({ navigation }) => {
                 <View style={{   width:"100%", height:lSizeFooter * 1, flexDirection: "row", justifyContent: 'center',}}>
                     <BottomButton 
                     source0={require("./resources/measuresButton.png")} 
-                    source1={require("./resources/notesButton.png")} 
+                    source1={require("./resources/notesbutton.png")} 
                     onClick={()=>{switchScreen()}}
                     isSelected = {screenId == 0}
                     />
