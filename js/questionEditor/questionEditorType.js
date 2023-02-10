@@ -19,6 +19,10 @@ const QuestionType = ({questionTypeId, onChange, enabled}) => {
           lTextTop = "intensity";
           lSubText = "it cannot be numbered."
           break;
+      case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+        lTextTop = "colour";
+        lSubText = "you'll pick a colour to answer"
+        break;
       case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
         lTextTop = "notes";
         lSubText = "classic text journal content."

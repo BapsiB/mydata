@@ -37,7 +37,8 @@ class SharedConstants {
         QUESTION_TYPE_NUMBER: 1,
         QUESTION_TYPE_INTENSITY: 2,
         QUESTION_TYPE_NOTE: 3,
-        QUESTION_TYPE_COUNT: 4
+        QUESTION_TYPE_COLOUR: 4,
+        QUESTION_TYPE_COUNT: 5
        };
 
        this.getDateString = function(date) {

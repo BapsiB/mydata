@@ -5,6 +5,7 @@ import DataManager from './dataManager.js';
 import AnswerYesNo from './answerComponents/answerYesNo.js';
 import AnswerSlider from './answerComponents/answerSlider.js';
 import AnswerNote from './answerComponents/answerNote.js';
+import AnswerColour from './answerComponents/answerColour';
 import HeaderDate from './headerDate.js';
 import Utils from './utils.js'
 import {
@@ -93,6 +94,9 @@ const AnswerScreen = (props) => {
           case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
               return (<AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>)
           break;
+          case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+            return (<AnswerColour date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id}/>)
+        break;
           case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
             return (<AnswerNote date={HeaderDate.getDate()} callback={nextQuestion} navigation={props.navigation} question={aCurrentQuestion} key={aCurrentQuestion.id}/>)
           break;

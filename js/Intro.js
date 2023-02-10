@@ -90,6 +90,9 @@ export default  Intro = (props) => {
                     case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
                         lOption = options.intensity;
                     break;
+                    case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+                        lOption = {};
+                    break;
                     case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
                     lOption = {};
                     break;

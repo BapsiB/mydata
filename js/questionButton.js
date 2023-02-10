@@ -172,7 +172,7 @@ const rightButton = (
           <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
           <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
         </View>}
-        <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.8}]}, isAnswered ? Utils.getShadowStyle() : null]}>
+        <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? null : null]}>
           <LinearGradient
               start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
               locations={[0, 1, 1]}
@@ -206,12 +206,19 @@ const styles = StyleSheet.create({
     borderColor:"black",
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 
   line:{
-    borderBottomColor: 'black',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    width:4,
+    borderBottomColor: '#bbb',
+    borderBottomWidth: 2,
+    width:2,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -277,10 +284,10 @@ const styles = StyleSheet.create({
       shadowRadius: 3.84,
   
       elevation: 3,
-      backgroundColor: '#f7f7f7',
+      backgroundColor: '#f7f5f5',
     },
 
     alreadyAnswered: {
-      backgroundColor: '#f7f7f7',
+      backgroundColor: '#f7f5f5',
     }
 });

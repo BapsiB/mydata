@@ -54,6 +54,8 @@ const RepartitionGraph = (props) => {
     const max = question.getMax();
     const useAllValuesAsX = (max - min) < 20;
     const lLocation = [];
+    // set the locations for the x axis.
+    // if there are too many X values, we organise the values in 8 level categories..
     if(!useAllValuesAsX) {
       for(let i = 0; i < 8; i++) {
         let xValue = "";

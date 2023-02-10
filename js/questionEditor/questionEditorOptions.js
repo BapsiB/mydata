@@ -11,6 +11,9 @@ const QuestionOptions = ({questionTypeId, onChange, initOptions}) => {
       case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
         return (<View style={{flex:2}}/>)
       break;
+      case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+        return (<View style={{flex:2}}/>)
+      break;
       case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
               if(initOptions.intensity === undefined) {
                   initOptions.intensity = {};

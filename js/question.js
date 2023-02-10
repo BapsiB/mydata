@@ -38,6 +38,8 @@ class Question {
                     return 0;
                 case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
                     return 0;
+                case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+                    return 0;
                 default:
                     return this.options.min;
             }
@@ -49,6 +51,8 @@ class Question {
                     return 1;
                 case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
                     return 100;
+                case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+                    return 1;
                 default:
                     return this.options.max;
             }

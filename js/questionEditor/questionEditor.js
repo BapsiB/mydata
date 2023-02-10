@@ -47,6 +47,9 @@ function onPressAddQuestion() {
         case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
             lOption = options.intensity;
         break;
+        case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+          lOption = {};
+        break;
         case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
           lOption = {};
         break;
@@ -113,6 +116,10 @@ function getQuestionExample(questionType) {
     lNotesQuestions.push("choose a title for that note");
     lNotesQuestions.push("choose a title for that note");
     lNotesQuestions.push("choose a title for that note");
+    lQuestions.push(lNotesQuestions);
+    lNotesQuestions.push("what's the colour of the sky?");
+    lNotesQuestions.push("colour of my mood");
+    lNotesQuestions.push("what's the colour of the day?");
     lQuestions.push(lNotesQuestions);
     return "eg: " + lQuestions[questionType][lRandom];
 }
