@@ -33,7 +33,7 @@ const NotesScreen = ({navigation}) => {
   }
 
   const editQuestion = (questionId) => {
-    navigation.replace("Answer Screen", questionId);
+    navigation.navigate("Answer Screen", questionId);
   }
 
   const openNoteEditor = (questionId) => {

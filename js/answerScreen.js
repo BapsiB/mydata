@@ -38,21 +38,19 @@ const AnswerScreen = (props) => {
             {getProperAnswerElement(localQuestion)}
           </View>
         </View>
-          <View style={{justifyContent: 'flex-end', alignItems: 'center', flexDirection: "row", backgroundColour:"blue", marginVertical:10}}>
         {hasNextPrevButton &&
+          <View style={{justifyContent: 'flex-end', alignItems: 'center', flexDirection: "row", backgroundColour:"blue", marginVertical:10}}>        
           <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(false, false);}}>
               <Text style={{color:"black"}}>PREV</Text>
           </TouchableOpacity>      
-        } 
           <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2}]} onPress={()=>{onReturn(hasNextPrevButton);}}>
               <Text style={{color:"black"}}>BACK</Text>
           </TouchableOpacity>
-        {hasNextPrevButton &&
           <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1}]} onPress={()=>{nextQuestion(true, false);}}>
               <Text style={{color:"black"}}>NEXT</Text>
           </TouchableOpacity>
-        }
         </View>
+        }
         </View>
       )
     }
@@ -112,9 +110,10 @@ const AnswerScreen = (props) => {
 
     listQuestions = DataManager.getQuestions();
     let optionsForth = Utils.horizontalScreenAnimation;
-    optionsForth.headerShown = false;
+    optionsForth.true = false;
+    
     let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
-    optionsBack.headerShown = false;
+    optionsBack.true = false;
     const listItemsforth = listQuestions.map((d) => 
       <StackIn.Screen name={d.id} component={AnswerComponent} options={optionsForth} key={d.id} initialParams={{ questionId: d.id }} />
       );

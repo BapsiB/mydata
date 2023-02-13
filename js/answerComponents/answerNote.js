@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, TextInput, Text, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, TextInput, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 import Utils from '../utils.js'
@@ -8,15 +10,12 @@ import Utils from '../utils.js'
 * Component showing the slider for both numbered and intensity type of questions.
 */
 const AnswerNote = (props) => {
+
+
     const date = props.date;
     const question = props.question;
     const navigation = props.navigation;
     const maxChar = 10000;
-    useEffect(() => {
-      navigation.addListener('beforeRemove', (e) => {
-        onSaveValue();
-    });
-  }, []);
 
     let lAnswerForQuestion = DataManager.getAnswerForQuestion(question.id, date);
     if(lAnswerForQuestion === undefined || !lAnswerForQuestion) {
@@ -24,15 +23,28 @@ const AnswerNote = (props) => {
     }
 
     const [answer, setAnswer] = React.useState(lAnswerForQuestion);
+    const [timeoutId, setTimeoutId] = React.useState(null);
 
     function onSetValue(aValue) {
         setAnswer(aValue);
+        if(timeoutId) {
+          clearInterval(timeoutId);
+        }
+        // we throttle the saving to avoid saving at every keyboard input.
+        const lTimeoutId = setTimeout(onSaveValue, 1000);
+        setTimeoutId(lTimeoutId);
     }
 
     function onSaveValue() {
         DataManager.setData(question.id, date, answer);
         props.callback();
     }
+
+    function onReturn() {
+      onSaveValue();
+      props.navigation.goBack();
+     }
+  
 
     function getEmptyLines() {
         let string = "";
@@ -53,12 +65,18 @@ const AnswerNote = (props) => {
             style={[styles.input, {}]}
             onChangeText={onSetValue}
             onEndEditing={onSaveValue}
+            onSubmitEditing={onSaveValue}
             defaultValue={lAnswerForQuestion}
             multiline={true}
             maxLength={maxChar}
         />
         </View>
         <Text style={styles.letterCounter}>{answer.length}/{maxChar}</Text>
+        <View style={{width:"100%", justifyContent: 'center', alignItems: 'center'}}>
+        <TouchableOpacity style={[SharedConstants.styles.BaseButtons, {}]} onPress={onReturn}>
+              <Text style={{color:"black"}}>BACK</Text>
+          </TouchableOpacity>
+          </View>
     </SafeAreaView>
     );
 }
