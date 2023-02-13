@@ -16,6 +16,7 @@ export default QuestionButton = (props) => {
     const [answerText, setAnswerText] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
     const [answerNorm, setAnswerNorm] = useState(0);
+    const [colourMarker, setColourMarker] = useState("#fff");
     const [question, setQuestion] = useState(null);
 
     useEffect(() => {
@@ -34,22 +35,35 @@ export default QuestionButton = (props) => {
         
         if(lIsAnswered) {
           const question = DataManager.getQuestionWithId(props.questionId);
-          const lAnswerNorm = question.normalizeValue(answer);
+          let lAnswerNorm = question.normalizeValue(answer);
           setAnswerNorm(lAnswerNorm);
+
+          if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) {
+            setColourMarker(answer);
+          }
+          else {
+            setColourMarker("#fff");
+          }
+
+          if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_YES_NO) {
+            lAnswerNorm = (lAnswerNorm == 1) ? 0.5 : -2;
+          }
+
           // Will change fadeAnim value to 1 in 5 seconds
           Animated.timing(valueAnim, {
             toValue: lAnswerNorm,
-            duration: 300,
+            duration: 400,
             useNativeDriver: true,
           }).start();
           setAnswerText(SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId)));
         }
         else {
+          setColourMarker("#fff")
           setAnswerNorm(0);
           // Will change fadeAnim value to 1 in 5 seconds
           Animated.timing(valueAnim, {
             toValue: -1,
-            duration: 300,
+            duration: 400,
             useNativeDriver: true,
           }).start();
         }
@@ -58,8 +72,8 @@ export default QuestionButton = (props) => {
 
     // Next, interpolate beginning and end values (in this case 0 and 1)
     const animInterpol = valueAnim.interpolate({
-      inputRange: [-1, 0, 1],
-      outputRange: ["0deg", "75deg", "195deg"]
+      inputRange: [-2, -1, 0, 1],
+      outputRange: ["-45deg", "0deg", "80deg", "200deg"]
     })
 
 
@@ -96,6 +110,15 @@ function getTextAnswer() {
     }
   }
   return "";
+}
+
+function displayMarkers() {
+  if(!isAnswered) {
+    return false;
+  }
+  else{
+    return (question.type == SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY) || (question.type == SharedConstants.questionTypes.QUESTION_TYPE_NUMBER);
+  } 
 }
 
   const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
@@ -167,7 +190,7 @@ const rightButton = (
         
         <TouchableOpacity style={[]} onPress={()=>{goToQuestion();}}>
 
-        {isAnswered && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
+        {(displayMarkers()) && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
           <View style={[styles.line, {transform: [{rotateZ:"30deg"}, {translateX:-20}]}]}></View>
           <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
           <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
@@ -176,12 +199,12 @@ const rightButton = (
           <LinearGradient
               start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
               locations={[0, 1, 1]}
-              colors={[ "white", "white", "#fff"]}
+              colors={[ colourMarker, colourMarker, "#fff"]}
               style={[styles.answerContainer]}>
           </LinearGradient>
         </Animated.View>
         <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15}}>
-          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color: "#999"}}>
+          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color: "#999", marginBottom:2}}>
                 {getTextAnswer()}
           </Text>
         </View>
@@ -229,7 +252,7 @@ const styles = StyleSheet.create({
     textAlign:"right",
     width:30,
     height:30,
-    paddingRight:0,
+    paddingBottom:2,
 
     justifyContent: 'center',
     textAlign:"center",

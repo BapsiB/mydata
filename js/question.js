@@ -118,6 +118,11 @@ class Question {
                 return value;
                 }
             break;
+            case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+                {
+                return 0.5;
+                }
+            break;
             default:
                 return 0;
         }
