@@ -11,7 +11,6 @@ import Utils from '../utils.js'
 */
 const AnswerNote = (props) => {
 
-
     const date = props.date;
     const question = props.question;
     const navigation = props.navigation;

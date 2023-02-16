@@ -33,6 +33,10 @@ const RepartitionGraph = (props) => {
           processNumber();
           break;
         }
+        case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR: {
+          processColour();
+          break;
+        }
       }
       setTimeout(() => {
         setFirstRender(false);
@@ -123,39 +127,68 @@ const RepartitionGraph = (props) => {
     setGroupValues(!useAllValuesAsX);
   }
 
-    function processYesNo() {
-      if(!data.length) {
-        return;
+  function processColour() {
+    if(!data.length) {
+      return;
+    }
+
+    const lLocation = [];
+
+    for(let i = 0; i <= 10; i++) {
+      const potentialText = 'hsl(0,0%,' + 10 * i + '%)';
+      lLocation.push({y:0, x:i.toString(), label:"", colour:potentialText});
+    }
+
+    const addVal = 100 / data.length;
+
+    for(let i in data) {
+      const hsv = Utils.hexToHSV(data[i].value);
+      const value = hsv.v / 100;
+      let index = value;
+      index *= lLocation.length;
+      index = Math.floor(index);
+      index = Math.min(index, lLocation.length - 1);
+      lLocation[index].y += addVal;
+    }
+
+    setWidthBars(Dimensions.get('window').width * 0.5 / lLocation.length);
+    setLocations(lLocation);
+    setGroupValues(true);
+  }
+
+  function processYesNo() {
+    if(!data.length) {
+      return;
+    }
+    let yesCount = 0;
+    let noCount = 0;
+    let nullCount = 0;
+    for(let i in data) {
+      const obj = data[i];
+      const dateStr = DataManager.getDateString(obj.date);
+      if(obj.value === 1) {
+        yesCount++;
       }
-      let yesCount = 0;
-      let noCount = 0;
-      let nullCount = 0;
-      for(let i in data) {
-        const obj = data[i];
-        const dateStr = DataManager.getDateString(obj.date);
-        if(obj.value === 1) {
-          yesCount++;
-        }
-        else if(obj.value === 0) {
-          noCount++;
-        }
+      else if(obj.value === 0) {
+        noCount++;
       }
+    }
 
-      nullCount = Math.abs(Utils.getDayDifference(data[0].date, data[data.length - 1].date) - yesCount - noCount);
+    nullCount = Math.abs(Utils.getDayDifference(data[0].date, data[data.length - 1].date) - yesCount - noCount);
 
-      const colourGreen = "#d7fdd7";
-      const colourGrey  = "#ddd";
-      const colourRed  = "#F8a3aF";
+    const colourGreen = "#d7fdd7";
+    const colourGrey  = "#ddd";
+    const colourRed  = "#F8a3aF";
 
-      const yesRatio = yesCount / (nullCount + yesCount + noCount);
-      const noSeRatio = nullCount / (nullCount + yesCount + noCount);
-      const noRatio = noCount / (nullCount + yesCount + noCount);
+    const yesRatio = yesCount / (nullCount + yesCount + noCount);
+    const noSeRatio = nullCount / (nullCount + yesCount + noCount);
+    const noRatio = noCount / (nullCount + yesCount + noCount);
 
-      function getLabel(ratio) {
-        return Math.round(ratio * 100).toString() + "%"
-      }
+    function getLabel(ratio) {
+      return Math.round(ratio * 100).toString() + "%"
+    }
 
-      const lLocation = [{y:yesRatio, x:"Yes", label:getLabel(yesRatio), colour:colourGreen }, {y:noSeRatio, x:"no data", label:getLabel(noSeRatio), colour:colourGrey},  {y:noRatio, x:"No", label:getLabel(noRatio), colour:colourRed}];
+    const lLocation = [{y:yesRatio, x:"Yes", label:getLabel(yesRatio), colour:colourGreen }, {y:noSeRatio, x:"no data", label:getLabel(noSeRatio), colour:colourGrey},  {y:noRatio, x:"No", label:getLabel(noRatio), colour:colourRed}];
       setLocations(lLocation);
       setWidthBars(70);
     }

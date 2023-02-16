@@ -9,7 +9,13 @@ import SharedConstants from '../sharedConstants.js'
 const SngleQuestionTimeGraph = (props) => {
 
     const question = DataManager.getQuestionWithId(props.questionId);
-    data = props.data;
+    let data = [];
+    if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) {
+      transformDataForColours();
+    }
+    else {
+      data = props.data;
+    }
     const averagePointCount = 7;
     const colourAverage = "#833";
 
@@ -20,42 +26,67 @@ const SngleQuestionTimeGraph = (props) => {
 
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
-    useEffect(() => {
-        processAverageChart();
-        setTimeout(() => {
-          setFirstRender(false);
+  useEffect(() => {
+      processAverageChart();
+      setTimeout(() => {
+        setFirstRender(false);
 
-          Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }).start();
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }).start();
 
-        }, 100);
-      }, [fadeAnim]);
+      }, 100);
+    }, [fadeAnim]);
 
-      function processAverageChart() {
-        const dataAv = [];
-        for(let i = 0; i < data.length; i++) {
-          const actualPointCount = Math.min(i, averagePointCount);
-          let valueAv = data[i].value;
-          for(let j = 1; j <= actualPointCount; j++) {
-            valueAv += data[i - j].value;
-          }
-          valueAv = valueAv / (actualPointCount + 1);
-          dataAv.push({date:data[i].date, value:valueAv});
-        }
-        setDataAv(dataAv);
+    function transformDataForColours() {
+      data = [];
+      for(let i in props.data) {
+        data[i] = {
+          colour:props.data[i].value, 
+          date:props.data[i].date, 
+          value:1};
       }
+    }
 
-      const renderVictoryLines = () => {
-        let id = 0;
-        let dataStyle = {};
-        const colour = question.getColour() ? question.getColour() : "#c43a31";
-    
+    function processAverageChart() {
+      const dataAv = [];
+      for(let i = 0; i < data.length; i++) {
+        const actualPointCount = Math.min(i, averagePointCount);
+        let valueAv = data[i].value;
+        for(let j = 1; j <= actualPointCount; j++) {
+          valueAv += data[i - j].value;
+        }
+        valueAv = valueAv / (actualPointCount + 1);
+        dataAv.push({date:data[i].date, value:valueAv});
+      }
+      setDataAv(dataAv);
+    }
+
+    const renderVictoryLines = () => {
+      let id = 0;
+      let dataStyle = {};
+      if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) {
+        return (
+        <VictoryBar
+        style={{
+          data: {
+            fill: ({ datum }) => datum.colour,
+            fillOpacity: 1,
+            strokeWidth: 0
+          }
+        }}
+        x="date" y="value"
+        data={data}
+        />
+        )
+      }
+      else {
         dataStyle = { fill: 'url(#gradientStroke)', fillOpacity: 0.5, stroke: colour, strokeWidth: 1 }
         return <VictoryArea interpolation="step" key={id} data={data} x="date" y="value" style={{ data:dataStyle  }}/>;
       }
+    }
 
   /*
   * render the secondary chart to compare values with.
@@ -81,7 +112,7 @@ const SngleQuestionTimeGraph = (props) => {
   }
 
   const renderAverageLine = () => {
-    if(questionToCompare) {
+    if(questionToCompare || (question.type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR)) {
       return null;
     }
     let id = 999999;
