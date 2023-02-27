@@ -7,6 +7,20 @@ import LinearGradient from 'react-native-linear-gradient';
 import HeaderDate from './headerDate';
 import Utils from './utils'
 import { Data } from 'victory-core';
+import utils from './utils';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
+import { DragSortableView } from 'react-native-drag-sort'
+
+// const colourAnswered = "#DECCF1";
+// const colourButtonBack = '#FDD7C2';
+// const colourText = '#666';
+
+const colourAnswered = "#fff";
+const colourText = '#666';
+const colourTextAnswered = '#666';
+const colourButtonBack = '#fff3f3';
+let colourButtonBackAnswered = colourButtonBack;//'#879';
 
 export default QuestionButton = (props) => {
 
@@ -19,9 +33,13 @@ export default QuestionButton = (props) => {
     const [colourMarker, setColourMarker] = useState("#fff");
     const [question, setQuestion] = useState(null);
 
+    if(question) {
+      colourButtonBackAnswered = '#a3f3f3';//utils.increase_brightness(question.color, 70);
+    }
+
     useEffect(() => {
       HeaderDate.addChangeCallback("QuestionButton" + props.questionID, dateChange);
-      setQuestion(DataManager.getQuestionWithId(props.questionId))
+      setQuestion(DataManager.getQuestionWithId(props.questionId));
       dateChange();
     })
 
@@ -42,7 +60,7 @@ export default QuestionButton = (props) => {
             setColourMarker(answer);
           }
           else {
-            setColourMarker("#fff");
+            setColourMarker(colourAnswered);
           }
 
           if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_YES_NO) {
@@ -109,7 +127,10 @@ function getTextAnswer() {
       return "n"
     }
   }
-  return "";
+  else if(question.type === SharedConstants.questionTypes.QUESTION_TYPE_NUMBER)
+  {
+    return answerText;
+  }
 }
 
 function displayMarkers() {
@@ -121,7 +142,8 @@ function displayMarkers() {
   } 
 }
 
-  const styleAns = isAnswered ? styles.alreadyAnswered : styles.notAlreadyAnswered;
+// {backgroundColor:utils.increase_brightness(question.colour, 90)}
+  const styleAns = isAnswered ? [styles.alreadyAnswered] : styles.notAlreadyAnswered;
 
   const leftButton = (
     <SwipeButtonsContainer
@@ -183,19 +205,18 @@ const rightButton = (
       onPress={()=>{goToQuestion();}}
   >
   <TouchableOpacity style={{height:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{openQuestionVisu();}}>
-        <Text style={{fontSize: 16, color:"#555", textAlign: 'center', justifyContent: 'center'}}>
+        <Text style={{fontSize: 16, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
         <View style={[styles.shadowView]}>
-        
-        <TouchableOpacity style={[]} onPress={()=>{goToQuestion();}}>
+        <TouchableOpacity style={[{width: 50, height:50}]} onPress={()=>{goToQuestion();}}>
 
         {(displayMarkers()) && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
           <View style={[styles.line, {transform: [{rotateZ:"30deg"}, {translateX:-20}]}]}></View>
           <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
           <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
         </View>}
-        <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? null : null]}>
+        <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? {borderColor:"#777"} : null]}>
           <LinearGradient
               start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
               locations={[0, 1, 1]}
@@ -204,7 +225,7 @@ const rightButton = (
           </LinearGradient>
         </Animated.View>
         <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15}}>
-          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color: "#999", marginBottom:2}}>
+          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color: isAnswered ? "#fff" : "#999", marginBottom:0}}>
                 {getTextAnswer()}
           </Text>
         </View>
@@ -217,13 +238,42 @@ const rightButton = (
   );
 }
 
+const QuestionButtonEdit = (props) => {
+
+  const editQuestion = () => {
+    props.editCallback(props.questionId);
+  }
+
+  return (
+    <View style={{marginVertical:0}}>
+      <TouchableOpacity style={[{height:"100%", textAlign: 'center', justifyContent: 'center'}, styles.questionsButtons, styles.alreadyAnswered]} onPress={()=>{editQuestion();}}>
+      <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center'}}>
+          {props.title}
+      </Text>
+      <TouchableOpacity style={{width:40, height:40, position:"absolute", left:0}} onPress={()=>{}}>
+      <IconCommunity name="drag" size={40} color="#777" style={{width:40, height:40, position:"absolute", left:0}}/>
+      </TouchableOpacity>
+      <View style={[styles.shadowView, {right:10}]}>
+        <Icon name="edit" size={20} color="#000"  style={{width:20, height:20}}/>
+    </View>
+  </TouchableOpacity>
+  </View>
+  )
+};
+
+export {QuestionButtonEdit}
+
 const styles = StyleSheet.create({
   questionsButtons: {
-    marginVertical:3,
-    marginHorizontal:20,
+    marginVertical:4,
+    marginLeft:20,
+    marginRight:10,
     paddingHorizontal:3,
     borderWidth:0,
-    borderRadius:10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 25,
+    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 10,
     height:50,
     flex:1,
     borderColor:"black",
@@ -234,8 +284,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
     shadowRadius: 3.84,
+    elevation:0
   },
 
   line:{
@@ -274,16 +325,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
     borderBottomLeftRadius: 0,
+    width:30,
+    marginLeft:10,
+    marginTop:10,
     borderColor:"#bbb",
     borderWidth:1,
     overflow: 'hidden',
   },
 
   shadowView: {
-    right:5,
     width:30,
     position:"absolute",
-    right:5,
+    right:20,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
@@ -292,13 +345,16 @@ const styles = StyleSheet.create({
 
   swipeContentContainerStyle: {
       justifyContent: 'center',
-      borderRadius: 9,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 25,
+      borderBottomRightRadius: 25,
+      borderBottomLeftRadius: 10,
       borderColor: 'black',
       borderWidth:0,
   },
 
     notAlreadyAnswered: {
-      shadowColor: "#fff",
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 2,
@@ -307,10 +363,12 @@ const styles = StyleSheet.create({
       shadowRadius: 3.84,
   
       elevation: 3,
-      backgroundColor: '#f7f5f5',
+      backgroundColor: colourButtonBack,
     },
 
     alreadyAnswered: {
-      backgroundColor: '#f7f5f5',
+      borderWidth:1,
+      borderColor:"#cdc",
+      backgroundColor: colourButtonBackAnswered,
     }
 });

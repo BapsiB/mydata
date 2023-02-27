@@ -53,7 +53,7 @@ const MeasuresScreen = ({navigation, date}) => {
       {getTextEmptyQuestion()}
     <ScrollView style={{marginBottom:"17%"}}>
       <SwipeProvider>
-        <View style={{height:15}}/>
+        <View style={{height:15,}}/>
         {listItems}
         <View style={{height:15}}/>
       </SwipeProvider>

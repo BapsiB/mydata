@@ -24,6 +24,7 @@ import {
 } from '@react-navigation/stack';
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, HStack, Divider } from 'react-native';
 import sharedConstants from './js/sharedConstants.js';
+import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
 
 
 const Stack = createNativeStackNavigator();
@@ -108,6 +109,7 @@ const MyStack = () => {
             options={{ headerShown:true }}
         />
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
+        <Stack.Screen name="Questions List Editor" component={EditQuestionsScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
         <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
         <Stack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
@@ -141,10 +143,10 @@ function CustomDrawerContent(props) {
         onPress={() => props.navigation.navigate("Question Editor", {startType: sharedConstants.questionTypes.QUESTION_TYPE_YES_NO})}
       />
       <DrawerItem
-        style={{opacity:0.5}}
+        style={{}}
         icon={({ focused, color, size }) => <Icon color={"#555"} size={20} name={'edit'} />}
-        label="Edit Questions (coming up)"
-        onPress={()=>{}}
+        label="Edit Questions"
+        onPress={() => props.navigation.navigate("Questions List Editor")}
       />
       <View
         style= {{

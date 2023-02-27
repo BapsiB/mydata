@@ -7,6 +7,7 @@ class Question {
         this.text = data.text;
         // id of the question type.
         this.type = data.type;
+        this.displayOrder = data.displayOrder ? data.displayOrder : 0;
         this.options = data.options;
         if(data.colour !== undefined) {
             if(String(data.colour).length <= 2) {
@@ -74,6 +75,10 @@ class Question {
             console.log(`${key}: ${value}`);
             this.options[key] = value;
         }
+    }
+
+    setDisplayOrder(aOrder) {
+        this.displayOrder = aOrder;
     }
 
     getArrayValues({normalizeValue}) {
