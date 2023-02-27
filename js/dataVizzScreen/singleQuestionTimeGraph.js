@@ -83,6 +83,7 @@ const SngleQuestionTimeGraph = (props) => {
         )
       }
       else {
+        const colour = question.getColour() ? question.getColour() : "#c43a31";
         dataStyle = { fill: 'url(#gradientStroke)', fillOpacity: 0.5, stroke: colour, strokeWidth: 1 }
         return <VictoryArea interpolation="step" key={id} data={data} x="date" y="value" style={{ data:dataStyle  }}/>;
       }

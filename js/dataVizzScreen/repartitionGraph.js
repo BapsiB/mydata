@@ -142,8 +142,8 @@ const RepartitionGraph = (props) => {
     const addVal = 100 / data.length;
 
     for(let i in data) {
-      const hsv = Utils.hexToHSV(data[i].value);
-      const value = hsv.v / 100;
+      const hsv = Utils.hexToHSL(data[i].value);
+      const value = hsv.l / 100;
       let index = value;
       index *= lLocation.length;
       index = Math.floor(index);

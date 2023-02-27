@@ -40,8 +40,8 @@ class Utils {
           } : null;
         }
 
-        // Convert hex to HSV.
-        this.hexToHSV = function(H) {
+        // Convert hex to HSVL
+        this.hexToHSL = function(H) {
               // Convert hex to RGB first
               let r = 0, g = 0, b = 0;
               if (H.length == 4) {
@@ -83,7 +83,7 @@ class Utils {
               s = +(s * 100).toFixed(1);
               l = +(l * 100).toFixed(1);
             
-              return {h:h, s:s, v:l};
+              return {h:h, s:s, l:l};
         }
 
         this.horizontalScreenAnimationRightToLeft = {

@@ -3,9 +3,11 @@ import { StyleSheet, View, Dimensions, ScrollView, Text } from "react-native";
 
 import DataManager from '../dataManager.js';
 import RepartitionGraph from './repartitionGraph.js'
+import RepartitionGraphColours from './repartitionGraphColours'
 import TextDataExtraction from './textDataExtraction'
 import SingleQuestionTimeGraph from './singleQuestionTimeGraph'
 import { parseSync } from "@babel/core";
+import sharedConstants from "../sharedConstants.js";
 
 const DataVisualisationSingleQuestion = (props) => {
 
@@ -13,6 +15,15 @@ const DataVisualisationSingleQuestion = (props) => {
 
   const data = question.getArrayValues({normalizeValue:false, writeDateInString:false});
   
+  function getRepartitionGraph() {
+    if(question.type == sharedConstants.questionTypes.QUESTION_TYPE_COLOUR) {
+      return (<RepartitionGraphColours data={data} question={question}/>)
+    }
+    else {
+      return (<RepartitionGraph data={data} question={question}/>)
+    }
+  }
+
   return (
     <View style={{flex:1}}>
     <Text style={styles.questionText}
@@ -23,10 +34,10 @@ const DataVisualisationSingleQuestion = (props) => {
     <ScrollView style={{flex:1}} scrollEnabled={true}>
     <SingleQuestionTimeGraph data={data} questionId={question.id}/>
     <View style={[styles.container, {zIndex:0}]}>
-      <RepartitionGraph data={data} question={question}/>
+    {getRepartitionGraph()}
     </View>
     <View style={[styles.container, {zIndex:0, padding:20}]}>
-    <TextDataExtraction data={data} style={{
+    <TextDataExtraction data={data} question={question} style={{
       zIndex: -1,
       elevation: -1,
     }}/>
