@@ -10,7 +10,6 @@ import { Data } from 'victory-core';
 import utils from './utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
-import { DragSortableView } from 'react-native-drag-sort'
 
 // const colourAnswered = "#DECCF1";
 // const colourButtonBack = '#FDD7C2';
@@ -225,7 +224,7 @@ const rightButton = (
           </LinearGradient>
         </Animated.View>
         <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15}}>
-          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontWeight:"bold", color: isAnswered ? "#fff" : "#999", marginBottom:0}}>
+          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontSize:12, fontWeight:"regular", color: isAnswered ? "#999" : "#999", marginBottom:0}}>
                 {getTextAnswer()}
           </Text>
         </View>
@@ -243,20 +242,19 @@ const QuestionButtonEdit = (props) => {
   const editQuestion = () => {
     props.editCallback(props.questionId);
   }
-
+  
   return (
-    <View style={{marginVertical:0}}>
-      <TouchableOpacity style={[{height:"100%", textAlign: 'center', justifyContent: 'center'}, styles.questionsButtons, styles.alreadyAnswered]} onPress={()=>{editQuestion();}}>
-      <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center'}}>
-          {props.title}
-      </Text>
-      <TouchableOpacity style={{width:40, height:40, position:"absolute", left:0}} onPress={()=>{}}>
-      <IconCommunity name="drag" size={40} color="#777" style={{width:40, height:40, position:"absolute", left:0}}/>
-      </TouchableOpacity>
-      <View style={[styles.shadowView, {right:10}]}>
-        <Icon name="edit" size={20} color="#000"  style={{width:20, height:20}}/>
-    </View>
-  </TouchableOpacity>
+    <View style={[{marginVertical:0, height:50, flexDirection:"row"}, styles.questionsButtons, styles.alreadyAnswered]}>
+      <IconCommunity name="drag-vertical" size={40} color="#777" style={{width:30, height:40, position:"absolute", left:-5}}/>
+      <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"85%"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
+        <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center'}}>
+            {props.title}
+        </Text>
+        
+        <View style={[styles.shadowView, {right:0}]}>
+          <Icon name="edit" size={20} color="#444"  style={{width:20, height:20}}/>
+        </View>
+    </TouchableOpacity>
   </View>
   )
 };

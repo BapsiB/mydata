@@ -56,6 +56,7 @@ class DataManager {
                   const questionCast = new Question(question, that);
                   that.listQuestions.push(questionCast);
               }
+              that.updateQuestionsOrder();
             }
       
             that.questionsLoaded = true;
@@ -168,13 +169,26 @@ class DataManager {
             }
         }
 
-       this.saveListQuestions = function() {
+        this.saveListQuestions = function() {
             const lListSavable = [];
             for(const question of this.listQuestions) {
                 lListSavable.push(question.getStringifyiableObject());
             }
             _storeData("@questions", lListSavable);
-       }
+         }
+
+        this.updateQuestionsOrder = function() {
+            this.listQuestions.sort((a, b) => { 
+                if (a.displayOrder < b.displayOrder) {
+                  return -1;
+                }
+                if (a.displayOrder > b.displayOrder) {
+                  return 1;
+                }
+                return 0;
+            })
+            this.callQuestionsCallbacks();
+        }
 
        this.setQuestionVisibility = function(questionId, visibility) {
         this.questionsSettings[questionId] = {visibility:visibility};

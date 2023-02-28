@@ -93,7 +93,7 @@ const MyStack = () => {
   
   React.useEffect(() => {
     DataManager.addQuestionsListener("MyStack", updateQuestions);
-}, []);
+  }, []);
 
   return (
     <View style={{height:"100%", width:"100%"}}>
