@@ -8,8 +8,9 @@ import NotificationsManager from './js/notificationsManager';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
 import HeaderDate from './js/headerDate.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
+import TimelineView from './js/timeline/timelineView'
 import Intro from './js/Intro.js'
-import MeasureScreen from './js/questionsScreens/measuresScreen.js'
+import MeasuresScreen from './js/questionsScreens/measuresScreen.js'
 import DebugScreen from './js/debugScreen'
 import Utils from './js/utils.js'
 import DataManager from './js/dataManager'
@@ -109,6 +110,7 @@ const MyStack = () => {
             component={MainView}
             options={{ headerShown:true }}
         />
+        <Stack.Screen name="Timeline" component={TimelineView} options={{ headerShown:false }}/>
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
         <Stack.Screen name="Questions List Editor" component={EditQuestionsScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
@@ -228,7 +230,7 @@ const MainView = ({ navigation }) => {
     const StackIn = createStackNavigator();
 
     return (
-        <View style={{ flex: 1}}>
+        <View style={{ flex: 1, backgroundColor:"white"}}>
             {HeaderDate.getHeader()}
             <UpdateManager/>
             {/* <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>
@@ -244,31 +246,34 @@ const MainView = ({ navigation }) => {
               </View>
           </View> */}
             <View style={{height:0}}></View>
-            <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
-              <StackIn.Screen
-                name="Measures"
-                component={MeasureScreen}
-                options={{ headerShown:false }}
-              />
-              <StackIn.Screen name="Notes" 
-                component={NotesScreen} 
-                options={{headerShown:false}}
-              />
-            </StackIn.Navigator>
-
-            <View style={{ position:'absolute', bottom:0, height:lSizeFooter, width:"100%"}}>
-                <View style={{   width:"100%", height:lSizeFooter * 1, flexDirection: "row", justifyContent: 'center',}}>
-                    <BottomButton 
-                    source0={require("./resources/measuresButton.png")} 
-                    source1={require("./resources/notesbutton.png")} 
-                    onClick={()=>{switchScreen()}}
-                    isSelected = {screenId == 0}
-                    />
-                    {/* <BottomButton
-                    isSelected = {screenId == 1}
-                    source={require("./resources/notesbutton.png")}
-                    onClick={function() {navigation.navigate("Data Visualisation Screen");}} onClick={()=>{goToScreen(1)}}/> */}
-                </View>
+            {/* <View style={[{marginLeft:"5%", width:"90%", height:"85%", marginTop:"5%", borderRadius:0}, styles.shadowFrame]}> */}
+              <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
+                <StackIn.Screen
+                  name="Measures"
+                  component={MeasuresScreen}
+                  options={{ headerShown:false }}
+                />
+                <StackIn.Screen name="Notes" 
+                  component={NotesScreen} 
+                  options={{headerShown:false}}
+                />
+              </StackIn.Navigator>
+            {/* </View> */}
+            <View style={[{ position:'absolute', right:-lSizeFooter * 0.3, bottom:"50%", width:lSizeFooter, height:lSizeFooter, backgroundColor:"#fff3f3", borderRadius:lSizeFooter * 0.5}, Utils.getShadowStyle(4)]}>
+              <View style={{ position:'absolute', width:lSizeFooter * 0.9, height:lSizeFooter * 0.9}}>
+                  <View style={{   width:lSizeFooter, height:lSizeFooter * 1, flexDirection: "row", justifyContent: 'center',}}>
+                      <BottomButton 
+                      source0={require("./resources/measuresButton.png")} 
+                      source1={require("./resources/notesbutton.png")} 
+                      onClick={()=>{switchScreen()}}
+                      isSelected = {screenId == 0}
+                      />
+                      {/* <BottomButton
+                      isSelected = {screenId == 1}
+                      source={require("./resources/notesbutton.png")}
+                      onClick={function() {navigation.navigate("Data Visualisation Screen");}} onClick={()=>{goToScreen(1)}}/> */}
+                  </View>
+            </View>
            </View>
         </View>
     );
@@ -295,8 +300,19 @@ buttonsTypeQuestions: {
     backgroundColor: "transparent",
     width:"40%",
     borderRadius:60
+  },
+
+  shadowFrame:
+  {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowOpacity: 0.65,
+    shadowRadius: 13.84,
+    elevation: 6,
   }
 });
-
 
 export default MyStack;

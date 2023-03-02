@@ -196,15 +196,16 @@ const rightButton = (
 
   return (
   <View style={{marginVertical:0}}>
-  <SwipeItem
+  {/* <SwipeItem
       style={styles.questionsButtons}
       swipeContainerStyle={[styles.swipeContentContainerStyle, styleAns]}
       leftButtons={leftButton}
       rightButtons={rightButton}
       ref={itemRef} 
       onPress={()=>{goToQuestion();}}
-  >
-  <TouchableOpacity style={{height:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{openQuestionVisu();}}>
+  > */}
+  <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, {width:"80%", marginLeft:"5%"}]}>
+  <TouchableOpacity style={{height:"100%", width:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{openQuestionVisu();}}>
         <Text style={{fontSize: 16, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
@@ -233,7 +234,8 @@ const rightButton = (
       </TouchableOpacity>
       </View>
   </TouchableOpacity>
-  </SwipeItem>
+  </View>
+  {/* </SwipeItem> */}
   </View>
   );
 }

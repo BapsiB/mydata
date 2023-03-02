@@ -103,12 +103,15 @@ class Utils {
             },
         };
 
-        this.getShadowStyle = function() {
+        this.getShadowStyle = function(shadowOffset) {
+            if(!shadowOffset) {
+              shadowOffset = 2;
+            }
             return {
                 shadowColor: "#000",
                 shadowOffset: {
-                  width: 2,
-                  height: 2,
+                  width: shadowOffset,
+                  height: shadowOffset,
                 },
                 shadowOpacity: 0.45,
                 shadowRadius: 3.84,

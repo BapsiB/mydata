@@ -62,7 +62,7 @@ const MeasuresScreen = ({navigation, date}) => {
       </Svg>
       </View>
       {getTextEmptyQuestion()}
-    <ScrollView style={{marginBottom:"17%"}}>
+    <ScrollView style={{marginBottom:"17%"}} showsHorizontalScrollIndicator={false}>
       <SwipeProvider>
         <View style={{height:65}}/>
         <View style={{height:15,}}/>
