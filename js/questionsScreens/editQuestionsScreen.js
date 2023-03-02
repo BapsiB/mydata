@@ -91,7 +91,7 @@ const EditQuestionsList = ({navigation}) => {
   return (
     <View style={{flex:1, backgroundColor:"white"}}>
       {getTextEmptyQuestion()}
-    <ScrollView style={{marginBottom:"17%"}}>
+    <ScrollView style={{marginBottom:"17%"}} scrollEnabled={scrollEnabled}>
       
       <View style={{height:15, width:parentWidth}}/>
       <DragSortableView

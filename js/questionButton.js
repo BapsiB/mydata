@@ -18,7 +18,8 @@ import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 const colourAnswered = "#fff";
 const colourText = '#666';
 const colourTextAnswered = '#666';
-const colourButtonBack = '#fff3f3';
+// const colourButtonBack = '#fff3f3';
+const colourButtonBack = '#fff';
 let colourButtonBackAnswered = colourButtonBack;//'#879';
 
 export default QuestionButton = (props) => {

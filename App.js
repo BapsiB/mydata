@@ -4,6 +4,7 @@ import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
 import UpdateManager from './js/updateManager';
+import NotificationsManager from './js/notificationsManager';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
 import HeaderDate from './js/headerDate.js';
 import NotesScreen from './js/questionsScreens/notesScreen.js'
@@ -227,7 +228,7 @@ const MainView = ({ navigation }) => {
     const StackIn = createStackNavigator();
 
     return (
-        <View style={{ flex: 1, backgroundColor:"white"}}>
+        <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
             <UpdateManager/>
             {/* <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>
@@ -242,7 +243,7 @@ const MainView = ({ navigation }) => {
               </TouchableOpacity>
               </View>
           </View> */}
-            <View style={{height:20}}></View>
+            <View style={{height:0}}></View>
             <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
               <StackIn.Screen
                 name="Measures"

@@ -47,7 +47,7 @@ class HeaderDate {
         }
 
         return (
-            <View style={{height:45, width:"90%", marginLeft:"5%", flexDirection: "row", marginVertical:0, marginBottom:0}}>
+            <View style={{position:"absolute", height:45, width:"90%", marginLeft:"5%", flexDirection: "row", marginVertical:0, marginBottom:0, elevation:3, zIndex: 3}}>
                 <View style={{flex:1, marginLeft:0}}>
                     <TouchableOpacity style={{width:50, height:60, paddingTop:20}} onPress={()=>{setDate(incrementDate(this.date, -1));}}>
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowL.png")}/>

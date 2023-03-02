@@ -76,6 +76,13 @@ const TextDataExtraction = (props) => {
         }
       }
 
+      function getFirstEntryDate() {
+        if(data[0]) {
+          return data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})
+        }
+        else return "";
+      }
+
     return(
         <View style={{flex:1, marginLeft:20}}>
           {!isColour && <View>
@@ -88,8 +95,8 @@ const TextDataExtraction = (props) => {
             <View style={{width:50, height:20, borderRadius:5, backgroundColor:averageValue}}></View>
           </View>}
           <View>
-            <Text style={styles.valuesText}>{"first entry : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
-            <Text style={styles.valuesText}>{"evolution since the last 7 days : " + data[0].date.toLocaleString('en-GB',{day:'numeric', month:'short', year:"numeric"})}</Text>
+            <Text style={styles.valuesText}>{"first entry : " + getFirstEntryDate()}</Text>
+            {/* <Text style={styles.valuesText}>{"evolution since the last 7 days : "}</Text> */}
             <Text style={styles.valuesText}>{"total Entry : " + data.length}</Text>
           </View>
         </View>
