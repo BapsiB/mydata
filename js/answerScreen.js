@@ -27,7 +27,8 @@ const AnswerScreen = (props) => {
 
       return (
         <View style={{ flex: 1}}>
-        <View style={{ flex: 4}}>
+        <View style={{ flex: 1}}/>
+        <View style={{ flex: 6}}>
           <View style={{ flex: 1}}>
             <Text style={styles.questionText}
                 adjustsFontSizeToFit={true}

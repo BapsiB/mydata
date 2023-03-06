@@ -20,6 +20,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerI
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import Svg, { Path } from 'react-native-svg';
 
 import {
   createStackNavigator
@@ -27,6 +28,7 @@ import {
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, HStack, Divider } from 'react-native';
 import sharedConstants from './js/sharedConstants.js';
 import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
+import { transparent } from 'react-native-paper/lib/typescript/styles/themes/v2/colors.js';
 
 
 const Stack = createNativeStackNavigator();
@@ -224,13 +226,17 @@ const MainView = ({ navigation }) => {
       setScreenId(lScreenId);
     }
 
+    function goToTimeView() {
+      navigation.navigate("Timeline");
+    }
+
     const forceUpdate = React.useReducer(() => ({}))[1]
 
     const lSizeFooter = 65;
     const StackIn = createStackNavigator();
 
     return (
-        <View style={{ flex: 1, backgroundColor:"white"}}>
+        <View style={{ flex: 1}}>
             {HeaderDate.getHeader()}
             <UpdateManager/>
             {/* <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop:20}}>
@@ -275,6 +281,21 @@ const MainView = ({ navigation }) => {
                   </View>
             </View>
            </View>
+          <View style={[{ position:'absolute', width:"100%", bottom:0, height:lSizeFooter, justifyContent: 'center', alignItems: 'center', backgroundColor:"transparent"}]}>
+            <View style={{position:"absolute", elevation:-1, zIndex:-1, width:"100%", height:"100%"}}>
+            <Svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <Path fill="#fff3f3" d="M51.7,-53.3C58.9,-44.6,50.8,-22.3,50.7,-0.1C50.6,22.1,58.4,44.2,51.3,53.1C44.2,62,22.1,57.7,4.9,52.8C-12.4,48,-24.8,42.6,-40.1,33.7C-55.4,24.8,-73.6,12.4,-79,-5.4C-84.4,-23.1,-76.9,-46.3,-61.6,-54.9C-46.3,-63.6,-23.1,-57.8,-0.4,-57.4C22.3,-56.9,44.6,-61.9,51.7,-53.3Z" transform="translate(100 230), scale(9, 3), rotate(20)" />
+            </Svg>
+            </View>
+              <View style={{   width:lSizeFooter, height:lSizeFooter * 1, flexDirection: "row", borderRadius:lSizeFooter * 0.5, justifyContent: 'center', alignItems: 'center', backgroundColor:"#fff3f3"}}>
+                  <BottomButton 
+                  source0={require("./resources/pathIcon.png")} 
+                  source1={require("./resources/pathIcon.png")} 
+                  onClick={()=>{goToTimeView()}}
+                  isSelected = {true}
+                  />
+              </View>
+           </View>
         </View>
     );
 }
@@ -298,7 +319,7 @@ buttonsTypeQuestions: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: "transparent",
-    width:"40%",
+    width:"100%",
     borderRadius:60
   },
 

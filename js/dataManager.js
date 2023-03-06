@@ -116,8 +116,11 @@ class DataManager {
 
         /*
         * return the datas as arrays ordered with time.
+        * this is to use in a csv generation.
         */
         this.getQuestionsDataLinear = function() {
+            // the first field if the column name question, that's for
+            // the csv display.
             const container = {fields:["questions"], data:[]};
 
             const dateLimite = this.daysData.getMinMaxDates();
@@ -331,6 +334,7 @@ class DataManager {
                 if(q.id == aQuestionId) {
                     this.listQuestions.splice(i, 1);
                     this.saveListQuestions();
+                    this.callQuestionsCallbacks();
                     return true;
                 }
             }

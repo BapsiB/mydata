@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import DataManager from './dataManager';
 import AppState from './appState';
 
-export default DebugScreen = () => {
+const DebugScreen = () => {
 
     function onResetIntro() {
         AppState.resetIntro();
@@ -23,6 +23,8 @@ export default DebugScreen = () => {
         </View>
     )
 }
+
+export default DebugScreen;
 
 const styles = StyleSheet.create({
     mainView:{

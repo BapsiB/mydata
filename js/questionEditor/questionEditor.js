@@ -5,6 +5,7 @@ import DataManager from '../dataManager.js';
 import QuestionType from './questionEditorType';
 import QuestionOptions from './questionEditorOptions';
 import QuestionColour from './questionEditorColour';
+import PopupWindow  from '../Utils/popupWindow';
 
 const QuestionEditor = (props) => {
 
@@ -14,6 +15,9 @@ const QuestionEditor = (props) => {
   if(props.route.params) {
     if(props.route.params.questionID !== undefined) {
       fromQuestion = DataManager.getQuestionWithId(props.route.params.questionID);
+      if(!fromQuestion) {
+        return;
+      }
       lQuestionType = fromQuestion.type;
     }
     else if(props.route.params.startType !== undefined) {
@@ -25,6 +29,7 @@ const QuestionEditor = (props) => {
   const [questionType, onChangeQuestionType] = React.useState(lQuestionType);
   const [options, onSetOptions] = React.useState(fromQuestion ? fromQuestion.options : {});
   const [colour, onSetColour] = React.useState(fromQuestion && fromQuestion.getColour() ? fromQuestion.getColour() : getRandomColour());
+  const [modalVisible, setModalVisible] = useState(false);
 
 function getRandomColour() {
   const index = Math.round(Math.random() * SharedConstants.coloursSet.length);
@@ -33,6 +38,20 @@ function getRandomColour() {
 
 function onColourChange(newColour) {
   onSetColour(newColour);
+}
+
+function onPressDelete() {
+  setModalVisible(true);
+}
+
+function requestClosePopup() {
+  setModalVisible(false);
+}
+
+const requestDelete = () => {
+  DataManager.deleteQuestion(fromQuestion.id);
+  setModalVisible(false);
+  props.navigation.goBack();
 }
 
 function onPressAddQuestion() {
@@ -69,6 +88,14 @@ const lDisableAddButton = questionText.length == 0;
   return (
     <View style={{ flex: 1}}>
       <View style={{ flex: 1, flexDirection: "column" }}>
+      {modalVisible && <PopupWindow 
+        textLayer1="Are you sure you want to archive this question?"
+        textLayer2="You cannot undo this."
+        answer1="DELETE"
+        answer2="CANCEL"
+        callbackAnswer1={requestDelete}
+        callbackAnswer2={requestClosePopup}
+        onRequestClose={requestClosePopup}/>}
       <View style={{flex: 1}}>
             <TextInput
               numberOfLines={1} 
@@ -85,10 +112,17 @@ const lDisableAddButton = questionText.length == 0;
           <QuestionColour onChange={onColourChange} initColour={colour}/>
         </View>
       </View>
-        <View style={{margin: 20, height:50, bottom:10, alignItems: 'center',}}>
+        <View style={{height:50, bottom:10, alignItems: 'center', flexDirection:'row'}}>
+          <View width="50%" style={{alignItems: 'center'}}>
+        {fromQuestion && <TouchableOpacity disabled={lDisableAddButton} key="delete" style={[styles.addButtonStyle, {backgroundColor: "red"}]} onPress={onPressDelete}>
+            <Text style={{color:"white", fontWeight:"bold"}}>DELETE</Text>
+        </TouchableOpacity>}
+        </View>
+        <View width="50%" style={{alignItems: 'center'}}>
         <TouchableOpacity disabled={lDisableAddButton} style={[styles.addButtonStyle, {opacity: lDisableAddButton ? 0.3 : 1}]} onPress={()=>{onPressAddQuestion();}}>
             <Text style={{color:"black"}}>{fromQuestion ? "UPDATE" : "ADD"}</Text>
         </TouchableOpacity>
+        </View>
        </View>
     </View>
   );
@@ -151,7 +185,6 @@ const styles = StyleSheet.create({
     addButtonStyle: {
         height:50,
         width:130,
-        backgroundColor: 'black',
         color:"black",
         alignItems: 'center',
         backgroundColor:"white",

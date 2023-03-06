@@ -6,6 +6,7 @@ import Draggable from 'react-native-draggable';
 import Utils from '../utils.js'
 import HeaderDate from '../headerDate.js';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Svg, { Path } from 'react-native-svg';
 
 const NotesScreen = ({navigation}) => {
 
@@ -114,7 +115,17 @@ const NotesScreen = ({navigation}) => {
   }, []);
 
   return (
-    <View style={{flex:2, flexDirection: "row", width:"100%"}}>
+    <View style={{flex:2, flexDirection: "row", width:"100%", backgroundColor:"white"}}>
+    <View style={{position:"absolute", elevation:2, zIndex:2, width:"100%", height:60}}>
+      <Svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <Path fill="#fff" d="M26.3,-49.2C36.5,-39.7,48.8,-37.5,60.4,-30.5C72.1,-23.5,83,-11.8,83,0C83,11.7,72,23.5,60.3,30.4C48.7,37.3,36.3,39.4,26.1,48C16,56.6,8,71.8,-4,78.7C-16,85.7,-32,84.4,-42.7,76.1C-53.4,67.8,-58.8,52.5,-64.5,38.6C-70.1,24.7,-75.9,12.4,-75.4,0.3C-74.8,-11.7,-67.9,-23.4,-59.9,-33.3C-51.9,-43.1,-43,-51,-32.8,-60.5C-22.7,-70.1,-11.3,-81.2,-1.6,-78.4C8.1,-75.5,16.1,-58.7,26.3,-49.2Z" transform="translate(100 ,-40), scale(10.5,3.9), rotate(35)" />
+      </Svg>
+      </View>
+      <View style={{position:"absolute", elevation:-1, zIndex:-1, width:"100%", height:"100%"}}>
+      <Svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <Path fill="#efe8f3" d="M29.7,-52.8C37.6,-41.1,42.6,-31.4,48.4,-21.3C54.2,-11.2,61,-0.7,64.3,12.6C67.5,25.9,67.3,42,58.6,49.2C49.9,56.3,32.7,54.4,17.4,58.4C2.2,62.4,-11,72.4,-21.2,70.3C-31.4,68.1,-38.6,53.9,-49.1,42.3C-59.7,30.6,-73.6,21.6,-75.6,10.6C-77.5,-0.3,-67.5,-13.3,-59.9,-26.3C-52.3,-39.3,-47.2,-52.4,-37.6,-63.4C-28.1,-74.3,-14,-83.1,-1.6,-80.6C10.9,-78.2,21.8,-64.5,29.7,-52.8Z" transform="translate(200, 50), scale(2.,2)" />
+      </Svg>
+    </View>
     {getTextEmptyNotes()}
     {listItems}
     </View>

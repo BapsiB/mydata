@@ -16,7 +16,7 @@ import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 // const colourText = '#666';
 
 const colourAnswered = "#fff";
-const colourText = '#666';
+const colourText = '#000';
 const colourTextAnswered = '#666';
 // const colourButtonBack = '#fff3f3';
 const colourButtonBack = '#fff';
