@@ -3,15 +3,13 @@ import React from 'react';
 import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor/questionEditor.js';
 import AnswerScreen from './js/answerScreen.js';
-import NotificationsManager from './js/notificationsManager';
+// import NotificationsManager from './js/notificationsManager';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
-import HeaderDate from './js/headerDate.js';
-import NotesScreen from './js/questionsScreens/notesScreen.js'
 import TimelineView from './js/timeline/timelineView'
 import Intro from './js/Intro.js'
-import MeasuresScreen from './js/questionsScreens/measuresScreen.js'
 import DebugScreen from './js/debugScreen'
 import QuestionsListView from './js/questionsListView.js'
+
 import Utils from './js/utils.js'
 import DataManager from './js/dataManager'
 import { NavigationContainer, useRoute } from '@react-navigation/native';
@@ -33,58 +31,6 @@ import { transparent } from 'react-native-paper/lib/typescript/styles/themes/v2/
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
-
-const BottomButton = (props) => {
-
-  const anim = React.useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
-
-  function getStyle() {
-
-      return {
-        backgroundColor:"white",
-        
-        borderRadius:25,
-        height:50,
-        width:50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 2,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 2,
-      }
-  }
-
-  function onClick() {
-    props.onClick();
-    
-    Animated.timing(anim, {
-      toValue: props.isSelected ? 1 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  // Next, interpolate beginning and end values (in this case 0 and 1)
-  const spin = anim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '180deg']
-  })
-
-return (
-  <TouchableOpacity style={[styles.button_footer2]} onPress={()=>{onClick(); }}>
-    <View style={[getStyle()] }>
-    <Animated.View style={ {transform: [{rotateY: spin}]}}>
-    <Image style={[{ width:40, height:40, resizeMode: 'stretch'}]} source={props.isSelected ? props.source1 : props.source0}/>
-    </Animated.View>
-    </View>
-  </TouchableOpacity>
-)
-}
 
 const MyStack = () => {
 
@@ -124,6 +70,7 @@ const MyStack = () => {
     </NavigationContainer>
     }
     {!introFinished && <Intro style={{position:"absolute", width:"100%", height:"100%", zIndex: 10, elevation:3 }} callback={() => {setIntroFinished(true)}}/>}
+    
     </View>
   );
 };
