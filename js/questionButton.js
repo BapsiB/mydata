@@ -10,6 +10,7 @@ import { Data } from 'victory-core';
 import utils from './utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 // const colourAnswered = "#DECCF1";
 // const colourButtonBack = '#FDD7C2';
@@ -205,7 +206,10 @@ const rightButton = (
       onPress={()=>{goToQuestion();}}
   > */}
   <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, {width:"80%", marginLeft:"5%"}]}>
-  <TouchableOpacity style={{height:"100%", width:"100%", textAlign: 'center', justifyContent: 'center',}} onPress={()=>{openQuestionVisu();}}>
+        <TouchableOpacity style={{ height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', }} onPress={() => { goToQuestion(); }}>
+          <TouchableOpacity onPress={() => { openQuestionVisu(); }}>
+            <SimpleLineIcons name="options-vertical" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
+        </TouchableOpacity>
         <Text style={{fontSize: 16, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
