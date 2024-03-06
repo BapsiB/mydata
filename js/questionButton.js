@@ -153,6 +153,40 @@ function displayMarkers() {
     return (question.type == SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY) || (question.type == SharedConstants.questionTypes.QUESTION_TYPE_NUMBER);
   } 
 }
+  
+  function getRightResultView() {
+    if (!isAnswered) {
+      return (< Text style={{ width: "100%", textAlign: 'center', justifyContent: 'center', fontSize: 12, fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
+        {"?"}
+      </Text >);
+    }
+
+    switch (question.type) {
+      case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
+      case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
+        return (< Text style={{ width: "100%", textAlign: 'center', justifyContent: 'center', fontSize: 12, fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
+          {getTextAnswer()}
+        </Text >);
+
+      case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
+        return (
+          <View style={{ width: 20, height: 20, backgroundColor: colourMarker, borderRadius: 50 }}></View>
+        )
+      case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+        const styleFull = { backgroundColor: "#999" };
+        const styleEmpty = { borderColor:"#ddd", borderWidth:1 };
+        const lNormValue = answerNorm;
+        return (
+          <View style={{ width: 15, height: 15, backgroundColor: colourMarker, flexDirection:"row" }}>
+            <View style={[{ marginRight:1, width: "20%", height: "20%", top:"80%"}, lNormValue > 0.2 ? styleFull : styleEmpty]} />
+            <View style={[{ marginRight:1, width: "20%", height: "40%", top:"60%"}, lNormValue > 0.4 ? styleFull : styleEmpty]} />
+            <View style={[{ marginRight:1, width: "20%", height: "60%", top:"40%"}, lNormValue > 0.6 ? styleFull : styleEmpty]} />
+            <View style={[{ marginRight:1, width: "20%", height: "80%", top:"20%"}, lNormValue > 0.8 ? styleFull : styleEmpty]} />
+          </View>
+        )
+
+    }
+  }
 
 // {backgroundColor:utils.increase_brightness(question.colour, 90)}
   const styleAns = isAnswered ? [styles.alreadyAnswered] : styles.notAlreadyAnswered;
@@ -242,12 +276,7 @@ const rightButton = (
         </Animated.View>}
         
         <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15, flexDirection: 'row', alignItems: 'center'}}>
-          {(DataManager.getQuestionWithId(props.questionId).type != SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) && <Text style={{ width: "100%", textAlign: 'center', justifyContent: 'center', fontSize: 12, fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
-            {getTextAnswer()}
-            </Text>}
-          {
-            (DataManager.getQuestionWithId(props.questionId).type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) &&  <View style={{width:20, height:20, backgroundColor:colourMarker, borderRadius: 50}}></View>          
-          }    
+          {getRightResultView()}   
         </View>
 
       </TouchableOpacity>
