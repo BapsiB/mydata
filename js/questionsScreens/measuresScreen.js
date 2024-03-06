@@ -6,6 +6,7 @@ import HeaderDate from '../headerDate.js';
 import QuestionButton from '../questionButton'
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
 import Svg, { Path } from 'react-native-svg';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 const MeasuresScreen = ({navigation, date}) => {
 
@@ -42,6 +43,10 @@ const MeasuresScreen = ({navigation, date}) => {
     else return null;
   }
 
+  function replyAllQuestions() {
+
+  }
+
   DataManager.setAnswersUpdateListener(updateAnswer);
   HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
 
@@ -64,8 +69,14 @@ const MeasuresScreen = ({navigation, date}) => {
       {getTextEmptyQuestion()}
     <ScrollView style={{marginBottom:"0%"}} showsVerticalScrollIndicator={false}>
       <SwipeProvider>
-        <View style={{height:65}}/>
-        <View style={{height:15,}}/>
+        <View style={{ height: 65}} />
+        <TouchableOpacity style={{flexDirection: "row", textAlign: 'center', justifyContent: 'center'}}>
+          <SimpleLineIcons name="loop" size={20}></SimpleLineIcons>
+          <Text style={{fontSize: 16, color:"#000", textAlign: 'center', justifyContent: 'center'}}>
+          {" answer all"}
+          </Text>
+        </TouchableOpacity>
+        <View style={{height:15}}/>
         {listItems}
         <View style={{height:70}}/>
       </SwipeProvider>

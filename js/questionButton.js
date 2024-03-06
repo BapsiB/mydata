@@ -1,3 +1,4 @@
+import React from 'react';
 import { Text, StyleSheet, TouchableOpacity, Image, View, Animated } from 'react-native';
 import { useRef, useState, useEffect } from 'react';
 import { SwipeItem, SwipeButtonsContainer } from 'react-native-swipe-item';
@@ -11,12 +12,16 @@ import utils from './utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { Menu, Provider } from 'react-native-paper';
 
 // const colourAnswered = "#DECCF1";
 // const colourButtonBack = '#FDD7C2';
 // const colourText = '#666';
 
-const colourAnswered = "#fff";
+const colourCircleAnswered = "#fff";
+const colourCircleNOTAnswered = "#fff";
+const colourTextCircleNOTAnswered = "#000";
+const colourTextCircleAnswered = "#999";
 const colourText = '#000';
 const colourTextAnswered = '#666';
 // const colourButtonBack = '#fff3f3';
@@ -24,6 +29,8 @@ const colourButtonBack = '#fff';
 let colourButtonBackAnswered = colourButtonBack;//'#879';
 
 export default QuestionButton = (props) => {
+
+
 
     const itemRef = useRef(true);
     const valueAnim = useRef(new Animated.Value(0)).current;
@@ -58,10 +65,10 @@ export default QuestionButton = (props) => {
           setAnswerNorm(lAnswerNorm);
 
           if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) {
-            setColourMarker(answer);
+            setColourMarker(Utils.increase_brightness(answer, 80));
           }
           else {
-            setColourMarker(colourAnswered);
+            setColourMarker(colourCircleAnswered);
           }
 
           if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_YES_NO) {
@@ -77,7 +84,7 @@ export default QuestionButton = (props) => {
           setAnswerText(SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId)));
         }
         else {
-          setColourMarker("#fff")
+          setColourMarker(colourCircleNOTAnswered);
           setAnswerNorm(0);
           // Will change fadeAnim value to 1 in 5 seconds
           Animated.timing(valueAnim, {
@@ -205,32 +212,32 @@ const rightButton = (
       ref={itemRef} 
       onPress={()=>{goToQuestion();}}
   > */}
-  <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, {width:"80%", marginLeft:"5%"}]}>
-        <TouchableOpacity style={{ height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', }} onPress={() => { goToQuestion(); }}>
-          <TouchableOpacity onPress={() => { openQuestionVisu(); }}>
-            <SimpleLineIcons name="options-vertical" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
-        </TouchableOpacity>
+      <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, { width: "80%", marginLeft: "5%" }]}>
+        {/* <TouchableOpacity style={{ width: "10%", height: "100%", position: "absolute", left: 0, zIndex:1, textAlign: 'center', justifyContent: 'center', borderWidth: 0 }} onPress={() => { openQuestionVisu(); }}>
+          <IconCommunity name="eye-outline" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
+        </TouchableOpacity> */}
+        <TouchableOpacity style={{ left:"0%", height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center'}} onPress={() => { goToQuestion(); }}>
         <Text style={{fontSize: 16, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
         <View style={[styles.shadowView]}>
         <TouchableOpacity style={[{width: 50, height:50}]} onPress={()=>{goToQuestion();}}>
 
-        {(displayMarkers()) && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
+        {/* {(displayMarkers()) && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
           <View style={[styles.line, {transform: [{rotateZ:"30deg"}, {translateX:-20}]}]}></View>
           <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
           <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
-        </View>}
-        <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? {borderColor:"#777"} : null]}>
+        </View>} */}
+        {!isAnswered && <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? {borderColor:"#777"} : null]}>
           <LinearGradient
               start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
               locations={[0, 1, 1]}
               colors={[ colourMarker, colourMarker, "#fff"]}
               style={[styles.answerContainer]}>
           </LinearGradient>
-        </Animated.View>
+        </Animated.View>}
         <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15}}>
-          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontSize:12, fontWeight:"regular", color: isAnswered ? "#999" : "#999", marginBottom:0}}>
+          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontSize:12, fontWeight:"regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom:0}}>
                 {getTextAnswer()}
           </Text>
         </View>
@@ -329,11 +336,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 0,
+    borderBottomLeftRadius: 15,
     width:30,
     marginLeft:10,
     marginTop:10,
-    borderColor:"#bbb",
+    borderColor:"#999",
     borderWidth:1,
     overflow: 'hidden',
   },

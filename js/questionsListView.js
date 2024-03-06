@@ -61,8 +61,6 @@ return (
 )
 }
 
-
-
 /*
 * old main screen, showing the questions as a list.
 */
