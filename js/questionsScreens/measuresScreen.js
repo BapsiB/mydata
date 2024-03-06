@@ -14,6 +14,8 @@ const MeasuresScreen = ({navigation, date}) => {
     DataManager.addQuestionsListener("MeasuresScreen", updateQuestions);
   }, []);
 
+  const allQuestionsAnswered = DataManager.getNextQuestionUnrespondedInArray(0, HeaderDate.getDate()) ? false : true;
+
   const updateQuestions = () => {
     const arrayQuestionsOrigin = DataManager.getQuestions();
     // we remove the questions that are the notes (they will be displayed in another screen)
@@ -44,7 +46,8 @@ const MeasuresScreen = ({navigation, date}) => {
   }
 
   function replyAllQuestions() {
-
+    const question = DataManager.getNextQuestionUnrespondedInArray(0, HeaderDate.getDate());
+    navigation.navigate("Answer Screen", question.id);
   }
 
   DataManager.setAnswersUpdateListener(updateAnswer);
@@ -70,12 +73,12 @@ const MeasuresScreen = ({navigation, date}) => {
     <ScrollView style={{marginBottom:"0%"}} showsVerticalScrollIndicator={false}>
       <SwipeProvider>
         <View style={{ height: 65}} />
-        <TouchableOpacity style={{flexDirection: "row", textAlign: 'center', justifyContent: 'center'}}>
-          <SimpleLineIcons name="loop" size={20}></SimpleLineIcons>
-          <Text style={{fontSize: 16, color:"#000", textAlign: 'center', justifyContent: 'center'}}>
-          {" answer all"}
-          </Text>
-        </TouchableOpacity>
+          {!allQuestionsAnswered && <TouchableOpacity onPress={replyAllQuestions} style={{ flexDirection: "row", textAlign: 'center', justifyContent: 'center' }}>
+            <SimpleLineIcons name="loop" size={20} color={"#555"}></SimpleLineIcons>
+            <Text style={{ fontSize: 16, color: "#000", textAlign: 'center', justifyContent: 'center' }}>
+              {" answer all"}
+            </Text>
+          </TouchableOpacity>}
         <View style={{height:15}}/>
         {listItems}
         <View style={{height:70}}/>

@@ -139,6 +139,10 @@ function getTextAnswer() {
   {
     return answerText;
   }
+  else if(question.type === SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY)
+  {
+    return answerText;
+  }
 }
 
 function displayMarkers() {
@@ -236,10 +240,14 @@ const rightButton = (
               style={[styles.answerContainer]}>
           </LinearGradient>
         </Animated.View>}
-        <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15}}>
-          <Text style={{width:"100%", textAlign: 'center', justifyContent: 'center', fontSize:12, fontWeight:"regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom:0}}>
-                {getTextAnswer()}
-          </Text>
+        
+        <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15, flexDirection: 'row', alignItems: 'center'}}>
+          {(DataManager.getQuestionWithId(props.questionId).type != SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) && <Text style={{ width: "100%", textAlign: 'center', justifyContent: 'center', fontSize: 12, fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
+            {getTextAnswer()}
+            </Text>}
+          {
+            (DataManager.getQuestionWithId(props.questionId).type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) &&  <View style={{width:20, height:20, backgroundColor:colourMarker, borderRadius: 50}}></View>          
+          }    
         </View>
 
       </TouchableOpacity>
@@ -264,7 +272,6 @@ const QuestionButtonEdit = (props) => {
         <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
-        
         <View style={[styles.shadowView, {right:0}]}>
           <Icon name="edit" size={20} color="#444"  style={{width:20, height:20}}/>
         </View>

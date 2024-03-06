@@ -427,7 +427,7 @@ class DataManager {
                         return lQuestion;
                     }
                     else {
-                        return this.getNextQuestionUnrespoindedInArray(i, date);
+                        return this.getNextQuestionUnrespondedInArray(i, date);
                     }
                    }
                    else {
@@ -440,7 +440,7 @@ class DataManager {
            return 
        }
 
-       this.getNextQuestionUnrespoindedInArray = function(aIndexInArray, date) {
+       this.getNextQuestionUnrespondedInArray = function(aIndexInArray, date) {
         let index;
         for(let indexAdd = 0; indexAdd < this.listQuestions.length; indexAdd++) {
             index = (aIndexInArray + indexAdd) % this.listQuestions.length;
