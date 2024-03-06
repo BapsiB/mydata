@@ -45,7 +45,7 @@ const AnswerSlider = (props) => {
 
     function onSetValue(aValue) {
         DataManager.setData(question.id, date, aValue);
-        props.callback();
+        props.callback(true);
     }
 
     function onValueChanged(aValue) {

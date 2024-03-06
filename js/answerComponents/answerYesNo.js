@@ -23,7 +23,7 @@ class AnswerYesNo extends React.Component {
             const lAnswer = isYes ? 1 : 0;
             DataManager.setData(this.question.id, HeaderDate.getDate(), lAnswer);
             this.setState({answer: lAnswer});
-            props.callback();
+            props.callback(true);
         }
 
         this.onPressRemoveData = function() {
