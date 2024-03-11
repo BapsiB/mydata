@@ -52,7 +52,7 @@ export default QuestionButton = (props) => {
     })
 
     function dateChange() {
-
+      
       const date = HeaderDate.getDate();
       if(date !== undefined) {
         const answer = DataManager.getAnswerForQuestion(props.questionId, date);
@@ -108,7 +108,7 @@ export default QuestionButton = (props) => {
   }
 
   const goToQuestion = () => {
-    props.navigation.navigate("Answer Screen", props.questionId);
+    props.navigation.navigate("Answer Screen", { id: props.questionId, onlyTakeUnanswered: true });
   }
 
   const requestDelete = () => {

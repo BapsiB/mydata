@@ -48,7 +48,7 @@ class DataManager {
        /*
        * init all the data values stored in the local storage.
        */
-       function init() {
+        function init() {
             getData("@questions").then((data) => {
             if(data) {
               that.listQuestions = [];
@@ -89,8 +89,7 @@ class DataManager {
     
                     that.daysData.set(keyDateOnly, object);
                 }
-    
-                if(this.answersUpdateCallback) {
+                if(that.answersUpdateCallback) {
                     that.answersUpdateCallback();
                 }
             });
@@ -460,7 +459,7 @@ class DataManager {
             this.questionCallback[stringId] = callback;
         }
 
-        this.setAnswersUpdateListener = function(callback){
+        this.setAnswersUpdateListener = function (callback) {
             this.answersUpdateCallback = callback;
         }
     }

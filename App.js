@@ -2,7 +2,7 @@ import React from 'react';
 
 import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor/questionEditor.js';
-import AnswerScreen from './js/answerScreen.js';
+import AnswerScreen from './js/answerScreen';
 // import NotificationsManager from './js/notificationsManager';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
 import TimelineView from './js/timeline/timelineView'

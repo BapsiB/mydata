@@ -14,4 +14,7 @@ module.exports = {
       },
     }),
   },
+  resolver: {
+    assetExts: ['png', 'jpg', 'jpeg', 'gif', 'svg'], // Add other file extensions as needed
+  },
 };

@@ -47,7 +47,7 @@ const MeasuresScreen = ({navigation, date}) => {
 
   function replyAllQuestions() {
     const question = DataManager.getNextQuestionUnrespondedInArray(0, HeaderDate.getDate());
-    navigation.navigate("Answer Screen", question.id);
+    navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:true} );
   }
 
   DataManager.setAnswersUpdateListener(updateAnswer);

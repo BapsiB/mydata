@@ -65,7 +65,6 @@ const EditQuestionsList = ({navigation}) => {
     else return null;
   }
 
-  DataManager.setAnswersUpdateListener(updateAnswer);
   HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
 
   const [arrayQuestions, setArrayQuestions] = React.useState([]);
