@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -51,5 +51,74 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Montserrat-Black.ttf</string>
+		<string>Montserrat-BlackItalic.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-BoldItalic.ttf</string>
+		<string>Montserrat-ExtraBold.ttf</string>
+		<string>Montserrat-ExtraBoldItalic.ttf</string>
+		<string>Montserrat-ExtraLight.ttf</string>
+		<string>Montserrat-ExtraLightItalic.ttf</string>
+		<string>Montserrat-Italic.ttf</string>
+		<string>Montserrat-Light.ttf</string>
+		<string>Montserrat-LightItalic.ttf</string>
+		<string>Montserrat-Medium.ttf</string>
+		<string>Montserrat-MediumItalic.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Montserrat-SemiBold.ttf</string>
+		<string>Montserrat-SemiBoldItalic.ttf</string>
+		<string>Montserrat-Thin.ttf</string>
+		<string>Montserrat-ThinItalic.ttf</string>
+		<string>NotoSansLaoLooped-Black.ttf</string>
+		<string>NotoSansLaoLooped-Bold.ttf</string>
+		<string>NotoSansLaoLooped-ExtraBold.ttf</string>
+		<string>NotoSansLaoLooped-ExtraLight.ttf</string>
+		<string>NotoSansLaoLooped-Light.ttf</string>
+		<string>NotoSansLaoLooped-Medium.ttf</string>
+		<string>NotoSansLaoLooped-Regular.ttf</string>
+		<string>NotoSansLaoLooped-SemiBold.ttf</string>
+		<string>NotoSansLaoLooped-Thin.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-Black.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-Bold.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-ExtraBold.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-ExtraLight.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-Light.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-Medium.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-Regular.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-SemiBold.ttf</string>
+		<string>NotoSansLaoLooped_Condensed-Thin.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-Black.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-Bold.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-ExtraBold.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-ExtraLight.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-Light.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-Medium.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-Regular.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-SemiBold.ttf</string>
+		<string>NotoSansLaoLooped_ExtraCondensed-Thin.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-Black.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-Bold.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-ExtraBold.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-ExtraLight.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-Light.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-Medium.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-Regular.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-SemiBold.ttf</string>
+		<string>NotoSansLaoLooped_SemiCondensed-Thin.ttf</string>
+		<string>Roboto-Black.ttf</string>
+		<string>Roboto-BlackItalic.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-BoldItalic.ttf</string>
+		<string>Roboto-Italic.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-LightItalic.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-MediumItalic.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>Roboto-Thin.ttf</string>
+		<string>Roboto-ThinItalic.ttf</string>
+	</array>
 </dict>
 </plist>

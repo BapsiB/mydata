@@ -12,7 +12,7 @@ import utils from './utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { Menu, Provider } from 'react-native-paper';
+import Svg, { Path } from 'react-native-svg';
 
 // const colourAnswered = "#DECCF1";
 // const colourButtonBack = '#FDD7C2';
@@ -20,13 +20,13 @@ import { Menu, Provider } from 'react-native-paper';
 
 const colourCircleAnswered = "#fff";
 const colourCircleNOTAnswered = "#fff";
-const colourTextCircleNOTAnswered = "#000";
-const colourTextCircleAnswered = "#999";
-const colourText = '#000';
-const colourTextAnswered = '#666';
+const colourTextCircleNOTAnswered = "#aaa";
+const colourTextCircleAnswered = "#444";
+const colourText = '#555';
+const colourTextAnswered = '#333';
 // const colourButtonBack = '#fff3f3';
 const colourButtonBack = '#fff';
-let colourButtonBackAnswered = colourButtonBack;//'#879';
+let colourButtonBackAnswered = '#fff9f9';
 
 export default QuestionButton = (props) => {
 
@@ -129,10 +129,10 @@ function getTextAnswer() {
   }
   else if(question.type === SharedConstants.questionTypes.QUESTION_TYPE_YES_NO) {
     if(answerNorm > 0.5) {
-      return "y";
+      return "yes";
     }
     else {
-      return "n"
+      return "no"
     }
   }
   else if(question.type === SharedConstants.questionTypes.QUESTION_TYPE_NUMBER)
@@ -154,9 +154,33 @@ function displayMarkers() {
   } 
 }
   
+  const CamembertSlice = ({ percentage, radius, color }) => {
+  const circumference = 2 * Math.PI * radius;
+  const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
+
+  // Move to center of circle
+  const moveTo = `M ${radius} ${radius} `;
+  // Line to the top of the circle
+  const lineTo = `L ${radius} 0 `;
+  // Arc around the circle
+  const arc = `A ${radius} ${radius} 0 ${percentage > 50 ? '1' : '0'} 1 ${radius + Math.sin(2 * Math.PI * percentage / 100) * radius} ${radius - Math.cos(2 * Math.PI * percentage / 100) * radius} `;
+  // Close the path
+  const close = 'Z';
+
+  return (
+    
+    <Svg width={radius * 2} height={radius * 2}>
+      <Path
+        d={`${moveTo}${lineTo}${arc}${close}`}
+        fill={color}
+      />
+    </Svg>
+  );
+};
+  
   function getRightResultView() {
     if (!isAnswered) {
-      return (< Text style={{ width: "100%", textAlign: 'center', justifyContent: 'center', fontSize: 12, fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
+      return (<Text style={{ width: "100%", textAlign: 'center', fontWeight:"bold", justifyContent: 'center', fontSize: 12, color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
         {"?"}
       </Text >);
     }
@@ -177,14 +201,15 @@ function displayMarkers() {
         const styleEmpty = { borderColor:"#ddd", borderWidth:1 };
         const lNormValue = answerNorm;
         return (
-          <View style={{ width: 15, height: 15, backgroundColor: colourMarker, flexDirection:"row" }}>
-            <View style={[{ marginRight:1, width: "20%", height: "20%", top:"80%"}, lNormValue > 0.2 ? styleFull : styleEmpty]} />
-            <View style={[{ marginRight:1, width: "20%", height: "40%", top:"60%"}, lNormValue > 0.4 ? styleFull : styleEmpty]} />
-            <View style={[{ marginRight:1, width: "20%", height: "60%", top:"40%"}, lNormValue > 0.6 ? styleFull : styleEmpty]} />
-            <View style={[{ marginRight:1, width: "20%", height: "80%", top:"20%"}, lNormValue > 0.8 ? styleFull : styleEmpty]} />
+          <View>
+            <View style={{ position: 'absolute', top: -15, left: -15, justifyContent: 'center' }} >
+              <CamembertSlice style={{ justifyContent: 'center' }} percentage={99} radius={10} color={"#eadada"}></CamembertSlice>
+            </View>
+            <View style={{ position: 'absolute', top: -15, left: -15, justifyContent: 'center' }}>
+              <CamembertSlice  percentage={answerNorm * 100} radius={10} color={"#fff"}></CamembertSlice>
+            </View>
           </View>
         )
-
     }
   }
 
@@ -241,7 +266,7 @@ const rightButton = (
 );
 
   return (
-  <View style={{marginVertical:0}}>
+  <View style={{marginVertical:0, flexBasis: '50%', height:70}}>
   {/* <SwipeItem
       style={styles.questionsButtons}
       swipeContainerStyle={[styles.swipeContentContainerStyle, styleAns]}
@@ -250,12 +275,12 @@ const rightButton = (
       ref={itemRef} 
       onPress={()=>{goToQuestion();}}
   > */}
-      <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, { width: "80%", marginLeft: "5%" }]}>
+      <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, { width: "90%", marginLeft: "5%" }]}>
         {/* <TouchableOpacity style={{ width: "10%", height: "100%", position: "absolute", left: 0, zIndex:1, textAlign: 'center', justifyContent: 'center', borderWidth: 0 }} onPress={() => { openQuestionVisu(); }}>
           <IconCommunity name="eye-outline" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
         </TouchableOpacity> */}
         <TouchableOpacity style={{ left:"0%", height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center'}} onPress={() => { goToQuestion(); }}>
-        <Text style={{fontSize: 16, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'center', justifyContent: 'center'}}>
+        <Text style={{fontSize: 14, marginLeft:10, width:"50%", color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', fontFamily: 'Montserrat-SemiBold'}}>
             {props.title}
         </Text>
         <View style={[styles.shadowView]}>
@@ -297,11 +322,11 @@ const QuestionButtonEdit = (props) => {
   return (
     <View style={[{marginVertical:0, height:50, flexDirection:"row"}, styles.questionsButtons, styles.alreadyAnswered]}>
       <IconCommunity name="drag-vertical" size={40} color="#777" style={{width:30, height:40, position:"absolute", left:-5}}/>
-      <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"85%"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
+      <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"85%", flexDirection:"row"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
         <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center'}}>
             {props.title}
         </Text>
-        <View style={[styles.shadowView, {right:0}]}>
+        <View style={[styles.shadowView, {width:30, right:0, textAlign: 'right', position:'absolute'}]}>
           <Icon name="edit" size={20} color="#444"  style={{width:20, height:20}}/>
         </View>
     </TouchableOpacity>
@@ -318,10 +343,7 @@ const styles = StyleSheet.create({
     marginRight:10,
     paddingHorizontal:3,
     borderWidth:0,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 25,
-    borderBottomRightRadius: 25,
-    borderBottomLeftRadius: 10,
+    borderRadius:15,
     height:50,
     flex:1,
     borderColor:"black",
@@ -394,8 +416,8 @@ const styles = StyleSheet.create({
   swipeContentContainerStyle: {
       justifyContent: 'center',
       borderTopLeftRadius: 10,
-      borderTopRightRadius: 25,
-      borderBottomRightRadius: 25,
+      borderTopRightRadius: 10,
+      borderBottomRightRadius: 10,
       borderBottomLeftRadius: 10,
       borderColor: 'black',
       borderWidth:0,
@@ -410,7 +432,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
   
-      elevation: 3,
+      elevation: 0,
       backgroundColor: colourButtonBack,
     },
 

@@ -1,0 +1,10 @@
+my app allows people to write a data journal. the user will setup a list of questions and reply to those questions everyday. questions can be from various type depending of the type of answer they expect: yes no, numbers, intensity, colours, open text. the app aim for self understanding of out patterns, visualisation and simply record.
+
+AI will be used to process those datas and give some input on how to maximize specific things.
+AI will also be used to help the user find more questions depending on their needs.
+Some extra externals data will be able to be added to the analysis, such as moon phase, seasons, temperature etc.
+
+One screen includes the list of the questions with the answers of the day, the date of the day, and some ways to navigate through the days.
+By clicking on a question we get to the list of questions one by one, like cards.
+
+I would like the design to be minimalist, yet quite clear.

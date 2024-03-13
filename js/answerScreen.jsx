@@ -158,7 +158,7 @@ const AnswerScreen = (props) => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={true}
+        visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}

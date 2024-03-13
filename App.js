@@ -18,7 +18,6 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerI
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Svg, { Path } from 'react-native-svg';
 
 import {
   createStackNavigator
