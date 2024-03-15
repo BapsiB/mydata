@@ -81,7 +81,7 @@ class Question {
         this.displayOrder = aOrder;
     }
 
-    getArrayValues({normalizeValue}) {
+    getArrayValues({normalizeValue, daysCount}) {
         if(normalizeValue === undefined) {
             normalizeValue = true;
         }
@@ -93,6 +93,16 @@ class Question {
         for(let i in allData) {
             dataDay = allData[i];
             const dateStr = dataDay.date;
+            if (daysCount) {
+                const lDateToCompareTo = new Date();
+                const lDateOfThis = this.dataManager.getDateFromString(dataDay.date);
+                const lTimeDiff = lDateToCompareTo.getTime() - lDateOfThis.getTime();
+                const lDayDiff = lTimeDiff / (1000 * 3600 * 24);
+                if (lDayDiff > daysCount) {
+                    continue;
+                }
+            }
+
             for(let j in dataDay.values) {
                 dayVal = dataDay.values[j];
                 if(that.id == dayVal.id) {

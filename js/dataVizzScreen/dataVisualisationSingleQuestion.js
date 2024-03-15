@@ -68,10 +68,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-
-
-    // justifyContent: "center",
-    // alignItems: "center",
   },
 
   questionText: {

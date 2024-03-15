@@ -51,16 +51,16 @@ class SharedConstants {
        }
 
        this.coloursSet = [
-        '#888888',
-        '#B4EECD',
-        '#ECF283',
-        '#EFD067',
-        '#F38290',
-        '#DABDE3',
-        '#7BADDC',
-        '#FEF6C9', 
-        '#F2CCF2',
-        '#A0DBA3'];
+        '#89CFF0',
+        '#98FF98',
+        '#E6E6FA',
+        '#FFE5B4',
+        '#FADADD',
+        '#FFFACD',
+        '#C0EAD7',
+        '#FF7F50', 
+        '#B0E0E6',
+        '#F4C2C2'];
 
        this.getIndexOfColour = function(colour) {
         function isColour(c) {

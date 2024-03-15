@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, Button, ScrollView } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 import HeaderDate from '../headerDate.js';
@@ -58,8 +58,9 @@ const MeasuresScreen = ({navigation, date}) => {
   const listItems = arrayQuestions.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
 
   return (
-    <View style={{flex:1, backgroundColor:"#f9f9f9", flexDirection: 'row'}}>
-      <View style={{position:"absolute", elevation:2, zIndex:2, width:"100%", height:60}}>
+    <View style={{ flex: 1, flexDirection: 'row' }}>
+      
+      <View style={{position:"absolute", elevation:2, zIndex:2, width:"100%", height:60, backgroundColor:"white"}}>
 
       </View>
       <View style={{position:"absolute", elevation:-1, zIndex:-1, width:"100%", height:"100%"}}>

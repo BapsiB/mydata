@@ -7,11 +7,10 @@ import SharedConstants from './sharedConstants.js';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderDate from './headerDate';
 import Utils from './utils'
-import { Data } from 'victory-core';
 import utils from './utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import QuestionButtonViz from './dataVizzScreen/questionButtonViz';
 import Svg, { Path } from 'react-native-svg';
 
 // const colourAnswered = "#DECCF1";
@@ -30,8 +29,6 @@ let colourButtonBackAnswered = '#fff9f9';
 
 export default QuestionButton = (props) => {
 
-
-
     const itemRef = useRef(true);
     const valueAnim = useRef(new Animated.Value(0)).current;
     
@@ -47,7 +44,8 @@ export default QuestionButton = (props) => {
 
     useEffect(() => {
       HeaderDate.addChangeCallback("QuestionButton" + props.questionID, dateChange);
-      setQuestion(DataManager.getQuestionWithId(props.questionId));
+      const lQuestion = DataManager.getQuestionWithId(props.questionId);
+      setQuestion(lQuestion);
       dateChange();
     })
 
@@ -188,10 +186,9 @@ function displayMarkers() {
     switch (question.type) {
       case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
       case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-        return (< Text style={{ width: "100%", textAlign: 'center', justifyContent: 'center', fontSize: 12, fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
+        return (<Text style={{ width: "100%", textAlign: 'center', fontFamily: 'Montserrat-SemiBold', justifyContent: 'center', fontSize: 14, textAlignVertical: 'center', fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
           {getTextAnswer()}
         </Text >);
-
       case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
         return (
           <View style={{ width: 20, height: 20, backgroundColor: colourMarker, borderRadius: 50 }}></View>
@@ -264,6 +261,7 @@ const rightButton = (
         </TouchableOpacity>
     </SwipeButtonsContainer>
 );
+  
 
   return (
   <View style={{marginVertical:0, flexBasis: '50%', height:70}}>
@@ -279,32 +277,33 @@ const rightButton = (
         {/* <TouchableOpacity style={{ width: "10%", height: "100%", position: "absolute", left: 0, zIndex:1, textAlign: 'center', justifyContent: 'center', borderWidth: 0 }} onPress={() => { openQuestionVisu(); }}>
           <IconCommunity name="eye-outline" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
         </TouchableOpacity> */}
-        <TouchableOpacity style={{ left:"0%", height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center'}} onPress={() => { goToQuestion(); }}>
-        <Text style={{fontSize: 14, marginLeft:10, width:"50%", color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', fontFamily: 'Montserrat-SemiBold'}}>
+        <TouchableOpacity style={{ left:"0%", height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', flexDirection: "row", flex:1, flexWrap: 'wrap',}} onPress={() => { goToQuestion(); }}>
+          <Text style={{fontSize: 14, marginLeft:10, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', textAlignVertical: 'center', fontFamily: 'Montserrat-SemiBold', backgroundColor:"transparent", flex:3}}>
             {props.title}
-        </Text>
-        <View style={[styles.shadowView]}>
-        <TouchableOpacity style={[{width: 50, height:50}]} onPress={()=>{goToQuestion();}}>
+          </Text>
+          {question && <QuestionButtonViz style={{flex:2, backgroundColor:"transparent"}} questionId={question.id}></QuestionButtonViz>}
+        <View style={[styles.shadowView, {flex:1, backgroundColor:"transparent"}]}>
+          <TouchableOpacity style={[{width: 50, height:50}]} onPress={()=>{goToQuestion();}}>
 
-        {/* {(displayMarkers()) && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
-          <View style={[styles.line, {transform: [{rotateZ:"30deg"}, {translateX:-20}]}]}></View>
-          <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
-          <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
-        </View>} */}
-        {!isAnswered && <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? {borderColor:"#777"} : null]}>
-          <LinearGradient
-              start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
-              locations={[0, 1, 1]}
-              colors={[ colourMarker, colourMarker, "#fff"]}
-              style={[styles.answerContainer]}>
-          </LinearGradient>
-        </Animated.View>}
-        
-        <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15, flexDirection: 'row', alignItems: 'center'}}>
-          {getRightResultView()}   
-        </View>
+          {/* {(displayMarkers()) && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
+            <View style={[styles.line, {transform: [{rotateZ:"30deg"}, {translateX:-20}]}]}></View>
+            <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
+            <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
+          </View>} */}
+          {!isAnswered && <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? {borderColor:"#777"} : null]}>
+            <LinearGradient
+                start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
+                locations={[0, 1, 1]}
+                colors={[ colourMarker, colourMarker, "#fff"]}
+                style={[styles.answerContainer]}>
+            </LinearGradient>
+          </Animated.View>}
+          
+          <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15, flexDirection: 'row', alignItems: 'center'}}>
+            {getRightResultView()}   
+          </View>
 
-      </TouchableOpacity>
+        </TouchableOpacity>
       </View>
   </TouchableOpacity>
   </View>
@@ -323,7 +322,7 @@ const QuestionButtonEdit = (props) => {
     <View style={[{marginVertical:0, height:50, flexDirection:"row"}, styles.questionsButtons, styles.alreadyAnswered]}>
       <IconCommunity name="drag-vertical" size={40} color="#777" style={{width:30, height:40, position:"absolute", left:-5}}/>
       <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"85%", flexDirection:"row"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
-        <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center'}}>
+        <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center', fontFamily: 'Montserrat-SemiBold'}}>
             {props.title}
         </Text>
         <View style={[styles.shadowView, {width:30, right:0, textAlign: 'right', position:'absolute'}]}>
@@ -404,9 +403,9 @@ const styles = StyleSheet.create({
   },
 
   shadowView: {
-    width:30,
-    position:"absolute",
-    right:20,
+    // width:30,
+    // position:"absolute",
+    // right:20,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderBottomRightRadius: 15,
@@ -438,7 +437,7 @@ const styles = StyleSheet.create({
 
     alreadyAnswered: {
       borderWidth:1,
-      borderColor:"#cdc",
+      borderColor:"#eee",
       backgroundColor: colourButtonBackAnswered,
     }
 });
