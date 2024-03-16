@@ -63,7 +63,7 @@ export default QuestionButton = (props) => {
           setAnswerNorm(lAnswerNorm);
 
           if(question.type == SharedConstants.questionTypes.QUESTION_TYPE_COLOUR) {
-            setColourMarker(Utils.increase_brightness(answer, 80));
+            setColourMarker(Utils.increase_brightness(answer, 20));
           }
           else {
             setColourMarker(colourCircleAnswered);
@@ -178,20 +178,21 @@ function displayMarkers() {
   
   function getRightResultView() {
     if (!isAnswered) {
-      return (<Text style={{ width: "100%", textAlign: 'center', fontWeight:"bold", justifyContent: 'center', fontSize: 12, color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
-        {"?"}
+      return (<Text style={{ textAlign: 'left', fontWeight:"bold", fontSize: 12, color: colourTextCircleNOTAnswered, marginBottom: 0 }}>
+        
       </Text >);
     }
 
     switch (question.type) {
       case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
       case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-        return (<Text style={{ width: "100%", textAlign: 'center', fontFamily: 'Montserrat-SemiBold', justifyContent: 'center', fontSize: 14, textAlignVertical: 'center', fontWeight: "regular", color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered, marginBottom: 0 }}>
+      case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
+        return (<Text style={{ width: "100%", textAlign: 'left', fontFamily: 'Montserrat-SemiBold', justifyContent: 'center', fontSize: 13, textAlignVertical: 'center', color: isAnswered ? colourTextCircleAnswered : colourTextCircleNOTAnswered}}>
           {getTextAnswer()}
         </Text >);
       case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
         return (
-          <View style={{ width: 20, height: 20, backgroundColor: colourMarker, borderRadius: 50 }}></View>
+          <View style={{ width: 40, height: 20, backgroundColor: colourMarker, borderRadius: 50 }}></View>
         )
       case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
         const styleFull = { backgroundColor: "#999" };
@@ -236,75 +237,32 @@ function displayMarkers() {
     </SwipeButtonsContainer>
 );
 
-const rightButton = (
-    <SwipeButtonsContainer
-        style={{
-            textAlign:"center",
-            flexDirection: 'column',
-            height:50,
-            width:60,
-            paddingLeft:6,
-        }}
-    >
-        <TouchableOpacity
-            onPress={() => {requestEdit();}}
-            style={{              borderRadius: 9,
-                                  borderColor: 'black',
-                                  borderWidth:0,
-                                  height:50,
-                                  backgroundColor:"#bfb",
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                  }}
-        >
-            <Image style={{ width:40, height:40,  resizeMode: 'stretch' }} source={require("../resources/pencil.png")}/>
-        </TouchableOpacity>
-    </SwipeButtonsContainer>
-);
-  
-
   return (
-  <View style={{marginVertical:0, flexBasis: '50%', height:70}}>
-  {/* <SwipeItem
-      style={styles.questionsButtons}
-      swipeContainerStyle={[styles.swipeContentContainerStyle, styleAns]}
-      leftButtons={leftButton}
-      rightButtons={rightButton}
-      ref={itemRef} 
-      onPress={()=>{goToQuestion();}}
-  > */}
+  <View style={{marginVertical:0, flexBasis: '50%', height:110}}>
+
       <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, { width: "90%", marginLeft: "5%" }]}>
         {/* <TouchableOpacity style={{ width: "10%", height: "100%", position: "absolute", left: 0, zIndex:1, textAlign: 'center', justifyContent: 'center', borderWidth: 0 }} onPress={() => { openQuestionVisu(); }}>
           <IconCommunity name="eye-outline" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
         </TouchableOpacity> */}
-        <TouchableOpacity style={{ left:"0%", height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', flexDirection: "row", flex:1, flexWrap: 'wrap',}} onPress={() => { goToQuestion(); }}>
-          <Text style={{fontSize: 14, marginLeft:10, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', textAlignVertical: 'center', fontFamily: 'Montserrat-SemiBold', backgroundColor:"transparent", flex:3}}>
+        <TouchableOpacity style={{ height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', flexDirection: "row", flex: 1, flexWrap: 'wrap', }} onPress={() => { goToQuestion(); }}>
+          <View style={{marginLeft:20, width:"70%", height:"100%", flexDirection: "column", flex: 1, flexWrap: 'wrap'}}>
+            <Text style={{fontSize: 13, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', textAlignVertical: 'center', fontFamily: 'Montserrat-Regular', backgroundColor:"transparent", flex:3}}>
             {props.title}
-          </Text>
-          {question && <QuestionButtonViz style={{flex:2, backgroundColor:"transparent"}} questionId={question.id}></QuestionButtonViz>}
-        <View style={[styles.shadowView, {flex:1, backgroundColor:"transparent"}]}>
-          <TouchableOpacity style={[{width: 50, height:50}]} onPress={()=>{goToQuestion();}}>
+            </Text>
+            <View style={{ flexDirection: "row", flexWrap: 'wrap', height: 40, alignItems:"center"}}>
+                <View style={isAnswered ? styles.circleAnswered : styles.circleNotAnswered}></View>
+                <View style={{ width: 200, marginLeft:5 }}> 
+                  {getRightResultView()}
+                </View>
+              </View>
 
-          {/* {(displayMarkers()) && <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>
-            <View style={[styles.line, {transform: [{rotateZ:"30deg"}, {translateX:-20}]}]}></View>
-            <View style={[styles.line, {transform: [{rotateZ:"90deg"}, {translateX:-20}]}]}></View>
-            <View style={[styles.line, {transform: [{rotateZ:"150deg"}, {translateX:-20}]}]}></View>
-          </View>} */}
-          {!isAnswered && <Animated.View style={[styles.animatedContainerAnswered, {transform: [{rotateZ:animInterpol}, {scale:0.7}]}, isAnswered ? {borderColor:"#777"} : null]}>
-            <LinearGradient
-                start={{x: 0.5, y: 1}} end={{x: 0.5, y: 0}}
-                locations={[0, 1, 1]}
-                colors={[ colourMarker, colourMarker, "#fff"]}
-                style={[styles.answerContainer]}>
-            </LinearGradient>
-          </Animated.View>}
-          
-          <View style={{position:"absolute", width:"100%", height:"100%", textAlign: 'center', justifyContent: 'center', elevation:15, flexDirection: 'row', alignItems: 'center'}}>
-            {getRightResultView()}   
+
+              
+            
           </View>
-
-        </TouchableOpacity>
-      </View>
+          <View style={{height:"100%", justifyContent:"center"}}>
+            {question && <QuestionButtonViz style={{ height: 0, flex: 2, backgroundColor: "transparent" }} questionId={question.id}></QuestionButtonViz>}
+          </View>
   </TouchableOpacity>
   </View>
   {/* </SwipeItem> */}
@@ -337,12 +295,12 @@ export {QuestionButtonEdit}
 
 const styles = StyleSheet.create({
   questionsButtons: {
-    marginVertical:4,
+    marginVertical:10,
     marginLeft:20,
     marginRight:10,
     paddingHorizontal:3,
     borderWidth:0,
-    borderRadius:15,
+    borderRadius:35,
     height:50,
     flex:1,
     borderColor:"black",
@@ -351,19 +309,26 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 12,
     },
-    shadowOpacity: 0.15,
-    shadowRadius: 3.84,
-    elevation:0
+    shadowOpacity: 0.1,
+    shadowRadius: 0,
+    elevation:6
   },
 
-  line:{
-    borderBottomColor: '#bbb',
-    borderBottomWidth: 2,
-    width:2,
-    justifyContent: 'center',
-    alignItems: 'center',
+  circleAnswered: {
+    backgroundColor: "#afa",
+    width: 11,
+    height: 11,
+    borderRadius: 7
+  },
+
+  circleNotAnswered: {
+    borderWidth: 1,
+    borderColor:"#999",
+    width: 11,
+    height: 11,
+    borderRadius: 7
   },
 
   answerContainer: {
@@ -414,10 +379,7 @@ const styles = StyleSheet.create({
 
   swipeContentContainerStyle: {
       justifyContent: 'center',
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-      borderBottomRightRadius: 10,
-      borderBottomLeftRadius: 10,
+      borderRadius:25,
       borderColor: 'black',
       borderWidth:0,
   },
@@ -428,10 +390,10 @@ const styles = StyleSheet.create({
         width: 0,
         height: 2,
       },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
+      shadowOpacity: 1,
+      // shadowRadius: 3.84,
   
-      elevation: 0,
+      elevation: 8,
       backgroundColor: colourButtonBack,
     },
 

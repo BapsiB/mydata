@@ -83,7 +83,7 @@ const QuestionButtonViz = (props) => {
 
   return (
     
-    <View style={[styles.container, {zIndex: 1, height:70, width:70, transform: [{translateY: -30}, {translateX: -30}, {scale:0.2}]}]}>
+    <View style={[styles.container, {zIndex: 1, height:70, width:70, transform: [{translateY: -20}, {translateX: -50}, {scale:0.2}]}]}>
     
     <VictoryChart  
               // domain={{ y: [question.getMin(), question.getMax() * 1.05] }}

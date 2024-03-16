@@ -55,7 +55,7 @@ const MyStack = () => {
         <Stack.Screen
             name="Home"
             component={MainView}
-            options={{ headerShown:true }}
+            options={{ headerShown:false }}
         />
         <Stack.Screen name="Timeline" component={TimelineView} options={{ headerShown:false }}/>
         <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>

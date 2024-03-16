@@ -59,7 +59,7 @@ const MeasuresScreen = ({navigation, date}) => {
 
   return (
     <View style={{ flex: 1, flexDirection: 'row' }}>
-      
+      <Image style={{resizeMode: 'cover', width:"100%", height:"100%", position:"absolute"}} source={require("../../resources/background.jpg")}></Image>
       <View style={{position:"absolute", elevation:2, zIndex:2, width:"100%", height:60, backgroundColor:"white"}}>
 
       </View>
