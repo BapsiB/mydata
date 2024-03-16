@@ -4,12 +4,13 @@ import ChartVsDropdownPicker from './chartVSDropdownPicker.js'
 import { VictoryArea, VictoryLabel, VictoryScatter, VictoryBar, VictoryLine, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import {Defs, LinearGradient, Stop} from "react-native-svg";
 import DataManager from '../dataManager.js';
-import SharedConstants from '../sharedConstants.js'
+import SharedConstants from '../sharedConstants.js';
+import HeaderDate from '../headerDate.js';
 
 const QuestionButtonViz = (props) => {
 
   const question = DataManager.getQuestionWithId(props.questionId);
-  const data = question.getArrayValues({ normalizeValue: false, writeDateInString: false, daysCount: 10 });
+  const data = question.getArrayValues({ normalizeValue: false, writeDateInString: false, daysCount: 10, upToDay:HeaderDate.getDate() });
   // data.push({ value: -0.5, date: -1 });
   // for (let i = 0; i < 10; i++) {
   //   data.push({ value: i / 15, date: i });

@@ -255,18 +255,14 @@ function displayMarkers() {
                   {getRightResultView()}
                 </View>
               </View>
-
-
-              
-            
           </View>
           <View style={{height:"100%", justifyContent:"center"}}>
             {question && <QuestionButtonViz style={{ height: 0, flex: 2, backgroundColor: "transparent" }} questionId={question.id}></QuestionButtonViz>}
           </View>
-  </TouchableOpacity>
-  </View>
-  {/* </SwipeItem> */}
-  </View>
+        </TouchableOpacity>
+        </View>
+        {/* </SwipeItem> */}
+        </View>
   );
 }
 
