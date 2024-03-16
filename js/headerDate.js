@@ -61,11 +61,11 @@ class HeaderDate {
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/>
                     </TouchableOpacity>
                 </View>
-                <View style={{flex:1}}>
+                {/* <View style={{flex:1}}>
                     <TouchableOpacity style={{width:50, height:60, paddingRight:20, paddingTop:20}} onPress={()=>{setDate(new Date());}}>
                       <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowDouble.png")}/>
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
         );
     }
