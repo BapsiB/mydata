@@ -261,7 +261,6 @@ function displayMarkers() {
           </View>
         </TouchableOpacity>
         </View>
-        {/* </SwipeItem> */}
         </View>
   );
 }
