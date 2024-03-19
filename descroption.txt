@@ -7,4 +7,34 @@ Some extra externals data will be able to be added to the analysis, such as moon
 One screen includes the list of the questions with the answers of the day, the date of the day, and some ways to navigate through the days.
 By clicking on a question we get to the list of questions one by one, like cards.
 
+One section, or screen, allows to add, edit and remove questions.
+
+One section is here to visualise and analyse the data.
+
+One section contains the parameters. Login, backup, loading etc.
+
+The questions expect a specific type of answer:
+Boolean (yes/no)
+Int (quantity)
+Percentage (intensity)
+Colour
+A tag among a list of tags.
+
+
 I would like the design to be minimalist, yet quite clear.
+
+
+Prompt Idea to be guided in the setup of the questions:
+"
+I am making a journal where I reply everyday to a series of questions. The questions could be of the following answer type:
+
+1:Boolean (yes/no)
+2:Int (quantities)
+3:percentage (intensity)
+4:colour
+
+I would like to have a series of 12 questions that would allow me to track relevant informations regarding the following problematic: “I want to find out about some tensions I feel sometimes”
+
+Please give me the questions as a json array with objects {question, answerType}.
+Exemple:[{question:”how many fruits did you eat?”, answertType:2}, {question:”did you smoke?”, answertType:1}]
+"

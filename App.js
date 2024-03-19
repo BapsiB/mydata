@@ -25,7 +25,6 @@ import {
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, HStack, Divider } from 'react-native';
 import sharedConstants from './js/sharedConstants.js';
 import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
-import { transparent } from 'react-native-paper/lib/typescript/styles/themes/v2/colors.js';
 
 
 const Stack = createNativeStackNavigator();

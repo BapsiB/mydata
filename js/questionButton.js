@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
 
     alreadyAnswered: {
       borderWidth:1,
-      borderColor:"#eee",
+      borderColor:"#fff",
       backgroundColor: colourButtonBackAnswered,
     }
 });

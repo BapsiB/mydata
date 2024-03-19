@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import SharedConstants from './sharedConstants.js';
+import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class HeaderDate {
 
@@ -47,10 +48,10 @@ class HeaderDate {
         }
 
         return (
-            <View style={{position:"absolute", height:45, width:"90%", marginLeft:"5%", flexDirection: "row", marginVertical:0, marginBottom:0, elevation:3, zIndex: 3}}>
+            <View style={{ position: "absolute", height: 45, width: "90%", marginLeft: "5%", flexDirection: "row", marginVertical: 0, marginBottom: 0, elevation: 3, zIndex: 3 }}>
                 <View style={{flex:1, marginLeft:0}}>
                     <TouchableOpacity style={{width:50, height:60, paddingTop:20}} onPress={()=>{setDate(incrementDate(this.date, -1));}}>
-                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowL.png")}/>
+                        <Text style={styles.dateText}>{"<"}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flex: 10, marginRight:-20, height:60, paddingTop:20}}>
@@ -58,7 +59,8 @@ class HeaderDate {
                 </View>
                 <View style={{flex:1}}>
                     <TouchableOpacity style={{width:50, height:60, paddingLeft:20, paddingTop:20, marginLeft:-15}} onPress={()=>{setDate(incrementDate(this.date, 1));}}>
-                      <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/>
+                        {/* <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/> */}
+                        <Text style={styles.dateText}>></Text>
                     </TouchableOpacity>
                 </View>
                 {/* <View style={{flex:1}}>
@@ -80,7 +82,8 @@ const styles = StyleSheet.create({
             fontSize: 16,
             fontWeight: '500',
             textAlignVertical:'center',
-            textAlign:'center',
+            textAlign: 'center',
+            fontFamily: 'Montserrat-Regular'
         },
  });
 

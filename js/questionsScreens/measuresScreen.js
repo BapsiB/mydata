@@ -72,12 +72,12 @@ const MeasuresScreen = ({navigation, date}) => {
     <ScrollView style={{marginBottom:"0%" }} showsVerticalScrollIndicator={false}>
       <SwipeProvider>
         <View style={{ height: 65, marginTop:20}} />
-          {!allQuestionsAnswered && <TouchableOpacity onPress={replyAllQuestions} style={{ flexDirection: "row", textAlign: 'center', justifyContent: 'center' }}>
-            <SimpleLineIcons name="loop" size={20} color={"#555"}></SimpleLineIcons>
-            <Text style={{ fontSize: 16, color: "#000", textAlign: 'center', justifyContent: 'center' }}>
-              {" answer all"}
+          <TouchableOpacity onPress={replyAllQuestions} style={{ flexDirection: "row", textAlign: 'center', justifyContent: 'center' }}>
+            {!allQuestionsAnswered && <SimpleLineIcons name="loop" size={20} color={"#555"}></SimpleLineIcons>}
+            <Text style={{ fontSize: 16, color: "#000", textAlign: 'center', justifyContent: 'center', fontFamily: 'Montserrat-Regular' }}>
+              {!allQuestionsAnswered ? " answer all" : ""}
             </Text>
-          </TouchableOpacity>}
+          </TouchableOpacity>
           <View style={{ height: 15 }} />
           <View style={{ flex: 1}}>
             {listItems}
