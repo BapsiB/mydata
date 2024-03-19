@@ -61,7 +61,6 @@ const MeasuresScreen = ({navigation, date}) => {
     <View style={{ flex: 1, flexDirection: 'row' }}>
       <Image style={{resizeMode: 'cover', width:"100%", height:"100%", position:"absolute"}} source={require("../../resources/background.jpg")}></Image>
       <View style={{position:"absolute", elevation:2, zIndex:2, width:"100%", height:60, backgroundColor:"white"}}>
-
       </View>
       <View style={{position:"absolute", elevation:-1, zIndex:-1, width:"100%", height:"100%"}}>
       {/* <Svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">

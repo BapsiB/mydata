@@ -122,7 +122,11 @@ const EditQuestionsList = ({navigation}) => {
                       DataManager.updateQuestionsOrder();
                       DataManager.saveListQuestions();
                     }}
-                    keyExtractor={(item,index)=> item.txt}
+                    keyExtractor={(item, index) => {
+                      item.id + item.text
+                    }
+                      
+                    }
                     onClickItem={(data,item,index)=>{
 
                     }}

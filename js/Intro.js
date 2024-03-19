@@ -207,7 +207,7 @@ export default  Intro = (props) => {
     function getButtonText() {
         switch(tutorialStep) {
             case 0:
-                return "take your hand";
+                return "take my hand";
             case 1:
                 return "why do that?";
             case 2:

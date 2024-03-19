@@ -15,6 +15,7 @@ import DataManager from './js/dataManager'
 import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -27,8 +28,42 @@ import sharedConstants from './js/sharedConstants.js';
 import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
 
 
-const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
+const JournalStack = createNativeStackNavigator();
+const ManageStack = createNativeStackNavigator();
+// const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
+
+function JournalStackScreen() {
+  return (
+    <JournalStack.Navigator initialRouteName="Home">
+        <JournalStack.Screen
+          name="Home"
+          component={MainView}
+          options={{ headerShown:false }}
+      />
+      <JournalStack.Screen name="Timeline" component={TimelineView} options={{ headerShown:false }}/>
+      <JournalStack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
+      <JournalStack.Screen name="Questions List Editor" component={EditQuestionsScreen} options={{ headerShown:false }}/>
+      <JournalStack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
+      <JournalStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
+      <JournalStack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
+      <JournalStack.Screen name="Debug" component={DebugScreen} options={{ headerShown: true }} />
+      {getStackNavigator()}
+    </JournalStack.Navigator>
+  )
+}
+
+function ManageStackScreen() {
+    return (
+    <ManageStack.Navigator initialRouteName="Questions List Editor">
+      <ManageStack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
+      <ManageStack.Screen name="Questions List Editor" component={EditQuestionsScreen} options={{ headerShown:false }}/>
+      <ManageStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
+      <ManageStack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
+      <ManageStack.Screen name="Debug" component={DebugScreen} options={{ headerShown: true }} />
+    </ManageStack.Navigator>
+  )
+}
 
 const MyStack = () => {
 
@@ -48,23 +83,10 @@ const MyStack = () => {
     {!questionLoaded && <Image style={{resizeMode: 'cover', width:"100%", height:"100%"}} source={require("./resources/splash.jpg")}></Image>}
     {questionLoaded &&
     <NavigationContainer>
-       <Drawer.Navigator
-          drawerContent={(props) => <CustomDrawerContent {...props} initialRouteName="Home" />}
-        >
-        <Stack.Screen
-            name="Home"
-            component={MainView}
-            options={{ headerShown:false }}
-        />
-        <Stack.Screen name="Timeline" component={TimelineView} options={{ headerShown:false }}/>
-        <Stack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
-        <Stack.Screen name="Questions List Editor" component={EditQuestionsScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
-        <Stack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
-        <Stack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
-        <Stack.Screen name="Debug" component={DebugScreen} options={{ headerShown:true }}/>
-        {getStackNavigator()}
-      </Drawer.Navigator>
+        <Tab.Navigator screenOptions={{ headerShown: false }}>
+            <Tab.Screen name="Journal" component={JournalStackScreen} />
+            <Tab.Screen name="Manage" component={ManageStackScreen} />
+        </Tab.Navigator>
     </NavigationContainer>
     }
     {!introFinished && <Intro style={{position:"absolute", width:"100%", height:"100%", zIndex: 10, elevation:3 }} callback={() => {setIntroFinished(true)}}/>}
@@ -79,7 +101,7 @@ function getStackNavigator() {
   optionsForth.headerShown = false;
   // let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
   // optionsBack.headerShown = false;
-  const listItemsforth = listQuestions.map((d) => <Stack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={{headerShown:false}} key={d.id} initialParams={{ questionId: d.id }} />);
+  const listItemsforth = listQuestions.map((d) => <JournalStack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={{headerShown:false}} key={d.id} initialParams={{ questionId: d.id }} />);
   // basically because i didn't find a better way, we put twice the screens with different animation.
   return listItemsforth;//.concat(listItemsback);
 }
