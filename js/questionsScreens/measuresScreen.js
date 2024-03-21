@@ -5,7 +5,6 @@ import DataManager from '../dataManager.js';
 import HeaderDate from '../headerDate.js';
 import QuestionButton from '../questionButton'
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
-import Svg, { Path } from 'react-native-svg';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 const MeasuresScreen = ({navigation, date}) => {
@@ -50,6 +49,19 @@ const MeasuresScreen = ({navigation, date}) => {
     navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:true} );
   }
 
+  function addQuestion() {
+    navigation.navigate("Question Editor", { startType: SharedConstants.questionTypes.QUESTION_TYPE_YES_NO });
+  }
+
+  function editNote() {
+    const question = DataManager.getNoteQuestion();
+    navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:false} );
+  }
+
+  function getAnswerNote() {
+    return DataManager.getAnswerForQuestion(DataManager.NOTE_QUESTION_ID, HeaderDate.getDate());
+  }
+
   DataManager.setAnswersUpdateListener(updateAnswer);
   HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
 
@@ -61,11 +73,6 @@ const MeasuresScreen = ({navigation, date}) => {
     <View style={{ flex: 1, flexDirection: 'row' }}>
       <Image style={{resizeMode: 'cover', width:"100%", height:"100%", position:"absolute"}} source={require("../../resources/background.jpg")}></Image>
       <View style={{position:"absolute", elevation:2, zIndex:2, width:"100%", height:60, backgroundColor:"white"}}>
-      </View>
-      <View style={{position:"absolute", elevation:-1, zIndex:-1, width:"100%", height:"100%"}}>
-      {/* <Svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <Path fill="#fff3f3" d="M 000 150 s 0 200 150 200 s 250 -300 500 -100 s 500 -450 400 -650 s 100 550 100 550" transform="translate(-100, -250), scale(1.,1)" />
-      </Svg> */}
       </View>
       {getTextEmptyQuestion()}
     <ScrollView style={{marginBottom:"0%" }} showsVerticalScrollIndicator={false}>
@@ -81,7 +88,24 @@ const MeasuresScreen = ({navigation, date}) => {
           <View style={{ flex: 1}}>
             {listItems}
           </View>
-        <View style={{height:70}}/>
+          <TouchableOpacity
+            onPress={editNote}
+          >
+            <Text style={{marginLeft:"5%", marginTop:30, fontFamily: 'Montserrat-Regular'}}>{"Notes:"}</Text>
+            <View style={{ flex: 1, flexDirection: "row", width:"90%", marginLeft:"5%", marginTop:20, paddingLeft:10, paddingBottom:40, paddingTop:20, backgroundColor:"#fafafa", elevation:2, borderRadius:5 }}>
+              <SimpleLineIcons size={15} name="pencil" style={{ marginLeft: -15, marginTop: -5, marginRight: 10, width: 30, height: 30, transform: [{ rotateY: '180deg' }] }}></SimpleLineIcons>
+              <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", color: "#aaa" }]} multiline={true} numberOfLines={3}>{getAnswerNote()}</Text>
+              <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", textDecorationLine: 'underline', color: "#aaa" }]} multiline={true} numberOfLines={3}>{"                                                                               " + "\n" + "                                                                               " +  "\n" + "                                                                               "}</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={addQuestion}
+            style={{ width: "100%", justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+            <View style={{width:50, height:50, borderRadius:25, borderWidth:1, borderColor:"#ddd", elevation:2, shadowColor: "#aaa", backgroundColor:"white", justifyContent: 'center'}}>
+              <Text style={{ width: 50, textAlign: 'center', fontSize:30, fontFamily: 'Montserrat-Thin' }}>+</Text>
+            </View>
+          </TouchableOpacity>
+        <View style={{height:30}}/>
       </SwipeProvider>
     </ScrollView>
     </View>

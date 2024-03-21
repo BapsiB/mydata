@@ -92,21 +92,20 @@ const NotesScreen = ({navigation}) => {
 
   const listItems = arrayNotes.map((d) =>         
   <Draggable x={getPercentToPix(d.options.x)} y={getPercentToPix(d.options.y)} key={d.id} 
-  onDragRelease={(event, gestureState, bounds)=>noteReleased(d.id, bounds)}
-  onLongPress={()=>console.log('long press')}
-  onShortPressRelease={()=>console.log('press drag')}
-  onPressIn={()=>console.log('in press')}
-  onPressOut={()=>console.log('out press')}>
-    <TouchableWithoutFeedback onPress={()=>editQuestion(d.id)} onLongPress={()=>openNoteEditor(d.id)}
->
-      <View style={[styles.noteContainer, {width:windowWidth * 0.3, height:windowWidth * 0.3, backgroundColor:Utils.increase_brightness(d.getColour(), 95), transform: [{ rotate: getRandomRotate() }]}]}>
-        <View style={[styles.noteTitleContainer, {backgroundColor:Utils.increase_brightness(d.getColour(), 85)}]}>
-          <Text style={styles.noteTitle} numberOfLines={2}>{d.text}</Text>
-        </View>
-        <Text style={styles.noteContent} multiline={true} numberOfLines={4}>{getNoteLines(d)}</Text>
-        <Text style={[styles.noteContent, {textDecorationLine: 'underline', color: "#ddd",}]} multiline={true} numberOfLines={5}>{getEmptyLines()}</Text>
+    onDragRelease={(event, gestureState, bounds)=>noteReleased(d.id, bounds)}
+    onLongPress={()=>console.log('long press')}
+    onShortPressRelease={()=>console.log('press drag')}
+    onPressIn={()=>console.log('in press')}
+    onPressOut={()=>console.log('out press')}>
+  <TouchableWithoutFeedback onPress={()=>editQuestion(d.id)} onLongPress={()=>openNoteEditor(d.id)}>
+    <View style={[styles.noteContainer, {width:windowWidth * 0.3, height:windowWidth * 0.3, backgroundColor:Utils.increase_brightness(d.getColour(), 95), transform: [{ rotate: getRandomRotate() }]}]}>
+      <View style={[styles.noteTitleContainer, {backgroundColor:Utils.increase_brightness(d.getColour(), 85)}]}>
+        <Text style={styles.noteTitle} numberOfLines={2}>{d.text}</Text>
       </View>
-    </TouchableWithoutFeedback>
+      <Text style={styles.noteContent} multiline={true} numberOfLines={4}>{getNoteLines(d)}</Text>
+      <Text style={[styles.noteContent, {textDecorationLine: 'underline', color: "#ddd",}]} multiline={true} numberOfLines={5}>{getEmptyLines()}</Text>
+    </View>
+  </TouchableWithoutFeedback>
   </Draggable>
   );
 

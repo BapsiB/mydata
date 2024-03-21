@@ -28,7 +28,7 @@ const {width} = Dimensions.get('window')
 
 const parentWidth = width
 const childrenWidth = width
-const childrenHeight = 50
+const childrenHeight = 70
 
 const EditQuestionsList = ({navigation}) => {
   
@@ -76,11 +76,6 @@ const EditQuestionsList = ({navigation}) => {
 
   const renderItem = (item,index) => {
     return (
-    //   <View style={styles.item}>
-    //   <View style={styles.item_children}>
-    //       <Text style={styles.item_text}>{item.text}</Text>
-    //   </View>
-    // </View>
       <View key={item.id} style={styles.item}>
         <QuestionButtonEdit title={item.text} questionId={item.id} key={item.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButtonEdit>
       </View>
@@ -90,7 +85,7 @@ const EditQuestionsList = ({navigation}) => {
   return (
     <View style={{flex:1, backgroundColor:"white"}}>
       {getTextEmptyQuestion()}
-    <ScrollView style={{marginBottom:"17%"}} scrollEnabled={scrollEnabled}>
+    <ScrollView style={{marginBottom:0}} scrollEnabled={scrollEnabled}>
       
       <View style={{height:15, width:parentWidth}}/>
       <DragSortableView
@@ -123,7 +118,7 @@ const EditQuestionsList = ({navigation}) => {
                       DataManager.saveListQuestions();
                     }}
                     keyExtractor={(item, index) => {
-                      item.id + item.text
+                      return item.id
                     }
                       
                     }

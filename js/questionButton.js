@@ -10,6 +10,7 @@ import Utils from './utils'
 import utils from './utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import QuestionButtonViz from './dataVizzScreen/questionButtonViz';
 import Svg, { Path } from 'react-native-svg';
 
@@ -272,7 +273,7 @@ const QuestionButtonEdit = (props) => {
   }
   
   return (
-    <View style={[{marginVertical:0, height:50, flexDirection:"row"}, styles.questionsButtons, styles.alreadyAnswered]}>
+    <View style={[{marginVertical:0, height:50, flexDirection:"row"}, styles.questionsButtonsEdit, styles.alreadyAnswered]}>
       <IconCommunity name="drag-vertical" size={40} color="#777" style={{width:30, height:40, position:"absolute", left:-5}}/>
       <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"85%", flexDirection:"row"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
         <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center', fontFamily: 'Montserrat-SemiBold'}}>
@@ -296,6 +297,28 @@ const styles = StyleSheet.create({
     paddingHorizontal:3,
     borderWidth:0,
     borderRadius:35,
+    height:50,
+    flex:1,
+    borderColor:"black",
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 0,
+    elevation:6
+  },
+
+    questionsButtonsEdit: {
+    marginVertical:10,
+    marginLeft:20,
+    marginRight:10,
+    paddingHorizontal:3,
+    borderWidth:0,
+    borderRadius:15,
     height:50,
     flex:1,
     borderColor:"black",

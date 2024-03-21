@@ -26,11 +26,14 @@ import {
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, HStack, Divider } from 'react-native';
 import sharedConstants from './js/sharedConstants.js';
 import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
+import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen.js';
+
+import AnalyseIcon from './resources/analytics.svg';
 
 
 const JournalStack = createNativeStackNavigator();
 const ManageStack = createNativeStackNavigator();
-// const Drawer = createDrawerNavigator();
+const AnalyseStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function JournalStackScreen() {
@@ -65,6 +68,15 @@ function ManageStackScreen() {
   )
 }
 
+
+function AnalyseStackScreen() {
+    return (
+      <AnalyseStack.Navigator initialRouteName="Data Viz Screen">
+        <AnalyseStack.Screen name="Data Viz Screen" component={DataVisualisationScreen} options={{ headerShown:false }}/>
+     </AnalyseStack.Navigator>
+  )
+}
+
 const MyStack = () => {
 
   const [questionLoaded, setQuestionsLoaded] = React.useState(false);
@@ -84,8 +96,25 @@ const MyStack = () => {
     {questionLoaded &&
     <NavigationContainer>
         <Tab.Navigator screenOptions={{ headerShown: false }}>
-            <Tab.Screen name="Journal" component={JournalStackScreen} />
+            <Tab.Screen
+              name="Journal"
+              component={JournalStackScreen}
+              options={{
+            title: 'My profile',
+            tabBarIcon: ({size,focused,color}) => {
+                return (
+                  <Image
+                    style={{ width: size, height: size }}
+                    source={{
+                      uri:'image url',
+                    }}
+                  />
+                );
+              },
+            }}
+            />
             <Tab.Screen name="Manage" component={ManageStackScreen} />
+            <Tab.Screen name="Analyse" component={AnalyseStackScreen} />
         </Tab.Navigator>
     </NavigationContainer>
     }
@@ -99,8 +128,6 @@ function getStackNavigator() {
   listQuestions = DataManager.getQuestions();
   let optionsForth = Utils.horizontalScreenAnimation;
   optionsForth.headerShown = false;
-  // let optionsBack = Utils.horizontalScreenAnimationRightToLeft;
-  // optionsBack.headerShown = false;
   const listItemsforth = listQuestions.map((d) => <JournalStack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={{headerShown:false}} key={d.id} initialParams={{ questionId: d.id }} />);
   // basically because i didn't find a better way, we put twice the screens with different animation.
   return listItemsforth;//.concat(listItemsback);

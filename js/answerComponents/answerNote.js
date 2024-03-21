@@ -4,7 +4,6 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
-import Utils from '../utils.js'
 
 /*
 * Component showing the slider for both numbered and intensity type of questions.
@@ -73,7 +72,7 @@ const AnswerNote = (props) => {
         <Text style={styles.letterCounter}>{answer.length}/{maxChar}</Text>
         <View style={{width:"100%", justifyContent: 'center', alignItems: 'center'}}>
         <TouchableOpacity style={[SharedConstants.styles.BaseButtons, {}]} onPress={onReturn}>
-              <Text style={{color:"black"}}>BACK</Text>
+              <Text style={{color:"black"}}>SAVE</Text>
           </TouchableOpacity>
           </View>
     </SafeAreaView>

@@ -55,9 +55,7 @@ const styles = StyleSheet.create({
     margin:5,
     borderWidth:0,
     borderRadius:10,
-     // 1 for stacking the element on top of the previous element and -1 
-             // for stacking the element under the above previous element.
-    elevation: 1,
+
 
     shadowColor: "#000",
     shadowOffset: {

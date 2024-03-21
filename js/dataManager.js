@@ -8,6 +8,7 @@ import { call } from 'react-native-reanimated';
 class DataManager {
     constructor() {
 
+        this.NOTE_QUESTION_ID = "9999";
        this.questionsLoaded = false;
        this.listQuestions = [];
        this.questionsSettings = [];
@@ -298,13 +299,14 @@ class DataManager {
         return maxNum.toString();
        }
 
-       this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colour) {
-           const lId = this.findAvailableId();
+       this.addQuestion = function(aQuestionText, aQuestionType, aOptions, colour, forcedId) {
+           const lId = forcedId ? forcedId : this.findAvailableId();
            let lQuestion = new Question({text:aQuestionText, type:aQuestionType, options:aOptions, colour, id:lId}, this);
            this.listQuestions.push(lQuestion);
            this.saveListQuestions();
 
-            this.callQuestionsCallbacks();
+           this.callQuestionsCallbacks();
+           return lQuestion;
        }
 
        this.updateQuestion = function(aQuestionId, aQuestionText, questionType, options, colour) {
@@ -319,7 +321,6 @@ class DataManager {
         }
 
         this.saveListQuestions();
-
         this.callQuestionsCallbacks();
     }
 
@@ -380,6 +381,15 @@ class DataManager {
             }
             return null;
        }
+        
+        this.getNoteQuestion = function () {
+            let lNote = this.getQuestionWithId(this.NOTE_QUESTION_ID);
+            if (!lNote) {
+                lNote = this.addQuestion("Complementary Notes", SharedConstants.questionTypes.QUESTION_TYPE_NOTE, {}, "#fff", this.NOTE_QUESTION_ID);
+                this.saveListQuestions();
+            }
+            return lNote;
+        }
 
        this.restore = function(objectToStore) {
         AsyncStorage.clear();
@@ -432,7 +442,6 @@ class DataManager {
                    else {
                     return lQuestion;
                    }
-                   
                }
            }
 
@@ -451,6 +460,8 @@ class DataManager {
         }
         return null;
        }
+        
+
 
         this.addQuestionsListener = function(stringId, callback){
             if(this.questionsLoaded) {
