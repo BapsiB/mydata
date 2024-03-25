@@ -36,7 +36,6 @@ const AnswerNote = (props) => {
       props.navigation.goBack();
      }
   
-
     function getEmptyLines() {
         let string = "";
         for(let j = 0; j < 30; j++) {

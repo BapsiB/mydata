@@ -3,7 +3,6 @@ import React from 'react';
 import Backup from './js/backup.js';
 import QuestionEditor from './js/questionEditor/questionEditor.js';
 import AnswerScreen from './js/answerScreen';
-// import NotificationsManager from './js/notificationsManager';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
 import TimelineView from './js/timeline/timelineView'
 import Intro from './js/Intro.js'
@@ -20,23 +19,22 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
-import {
-  createStackNavigator
-} from '@react-navigation/stack';
 import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View, HStack, Divider } from 'react-native';
 import sharedConstants from './js/sharedConstants.js';
 import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
+import SettingsScreen from './js/settingsScreen.jsx';
 import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen.js';
 
 const JournalStack = createNativeStackNavigator();
 const ManageStack = createNativeStackNavigator();
 const AnalyseStack = createNativeStackNavigator();
+const SettingsStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function JournalStackScreen() {
   return (
     <JournalStack.Navigator initialRouteName="Home">
-        <JournalStack.Screen
+      <JournalStack.Screen
           name="Home"
           component={MainView}
           options={{ headerShown:false }}
@@ -58,10 +56,19 @@ function ManageStackScreen() {
     <ManageStack.Navigator initialRouteName="Questions List Editor">
       <ManageStack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
       <ManageStack.Screen name="Questions List Editor" component={EditQuestionsScreen} options={{ headerShown:false }}/>
-      <ManageStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
-      <ManageStack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
-      <ManageStack.Screen name="Debug" component={DebugScreen} options={{ headerShown: true }} />
+
     </ManageStack.Navigator>
+  )
+}
+
+function SettingsStackScreen() {
+    return (
+    <SettingsStack.Navigator initialRouteName="Settings">
+      <SettingsStack.Screen name="Settings" component={SettingsScreen} options={{ headerShown:true }}/>
+      <SettingsStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
+      <SettingsStack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
+      <SettingsStack.Screen name="Debug" component={DebugScreen} options={{ headerShown: true }} />
+    </SettingsStack.Navigator>
   )
 }
 
@@ -95,16 +102,6 @@ const MyStack = () => {
     {questionLoaded &&
     <NavigationContainer>
           <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="Journal">
-            <Tab.Screen name="Manage" component={ManageStackScreen}
-              options={{
-                tabBarIcon: ({ focused, color, size }) => (
-                  <Image
-                    source={focused ? require('./resources/gearFocused.png') : require('./resources/gear.png')}
-                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor:focused ? colourFocused : "#9aa"}}
-                  />
-                 ),
-                 tabBarLabel: () => null,
-              }}/>
             <Tab.Screen
               name="Journal"
               component={JournalStackScreen}
@@ -133,6 +130,28 @@ const MyStack = () => {
               }}
 
             />
+            <Tab.Screen name="Manage" component={ManageStackScreen}
+              options={{
+                tabBarIcon: ({ focused, color, size }) => (
+                  <Image
+                    source={focused ? require('./resources/editQuestionsFocused.png') : require('./resources/editQuestions.png')}
+                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor:focused ? colourFocused : "#9aa"}}
+                  />
+                 ),
+                 tabBarLabel: () => null,
+              }} />
+            <Tab.Screen name="Settings" component={SettingsStackScreen}
+              options={{
+                tabBarIcon: ({ focused, color, size }) => (
+                  <Image
+                    source={focused ? require('./resources/settingsFocused.png') : require('./resources/settings.png')}
+                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor:focused ? colourFocused : "#9aa"}}
+                  />
+                 ),
+                 tabBarLabel: () => null,
+              }}/>
+
+
         </Tab.Navigator>
     </NavigationContainer>
     }

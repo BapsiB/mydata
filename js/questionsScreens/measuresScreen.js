@@ -4,7 +4,7 @@ import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.js';
 import HeaderDate from '../headerDate.js';
 import QuestionButton from '../questionButton'
-import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
+import { SwipeProvider } from 'react-native-swipe-item';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 const MeasuresScreen = ({navigation, date}) => {
