@@ -28,9 +28,6 @@ import sharedConstants from './js/sharedConstants.js';
 import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
 import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen.js';
 
-import AnalyseIcon from './resources/analytics.svg';
-
-
 const JournalStack = createNativeStackNavigator();
 const ManageStack = createNativeStackNavigator();
 const AnalyseStack = createNativeStackNavigator();
@@ -90,31 +87,52 @@ const MyStack = () => {
     DataManager.addQuestionsListener("MyStack", updateQuestions);
   }, []);
 
+  const colourFocused = "#cca";
+
   return (
     <View style={{height:"100%", width:"100%"}}>
     {!questionLoaded && <Image style={{resizeMode: 'cover', width:"100%", height:"100%"}} source={require("./resources/splash.jpg")}></Image>}
     {questionLoaded &&
     <NavigationContainer>
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
+          <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="Journal">
+            <Tab.Screen name="Manage" component={ManageStackScreen}
+              options={{
+                tabBarIcon: ({ focused, color, size }) => (
+                  <Image
+                    source={focused ? require('./resources/gearFocused.png') : require('./resources/gear.png')}
+                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor:focused ? colourFocused : "#9aa"}}
+                  />
+                 ),
+                 tabBarLabel: () => null,
+              }}/>
             <Tab.Screen
               name="Journal"
               component={JournalStackScreen}
               options={{
-            title: 'My profile',
-            tabBarIcon: ({size,focused,color}) => {
-                return (
+                tabBarIcon: ({ focused, color, size }) => (
                   <Image
-                    style={{ width: size, height: size }}
-                    source={{
-                      uri:'image url',
-                    }}
+
+                    source={focused ? require('./resources/notesbuttonFocused.png') : require('./resources/notesbutton.png')}
+                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor: focused ? colourFocused : "#9aa"}}
                   />
-                );
-              },
-            }}
+                ),
+                tabBarLabel: () => null,
+              }}
             />
-            <Tab.Screen name="Manage" component={ManageStackScreen} />
-            <Tab.Screen name="Analyse" component={AnalyseStackScreen} />
+            <Tab.Screen
+              name="Analyse"
+              component={AnalyseStackScreen}
+              options={{
+                tabBarIcon: ({ focused, color, size }) => (
+                  <Image
+                    source={focused ? require('./resources/analyticsFocused.png') : require('./resources/analytics.png')}
+                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor: focused ? colourFocused : "#9aa"}}
+                  />
+                ),
+                tabBarLabel: () => null,
+              }}
+
+            />
         </Tab.Navigator>
     </NavigationContainer>
     }

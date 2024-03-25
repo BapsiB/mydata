@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlignVertical: 'center',
     textAlign: 'center',
+    fontFamily: 'Montserrat-Regular'
   },
   centeredView: {
     flex: 1,

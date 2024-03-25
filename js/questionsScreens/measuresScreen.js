@@ -93,7 +93,7 @@ const MeasuresScreen = ({navigation, date}) => {
           >
             <Text style={{marginLeft:"5%", marginTop:30, fontFamily: 'Montserrat-Regular'}}>{"Notes:"}</Text>
             <View style={{ flex: 1, flexDirection: "row", width:"90%", marginLeft:"5%", marginTop:20, paddingLeft:10, paddingBottom:40, paddingTop:20, backgroundColor:"#fafafa", elevation:2, borderRadius:5 }}>
-              <SimpleLineIcons size={15} name="pencil" style={{ marginLeft: -15, marginTop: -5, marginRight: 10, width: 30, height: 30, transform: [{ rotateY: '180deg' }] }}></SimpleLineIcons>
+              <SimpleLineIcons color={"#555"} size={15} name="pencil" style={{ marginLeft: -15, marginTop: -5, marginRight: 10, width: 30, height: 30, transform: [{ rotateY: '180deg' }] }}></SimpleLineIcons>
               <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", color: "#aaa" }]} multiline={true} numberOfLines={3}>{getAnswerNote()}</Text>
               <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", textDecorationLine: 'underline', color: "#aaa" }]} multiline={true} numberOfLines={3}>{"                                                                               " + "\n" + "                                                                               " +  "\n" + "                                                                               "}</Text>
             </View>
@@ -102,7 +102,7 @@ const MeasuresScreen = ({navigation, date}) => {
             onPress={addQuestion}
             style={{ width: "100%", justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
             <View style={{width:50, height:50, borderRadius:25, borderWidth:1, borderColor:"#ddd", elevation:2, shadowColor: "#aaa", backgroundColor:"white", justifyContent: 'center'}}>
-              <Text style={{ width: 50, textAlign: 'center', fontSize:30, fontFamily: 'Montserrat-Thin' }}>+</Text>
+              <Text style={{ width: 50, color:"#555", textAlign: 'center', fontSize:30, fontFamily: 'Montserrat-Thin' }}>+</Text>
             </View>
           </TouchableOpacity>
         <View style={{height:30}}/>
