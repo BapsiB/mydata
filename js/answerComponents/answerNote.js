@@ -21,16 +21,9 @@ const AnswerNote = (props) => {
     }
 
     const [answer, setAnswer] = React.useState(lAnswerForQuestion);
-    const [timeoutId, setTimeoutId] = React.useState(null);
 
     function onSetValue(aValue) {
         setAnswer(aValue);
-        if(timeoutId) {
-          clearInterval(timeoutId);
-        }
-        // we throttle the saving to avoid saving at every keyboard input.
-        const lTimeoutId = setTimeout(onSaveValue, 1000);
-        setTimeoutId(lTimeoutId);
     }
 
     function onSaveValue() {
