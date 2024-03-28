@@ -8,23 +8,31 @@ import DataManager from './dataManager.js';
 
 const SettingsScreen = (props) => {
 
+  const navigate = (aDestination) => {
+    props.navigation.navigate(aDestination);
+  }
+
   return (
     <View style={{
       flex: 1, justifyContent: 'center',
       alignItems: 'center',
     }}>
-      <View style={styles.button}>
+      <TouchableOpacity onPress={() => { navigate("Backup") }} style={styles.button}>
+        <MaterialIcons color={"#555"} size={20} name={'notifications'} style={styles.icon} />
+        <Text style={styles.text}>Notifications</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => { navigate("Backup") }} style={styles.button}>
         <MaterialIcons color={"#555"} size={20} name={'backup'} style={styles.icon} />
-        <Text>Backup</Text>
-      </View>
-      <View style={styles.button}>
+        <Text style={styles.text}>Backup</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => { navigate("Restore") }} style={styles.button}>
         <MaterialIcons color={"#555"} size={20} name={'settings-backup-restore'} style={styles.icon} />
-        <Text>Restore</Text>
-      </View>
-      <View style={styles.button}>
+        <Text style={styles.text}>Restore</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => { navigate("Debug") }} style={styles.button}>
         <MaterialIcons color={"#555"} size={20} name={'bug-report'} style={styles.icon} />
-        <Text>Debug</Text>
-      </View>
+        <Text style={styles.text}>Debug</Text>
+      </TouchableOpacity>
 
     </View >
   )
@@ -50,13 +58,18 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 0,
     marginHorizontal: 35,
-    borderColor: '#888',
+    borderColor: '#999',
     borderWidth: 1,
     flexDirection: "row",
     margin: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  text: {
+    color: "#444",
+    fontFamily: 'Montserrat-Regular'
+  }
 
 });
 

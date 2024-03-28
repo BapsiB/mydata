@@ -12,12 +12,12 @@ const DebugScreen = () => {
         DataManager.clearAll();
     }
 
-    return(
+    return (
         <View style={styles.mainView}>
-            <TouchableOpacity style={styles.buttonStyle} onPress={()=>{onResetIntro(); }}>
+            <TouchableOpacity style={styles.buttonStyle} onPress={() => { onResetIntro(); }}>
                 <Text style={styles.buttonText}>Reset Intro</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonStyle} onPress={()=>{onResetData(); }}>
+            <TouchableOpacity style={styles.buttonStyle} onPress={() => { onResetData(); }}>
                 <Text style={styles.buttonText}>Erase All Data</Text>
             </TouchableOpacity>
         </View>
@@ -27,25 +27,26 @@ const DebugScreen = () => {
 export default DebugScreen;
 
 const styles = StyleSheet.create({
-    mainView:{
+    mainView: {
         justifyContent: 'center', //Centered horizontally
         alignItems: 'center', //Centered vertically
     },
     buttonStyle: {
-        margin:20,
-        backgroundColor:"white",
-        borderRadius:10,
-        borderWidth:1,
-        width:300,
-        height:50,
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 10,
+        borderWidth: 1,
+        width: 300,
+        height: 50,
         justifyContent: 'center', //Centered horizontally
         alignItems: 'center', //Centered vertically
     },
 
     buttonText: {
-        fontSize:20,
-        textAlign:'center',
+        color: "#444",
+        fontSize: 20,
+        textAlign: 'center',
 
     }
-    
+
 });

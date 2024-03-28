@@ -14,7 +14,6 @@ const EditQuestionsScreen = ({navigation}) => {
   const StackIn = createStackNavigator();
 
   return (
-
     <View style={{ flex: 1}}>
       <StackIn.Navigator initialRouteName={"Questions List Editor"}>
         <StackIn.Screen name="Question Editor 2" component={QuestionEditor} options={{ headerShown:false }}/>
@@ -83,7 +82,10 @@ const EditQuestionsList = ({navigation}) => {
   }
 
   return (
-    <View style={{flex:1, backgroundColor:"white"}}>
+  <View style={{ flex: 1, backgroundColor: "white" }}>
+    <View>
+        
+    </View>
       {getTextEmptyQuestion()}
     <ScrollView style={{marginBottom:0}} scrollEnabled={scrollEnabled}>
       
