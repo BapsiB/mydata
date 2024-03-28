@@ -18,6 +18,12 @@ const AnswerScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const lCurrentQuestion = DataManager.getQuestionWithId(props.route.params.id);
   const lTakeUnansweredOnly = props.route.params.onlyTakeUnanswered;
+
+  /*
+   * defines wether we want to go next question after setting an answer.
+   */
+  const automaticNextQuestion = props.route.params.automaticNextQuestion;
+
   const [currentQuestion, setCurrentQuestion] = React.useState(lCurrentQuestion);
 
   const images: ImageSourcePropType[] = [
@@ -54,14 +60,14 @@ const AnswerScreen = (props) => {
         </View>
         {hasNextPrevButton &&
           <View style={{ justifyContent: 'flex-end', alignItems: 'center', flexDirection: "row", backgroundColour: "blue", marginVertical: 10 }}>
-            <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1 }]} onPress={() => { nextQuestion(false, lTakeUnansweredOnly); }}>
-              <Text style={{ color: "black" }}>PREV</Text>
+            <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1 }]} onPress={() => { nextQuestion(false, false); }}>
+              <Text style={SharedConstants.styles.textButton}>PREV</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 2 }]} onPress={() => { onReturn(hasNextPrevButton); }}>
-              <Text style={{ color: "black" }}>BACK</Text>
+              <Text style={SharedConstants.styles.textButton}>BACK</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[SharedConstants.styles.BaseButtons, { flex: 1 }]} onPress={() => { nextQuestion(true, lTakeUnansweredOnly); }}>
-              <Text style={{ color: "black" }}>NEXT</Text>
+              <Text style={SharedConstants.styles.textButton}>NEXT</Text>
             </TouchableOpacity>
           </View>
         }
@@ -69,9 +75,9 @@ const AnswerScreen = (props) => {
     )
   }
 
-  function nextQuestion(goNext) {
+  function nextQuestion(goNext, takeUnansweredOnly) {
 
-    const onlyTakeEmptyAnswer = lTakeUnansweredOnly;
+    let onlyTakeEmptyAnswer = takeUnansweredOnly;
 
     if (goNext === undefined) {
       return;
@@ -96,23 +102,29 @@ const AnswerScreen = (props) => {
 
   }
 
+  function answerGiven() {
+    if (automaticNextQuestion) {
+      nextQuestion(true, true);
+    }
+  }
+
   function getProperAnswerElement(aCurrentQuestion) {
 
     switch (aCurrentQuestion.type) {
       case SharedConstants.questionTypes.QUESTION_TYPE_YES_NO:
-        return (<AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={nextQuestion} key={aCurrentQuestion.id} />);
+        return (<AnswerYesNo date={HeaderDate.getDate()} question={aCurrentQuestion} callback={answerGiven} key={aCurrentQuestion.id} />);
         break;
       case SharedConstants.questionTypes.QUESTION_TYPE_NUMBER:
-        return (<AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
+        return (<AnswerSlider date={HeaderDate.getDate()} callback={answerGiven} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
         break;
       case SharedConstants.questionTypes.QUESTION_TYPE_INTENSITY:
-        return (<AnswerSlider date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
+        return (<AnswerSlider date={HeaderDate.getDate()} callback={answerGiven} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
         break;
       case SharedConstants.questionTypes.QUESTION_TYPE_COLOUR:
-        return (<AnswerColour date={HeaderDate.getDate()} callback={nextQuestion} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
+        return (<AnswerColour date={HeaderDate.getDate()} callback={answerGiven} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
         break;
       case SharedConstants.questionTypes.QUESTION_TYPE_NOTE:
-        return (<AnswerNote date={HeaderDate.getDate()} callback={nextQuestion} navigation={props.navigation} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
+        return (<AnswerNote date={HeaderDate.getDate()} callback={answerGiven} navigation={props.navigation} question={aCurrentQuestion} key={aCurrentQuestion.id} />)
         break;
     }
   }

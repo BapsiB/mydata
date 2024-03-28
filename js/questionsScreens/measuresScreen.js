@@ -46,7 +46,7 @@ const MeasuresScreen = ({navigation, date}) => {
 
   function replyAllQuestions() {
     const question = DataManager.getNextQuestionUnrespondedInArray(0, HeaderDate.getDate());
-    navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:true} );
+    navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:true, automaticNextQuestion:true} );
   }
 
   function addQuestion() {
@@ -55,7 +55,7 @@ const MeasuresScreen = ({navigation, date}) => {
 
   function editNote() {
     const question = DataManager.getNoteQuestion();
-    navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:false} );
+    navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:false, automaticNextQuestion:false} );
   }
 
   function getAnswerNote() {

@@ -107,7 +107,7 @@ export default QuestionButton = (props) => {
   }
 
   const goToQuestion = () => {
-    props.navigation.navigate("Answer Screen", { id: props.questionId, onlyTakeUnanswered: true });
+    props.navigation.navigate("Answer Screen", { id: props.questionId, onlyTakeUnanswered: false, automaticNextQuestion:false });
   }
 
   const requestDelete = () => {

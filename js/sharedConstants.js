@@ -109,21 +109,22 @@ class SharedConstants {
 
         this.styles = StyleSheet.create({
            BaseButtons: {
-               height:50,
-               width:130,
-               marginHorizontal:5,
-               backgroundColor: 'black',
-               color:"black",
-               alignItems: 'center',
-               backgroundColor:"white",
-               borderWidth:1,
-               borderRadius:10,
-               textAlignVertical:'center',
-               textAlign:'center',
-               justifyContent: 'center',
-               alignItems: 'center',
-           },
+            width: 200,
+            borderRadius: 10,
+            padding: 10,
+            elevation: 0,
+            borderColor: '#999',
+            borderWidth: 1,
+            flexDirection: "row",
+            margin: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+            },
 
+            textButton: {
+                color: "#444",
+                fontFamily: 'Montserrat-Regular'
+            }
        })
   }
 }
