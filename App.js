@@ -41,11 +41,7 @@ function JournalStackScreen() {
       />
       <JournalStack.Screen name="Timeline" component={TimelineView} options={{ headerShown:false }}/>
       <JournalStack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
-      <JournalStack.Screen name="Questions List Editor" component={EditQuestionsScreen} options={{ headerShown:false }}/>
       <JournalStack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
-      <JournalStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
-      <JournalStack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
-      <JournalStack.Screen name="Debug" component={DebugScreen} options={{ headerShown: true }} />
       {getStackNavigator()}
     </JournalStack.Navigator>
   )
@@ -63,7 +59,7 @@ function ManageStackScreen() {
 
 function SettingsStackScreen() {
     return (
-    <SettingsStack.Navigator initialRouteName="Settings">
+    <SettingsStack.Navigator initialRouteName="SettingsScreen">
       <SettingsStack.Screen name="Settings" component={SettingsScreen} options={{ headerShown:true }}/>
       <SettingsStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
       <SettingsStack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
@@ -94,7 +90,7 @@ const MyStack = () => {
     DataManager.addQuestionsListener("MyStack", updateQuestions);
   }, []);
 
-  const colourFocused = "#cca";
+  const colourFocused = "#ccc";
 
   return (
     <View style={{height:"100%", width:"100%"}}>
@@ -140,7 +136,7 @@ const MyStack = () => {
                  ),
                  tabBarLabel: () => null,
               }} />
-            <Tab.Screen name="Settings" component={SettingsStackScreen}
+            <Tab.Screen name="SettingsTab" component={SettingsStackScreen}
               options={{
                 tabBarIcon: ({ focused, color, size }) => (
                   <Image

@@ -1,40 +1,56 @@
-my app allows people to write a data journal. the user will setup a list of questions and reply to those questions everyday. questions can be from various type depending of the type of answer they expect: yes no, numbers, intensity, colours, open text. the app aim for self understanding of out patterns, visualisation and simply record.
 
-AI will be used to process those datas and give some input on how to maximize specific things.
-AI will also be used to help the user find more questions depending on their needs.
-Some extra externals data will be able to be added to the analysis, such as moon phase, seasons, temperature etc.
+** GENERAL DESCRIPTION **
+	my app allows people to write a data journal. the user will setup a list of questions and reply to those questions everyday. questions can be from various type depending of the type of answer they expect: yes no, numbers, intensity, colours, open text. the app aim for self understanding of out patterns, visualisation and simply record.
 
-One screen includes the list of the questions with the answers of the day, the date of the day, and some ways to navigate through the days.
-By clicking on a question we get to the list of questions one by one, like cards.
+	AI will be used to process those datas and give some input on how to maximize specific things.
+	AI will also be used to help the user find more questions depending on their needs.
+	Some extra externals data will be able to be added to the analysis, such as moon phase, seasons, temperature etc.
 
-One section, or screen, allows to add, edit and remove questions.
+	One screen includes the list of the questions with the answers of the day, the date of the day, and some ways to navigate through the days.
+	By clicking on a question we get to the list of questions one by one, like cards.
 
-One section is here to visualise and analyse the data.
+	One section, or screen, allows to add, edit and remove questions.
 
-One section contains the parameters. Login, backup, loading etc.
+	One section is here to visualise and analyse the data.
 
-The questions expect a specific type of answer:
-Boolean (yes/no)
-Int (quantity)
-Percentage (intensity)
-Colour
-A tag among a list of tags.
+	One section contains the parameters. Login, backup, loading etc.
 
+	The questions expect a specific type of answer:
+	Boolean (yes/no)
+	Int (quantity)
+	Percentage (intensity)
+	Colour
+	A tag among a list of tags.
 
-I would like the design to be minimalist, yet quite clear.
+	I would like the design to be minimalist, yet quite clear.
 
+** AI ANALYSIS **
 
-Prompt Idea to be guided in the setup of the questions:
-"
-I am making a journal where I reply everyday to a series of questions. The questions could be of the following answer type:
+	Prompt Idea to be guided in the setup of the questions:
+	"
+	I am making a journal where I reply everyday to a series of questions. The questions could be of the following answer type:
 
-1:Boolean (yes/no)
-2:Int (quantities)
-3:percentage (intensity)
-4:colour
+	1:Boolean (yes/no)
+	2:Int (quantities)
+	3:percentage (intensity)
+	4:colour
 
-I would like to have a series of 12 questions that would allow me to track relevant informations regarding the following problematic: “I want to find out about some tensions I feel sometimes”
+	I would like to have a series of 12 questions that would allow me to track relevant informations regarding the following problematic: “I want to find out about some tensions I feel sometimes”
 
-Please give me the questions as a json array with objects {question, answerType}.
-Exemple:[{question:”how many fruits did you eat?”, answertType:2}, {question:”did you smoke?”, answertType:1}]
-"
+	Please give me the questions as a json array with objects {question, answerType}.
+	Exemple:[{question:”how many fruits did you eat?”, answertType:2}, {question:”did you smoke?”, answertType:1}]
+	"
+
+**PAID VERSION**
+
+	The paid version should be around 12$ a year, and would include the following features:
+	AI tools: analysis, questions suggestion.
+	backup, store the data on server.
+
+**AUTOMATIC DATA**
+
+	moon phase
+	temperature
+	sunlight
+	birthday
+	holidays
