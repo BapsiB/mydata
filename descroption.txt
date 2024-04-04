@@ -54,3 +54,4 @@
 	sunlight
 	birthday
 	holidays
+	Lichess score
