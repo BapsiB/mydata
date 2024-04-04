@@ -18,7 +18,9 @@ const MeasuresScreen = ({navigation, date}) => {
   const updateQuestions = () => {
     const arrayQuestionsOrigin = DataManager.getQuestions();
     // we remove the questions that are the notes (they will be displayed in another screen)
-    const filtered = arrayQuestionsOrigin.filter((question) => {return question.type != SharedConstants.questionTypes.QUESTION_TYPE_NOTE});
+    const filtered = arrayQuestionsOrigin.filter((question) => { return question.type != SharedConstants.questionTypes.QUESTION_TYPE_NOTE });
+    const filteredNotes = DataManager.getNotes();
+    setArraNotes(filteredNotes);
     setArrayQuestions(filtered);
     forceUpdate();
   }
@@ -53,8 +55,8 @@ const MeasuresScreen = ({navigation, date}) => {
     navigation.navigate("Question Editor", { startType: SharedConstants.questionTypes.QUESTION_TYPE_YES_NO });
   }
 
-  function editNote() {
-    const question = DataManager.getNoteQuestion();
+  function editNote(aId) {
+    const question = DataManager.getNoteQuestion(aId);
     navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:false, automaticNextQuestion:false} );
   }
 
@@ -66,8 +68,24 @@ const MeasuresScreen = ({navigation, date}) => {
   HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
 
   const [arrayQuestions, setArrayQuestions] = React.useState([]);
-
+  const [arrayNotes, setArraNotes] = React.useState([]);
   const listItems = arrayQuestions.map((d) => <QuestionButton title={d.text} date={HeaderDate.getDate()} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButton>);
+  const listNotesItems = arrayNotes.map((d) => getNote(d.id));
+
+  function getNote(id) {
+    const note = DataManager.getQuestionWithId(id);
+    return(         
+        <TouchableOpacity
+          onPress={() => { editNote(id) }}
+          >
+            <Text style={{marginLeft:"5%", marginTop:30, fontFamily: 'Montserrat-Regular'}}>{note.text + ":"}</Text>
+            <View style={{ flex: 1, flexDirection: "row", width:"90%", marginLeft:"5%", marginTop:20, paddingLeft:10, paddingBottom:40, paddingTop:20, backgroundColor:"#fafafa", elevation:2, borderRadius:5 }}>
+              <SimpleLineIcons color={"#555"} size={15} name="pencil" style={{ marginLeft: -15, marginTop: -5, marginRight: 10, width: 30, height: 30, transform: [{ rotateY: '180deg' }] }}></SimpleLineIcons>
+              <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", color: "#aaa" }]} multiline={true} numberOfLines={3}>{getAnswerNote(id)}</Text>
+              <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", textDecorationLine: 'underline', color: "#aaa" }]} multiline={true} numberOfLines={3}>{"                                                                               " + "\n" + "                                                                               " +  "\n" + "                                                                               "}</Text>
+            </View>
+      </TouchableOpacity>);
+  }
 
   return (
     <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -88,7 +106,7 @@ const MeasuresScreen = ({navigation, date}) => {
           <View style={{ flex: 1}}>
             {listItems}
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={editNote}
           >
             <Text style={{marginLeft:"5%", marginTop:30, fontFamily: 'Montserrat-Regular'}}>{"Notes:"}</Text>
@@ -97,7 +115,8 @@ const MeasuresScreen = ({navigation, date}) => {
               <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", color: "#aaa" }]} multiline={true} numberOfLines={3}>{getAnswerNote()}</Text>
               <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", textDecorationLine: 'underline', color: "#aaa" }]} multiline={true} numberOfLines={3}>{"                                                                               " + "\n" + "                                                                               " +  "\n" + "                                                                               "}</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity > */}
+          {listNotesItems}
           <TouchableOpacity
             onPress={addQuestion}
             style={{ width: "100%", justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>

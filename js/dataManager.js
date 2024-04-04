@@ -382,8 +382,8 @@ class DataManager {
             return null;
        }
         
-        this.getNoteQuestion = function () {
-            let lNote = this.getQuestionWithId(this.NOTE_QUESTION_ID);
+        this.getNoteQuestion = function (aId) {
+            let lNote = this.getQuestionWithId(aId);
             if (!lNote) {
                 lNote = this.addQuestion("Complementary Notes", SharedConstants.questionTypes.QUESTION_TYPE_NOTE, {}, "#fff", this.NOTE_QUESTION_ID);
                 this.saveListQuestions();
