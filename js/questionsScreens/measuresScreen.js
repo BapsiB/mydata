@@ -60,8 +60,8 @@ const MeasuresScreen = ({navigation, date}) => {
     navigation.navigate("Answer Screen", { id: question.id, onlyTakeUnanswered:false, automaticNextQuestion:false} );
   }
 
-  function getAnswerNote() {
-    return DataManager.getAnswerForQuestion(DataManager.NOTE_QUESTION_ID, HeaderDate.getDate());
+  function getAnswerNote(aNoteId) {
+    return DataManager.getAnswerForQuestion(aNoteId, HeaderDate.getDate());
   }
 
   DataManager.setAnswersUpdateListener(updateAnswer);
@@ -74,6 +74,9 @@ const MeasuresScreen = ({navigation, date}) => {
 
   function getNote(id) {
     const note = DataManager.getQuestionWithId(id);
+    if (!note) {
+      return null;
+    }
     return(         
         <TouchableOpacity
           onPress={() => { editNote(id) }}

@@ -10,44 +10,44 @@ import DataManager from '../dataManager.js';
 */
 const AnswerNote = (props) => {
 
-    const date = props.date;
-    const question = props.question;
-    const navigation = props.navigation;
-    const maxChar = 10000;
+  const date = props.date;
+  const question = props.question;
+  const navigation = props.navigation;
+  const maxChar = 500;
 
-    let lAnswerForQuestion = DataManager.getAnswerForQuestion(question.id, date);
-    if(lAnswerForQuestion === undefined || !lAnswerForQuestion) {
-        lAnswerForQuestion = "";
-    }
+  let lAnswerForQuestion = DataManager.getAnswerForQuestion(question.id, date);
+  if (lAnswerForQuestion === undefined || !lAnswerForQuestion) {
+    lAnswerForQuestion = "";
+  }
 
-    const [answer, setAnswer] = React.useState(lAnswerForQuestion);
+  const [answer, setAnswer] = React.useState(lAnswerForQuestion);
 
-    function onSetValue(aValue) {
-        setAnswer(aValue);
-    }
+  function onSetValue(aValue) {
+    setAnswer(aValue);
+  }
 
-    function onSaveValue() {
-        DataManager.setData(question.id, date, answer);
-        props.callback();
-    }
+  function onSaveValue() {
+    DataManager.setData(question.id, date, answer);
+    props.callback();
+  }
 
-    function onReturn() {
-      onSaveValue();
-      props.navigation.goBack();
-     }
+  function onReturn() {
+    onSaveValue();
+    props.navigation.goBack();
+  }
   
-    function getEmptyLines() {
-        let string = "";
-        for(let j = 0; j < 30; j++) {
-          for(let i = 0; i < 128; i++) {
-            string += " ";
-          }
-          string += "\n";
-        }
-        return string;
+  function getEmptyLines() {
+    let string = "";
+    for (let j = 0; j < 30; j++) {
+      for (let i = 0; i < 128; i++) {
+        string += " ";
       }
+      string += "\n";
+    }
+    return string;
+  }
 
-    return (
+  return (
     <SafeAreaView>
         <View style={[styles.inputContainer, {backgroundColor:"#fff"}]}>
         <Text style={[styles.input,  {textDecorationLine: 'underline', color: "#ddd",}]}>{getEmptyLines()}</Text>
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     },
 
     inputContainer: {
-        height: "80%",
-        margin: 12,
+        height: "75%",
+        // margin: 12,
         borderRadius:20,
         shadowColor: "#000",
         shadowOffset: {

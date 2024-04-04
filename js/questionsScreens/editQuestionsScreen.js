@@ -40,6 +40,8 @@ const EditQuestionsList = ({navigation}) => {
     // we remove the questions that are the notes (they will be displayed in another screen)
     const filtered = arrayQuestionsOrigin.filter((question) => {return question.type != SharedConstants.questionTypes.QUESTION_TYPE_NOTE});
     setArrayQuestions(filtered);
+
+    setArrayNotes(DataManager.getNotes());
     forceUpdate();
   }
   
@@ -67,6 +69,7 @@ const EditQuestionsList = ({navigation}) => {
   HeaderDate.addChangeCallback("MeasureScreen", updateAnswer);
 
   const [arrayQuestions, setArrayQuestions] = React.useState([]);
+  const [arrayNotes, setArrayNotes] = React.useState([]);
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
 
   // const listItems = arrayQuestions.map((d) => <QuestionButtonEdit title={d.text} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButtonEdit>);
@@ -130,7 +133,50 @@ const EditQuestionsList = ({navigation}) => {
                     renderItem={(item,index)=>{
                         return renderItem(item,index)
                     }}
-                />
+        />
+        <View style={{ height: 15 }} />
+        <Text>NOTES</Text>
+        <DragSortableView
+              dataSource={arrayNotes}
+
+              parentWidth={parentWidth}
+
+              childrenWidth= {childrenWidth}
+              childrenHeight={childrenHeight}
+
+              scaleStatus={'scaleY'}
+
+              onClickItem={() => {
+                console.log("click item");
+              }}
+
+              onDragStart={(startIndex,endIndex)=>{
+                console.log("start");
+                setScrollEnabled(false);
+              }}
+              onDragEnd={(startIndex)=>{
+                setScrollEnabled(true);
+              }}
+              delayLongPress={0}
+              onDataChange = {(data)=>{
+                for(let i = 0; i < data.length; i++) {
+                  data[i].setDisplayOrder(i);
+                }
+                DataManager.updateQuestionsOrder();
+                DataManager.saveListQuestions();
+              }}
+              keyExtractor={(item, index) => {
+                return item.id
+              }
+                
+              }
+              onClickItem={(data,item,index)=>{
+
+              }}
+              renderItem={(item,index)=>{
+                  return renderItem(item,index)
+              }}
+          />
 
       <View style={{height:15}}/>
     </ScrollView>

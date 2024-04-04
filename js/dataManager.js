@@ -382,12 +382,11 @@ class DataManager {
             return null;
        }
         
+        /*
+        * return the note matching the given id. Notes are the same as other questions but treated differently in the app.
+       */
         this.getNoteQuestion = function (aId) {
             let lNote = this.getQuestionWithId(aId);
-            if (!lNote) {
-                lNote = this.addQuestion("Complementary Notes", SharedConstants.questionTypes.QUESTION_TYPE_NOTE, {}, "#fff", this.NOTE_QUESTION_ID);
-                this.saveListQuestions();
-            }
             return lNote;
         }
 
