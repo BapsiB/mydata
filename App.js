@@ -23,7 +23,7 @@ import { Image, TouchableOpacity, TouchableHighlight, StyleSheet, Animated, View
 import sharedConstants from './js/sharedConstants.js';
 import EditQuestionsScreen from './js/questionsScreens/editQuestionsScreen.js';
 import SettingsScreen from './js/settingsScreen.jsx';
-import DataVisualisationScreen from './js/dataVizzScreen/dataVisualisationScreen.js';
+import DataAnalyticScreen from './js/dataVizzScreen/dataAnalyticScreen.js';
 
 const JournalStack = createNativeStackNavigator();
 const ManageStack = createNativeStackNavigator();
@@ -72,7 +72,7 @@ function SettingsStackScreen() {
 function AnalyseStackScreen() {
     return (
       <AnalyseStack.Navigator initialRouteName="Data Viz Screen">
-        <AnalyseStack.Screen name="Data Viz Screen" component={DataVisualisationScreen} options={{ headerShown:false }}/>
+        <AnalyseStack.Screen name="Data Viz Screen" component={DataAnalyticScreen} options={{ headerShown:false }}/>
      </AnalyseStack.Navigator>
   )
 }

@@ -81,7 +81,7 @@ const MeasuresScreen = ({navigation, date}) => {
         <TouchableOpacity
           onPress={() => { editNote(id) }}
           >
-            <Text style={{marginLeft:"5%", marginTop:30, fontFamily: 'Montserrat-Regular'}}>{note.text + ":"}</Text>
+            <Text style={{marginLeft:"5%", marginTop:30, fontFamily: 'Montserrat-Regular', color:"#555"}}>{note.text + ":"}</Text>
             <View style={{ flex: 1, flexDirection: "row", width:"90%", marginLeft:"5%", marginTop:20, paddingLeft:10, paddingBottom:40, paddingTop:20, backgroundColor:"#fafafa", elevation:2, borderRadius:5 }}>
               <SimpleLineIcons color={"#555"} size={15} name="pencil" style={{ marginLeft: -15, marginTop: -5, marginRight: 10, width: 30, height: 30, transform: [{ rotateY: '180deg' }] }}></SimpleLineIcons>
               <Text style={[{ width: "90%", marginTop:"5%", left:"10%", position:"absolute", color: "#aaa" }]} multiline={true} numberOfLines={3}>{getAnswerNote(id)}</Text>

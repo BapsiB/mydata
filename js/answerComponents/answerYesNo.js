@@ -43,14 +43,14 @@ class AnswerYesNo extends React.Component {
             <View style={{margin: 50, flexDirection: "column", justifyContent: 'center'}}>
                 <View style={{margin: 50, flexDirection: "row", justifyContent: 'center'}}>
                     <TouchableOpacity style={[SharedConstants.styles.BaseButtons, this.getStyle(answer == 1)]} onPress={()=>{this.onPress(true);}}>
-                        <Text style={{color:"black"}}>YES</Text>
+                        <Text style={[SharedConstants.styles.textButton, {color:"black"}]}>YES</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[SharedConstants.styles.BaseButtons, this.getStyle(answer == 0)]} onPress={()=>{this.onPress(false);}}>
-                        <Text style={{color:"black"}}>NO</Text>
+                        <Text style={[SharedConstants.styles.textButton, {color:"black"}]}>NO</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={{justifyContent: 'center', alignItems:'center', height:50, marginVertical:-20 }} onPress={()=>{this.onPressRemoveData();}}>
-                    <Text style={{color:"black", textDecorationLine: 'underline'}}>I DON'T KNOW</Text>
+                    <Text style={[SharedConstants.styles.textButton, {color:"black", textDecorationLine: 'underline'}]}>I DON'T KNOW</Text>
                 </TouchableOpacity>
         </View>
         );
@@ -60,13 +60,15 @@ class AnswerYesNo extends React.Component {
 const styles = StyleSheet.create({
     yesNoButtons: {
         margin:20,
-        height:70
+        height: 70,
+        width: 130,
     },
 
     yesNoButtonsSelected: {
         margin:20,
         height:70,
-        backgroundColor:"#eef",
+        backgroundColor: "#eef",
+        width:130
     },
  });
 
