@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Backup from './js/backup.js';
+import Account from './js/account.js';
 import QuestionEditor from './js/questionEditor/questionEditor.js';
 import AnswerScreen from './js/answerScreen';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';

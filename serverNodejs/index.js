@@ -7,6 +7,12 @@ const User = require('./models/User');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
+const axios = require('axios');
+
+const OpenAI = require('openai').default;
+const openai = new OpenAI();
+
+const openaiApiKey = 'REMOVED_OPENAI_KEY';
 
 // MongoDB connection string
 const mongoDB = 'mongodb://localhost/userDB';
@@ -23,6 +29,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.json());
 app.use(flash());
 
 // Define the local strategy for Passport
@@ -136,6 +143,46 @@ app.get('/signup', (req, res) => {
       </div>
     </form>
   `);
+});
+
+app.post('/api', async (req, res) => {
+  if (req.isAuthenticated()) {
+    // User is authenticated, proceed with the API response
+    const question = req.body.question;
+
+
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: "system", content: "You are a helpful assistant." }, {"role": "user", "content": question}],
+        model: "gpt-3.5-turbo",
+      });
+
+      res.json({ message: completion.choices[0].message.content });
+      console.log(completion.choices[0]);
+
+
+    // axios.post('https://api.openai.com/v1/engines/davinci/completions', {
+    //   prompt: question,
+    //   max_tokens: 50
+    // }, {
+    //   headers: {
+    //     'Authorization': `Bearer ${openaiApiKey}`
+    //   }
+    // })
+    // .then(response => {
+    //   res.json({ message: "response: " + response.data.choices[0].text });
+    //   console.log(response.data.choices[0].text);
+    // })
+    // .catch(error => {
+    //   res.json({ message: "error: " + error });
+    //   console.error(error)
+    // });
+
+
+    
+  } else {
+    // User is not authenticated
+    res.status(401).json({ message: "Unauthorized" });
+  }
 });
 
 

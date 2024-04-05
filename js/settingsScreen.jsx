@@ -17,6 +17,10 @@ const SettingsScreen = (props) => {
       flex: 1, justifyContent: 'center',
       alignItems: 'center',
     }}>
+      <TouchableOpacity onPress={() => { navigate("Account") }} style={styles.button}>
+        <MaterialIcons color={"#555"} size={20} name={'account-circle'} style={styles.icon} />
+        <Text style={styles.text}>Account</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => { navigate("Backup") }} style={styles.button}>
         <MaterialIcons color={"#555"} size={20} name={'notifications'} style={styles.icon} />
         <Text style={styles.text}>Notifications</Text>

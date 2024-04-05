@@ -52,7 +52,7 @@ class AnswerYesNo extends React.Component {
                 <TouchableOpacity style={{justifyContent: 'center', alignItems:'center', height:50, marginVertical:-20 }} onPress={()=>{this.onPressRemoveData();}}>
                     <Text style={[SharedConstants.styles.textButton, {color:"black", textDecorationLine: 'underline'}]}>I DON'T KNOW</Text>
                 </TouchableOpacity>
-        </View>
+            </View>
         );
     }
 }
