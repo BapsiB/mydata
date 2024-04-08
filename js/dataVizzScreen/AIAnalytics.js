@@ -1,15 +1,27 @@
 import React, {useRef, useEffect} from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import SharedConstants from '../sharedConstants.js';
-
-
+import axios from 'axios';
 
 const AIAnalyticScreen = () => {
 
   const [questionAI, setQuestionAI] = React.useState("");
+  const [GPTresponse, setGPTResponse] = React.useState("");
 
-  const askChatGpt = () => {
+  const askChatGpt = async () => {
     const question = questionAI;
+
+    try {
+      const response = await axios.post('http://10.0.2.2:3000/api', {
+        question:question
+      });
+      // Handle success by navigating or saving the token
+      // Example: navigation.navigate('Home');
+      setGPTResponse(response.data.message);
+      // Alert.alert("response", response.message);
+    } catch (error) {
+      Alert.alert("Login Failed", "Check your credentials.");
+    }
   }
 
   return (
@@ -24,6 +36,8 @@ const AIAnalyticScreen = () => {
       <TouchableOpacity style={[styles.buttonSend, {}]} onPress={askChatGpt}>
         <Text style={{color:"black"}}>send</Text>
       </TouchableOpacity>
+
+      <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10 }}>{GPTresponse}</Text>
     </View>
   );
 }

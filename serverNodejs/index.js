@@ -10,9 +10,8 @@ const flash = require('connect-flash');
 const axios = require('axios');
 
 const OpenAI = require('openai').default;
-const openai = new OpenAI();
-
 const openaiApiKey = 'REMOVED_OPENAI_KEY';
+const openai = new OpenAI({ apiKey: openaiApiKey });
 
 // MongoDB connection string
 const mongoDB = 'mongodb://localhost/userDB';
@@ -68,7 +67,7 @@ passport.deserializeUser(function(id, done) {
 // Routes
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/success',
-  failureRedirect:'/login',
+  failureRedirect:'/failure',
   failureFlash: true,
 }));
 
@@ -92,17 +91,22 @@ app.post('/register', async (req, res) => {
   }
 });
 
-
 app.get('/success', (req, res) => {
-  res.send(`
-    <h2>Login success</h2>
-  `);
+  console.log("login success");
+  res.send(`success`);
+});
+
+app.get('/test', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.send('is Authenticated');
+  }
+  else {
+    res.send('not Authenticated');
+  }
 });
 
 app.get('/failure', (req, res) => {
-  res.send(`
-    <h2>Login failure</h2>
-  `);
+  res.send(`failure`);
 });
 
 app.get('/login', (req, res) => {
@@ -157,7 +161,7 @@ app.post('/api', async (req, res) => {
       });
 
       res.json({ message: completion.choices[0].message.content });
-      console.log(completion.choices[0]);
+      console.log(completion.choices[0].message.content);
 
 
     // axios.post('https://api.openai.com/v1/engines/davinci/completions', {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Backup from './js/backup.js';
-import Account from './js/account.js';
+import Account from './js/account';
 import QuestionEditor from './js/questionEditor/questionEditor.js';
 import AnswerScreen from './js/answerScreen';
 import DataVisualisationSingleQuestion from './js/dataVizzScreen/dataVisualisationSingleQuestion';
@@ -60,7 +60,8 @@ function ManageStackScreen() {
 
 function SettingsStackScreen() {
     return (
-    <SettingsStack.Navigator initialRouteName="SettingsScreen">
+      <SettingsStack.Navigator initialRouteName="SettingsScreen">
+        <SettingsStack.Screen name="Account" component={Account} options={{ headerShown:true }}/>
       <SettingsStack.Screen name="Settings" component={SettingsScreen} options={{ headerShown:true }}/>
       <SettingsStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
       <SettingsStack.Screen name="Backup" component={Backup.backupView} options={{ headerShown:true }}/>
