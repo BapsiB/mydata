@@ -9,7 +9,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://10.0.2.2:3000/login', {
+      const response = await axios.post('http://lebaptiste.com/testApp/login', {
         username,
         password,
       });
@@ -23,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
 
   const testLogin = async () => {
     try {
-      const response = await axios.get('http://10.0.2.2:3000/test');
+      const response = await axios.get('http://lebaptiste.com/testApp/test');
       // Handle success by navigating or saving the token
       // Example: navigation.navigate('Home');
       Alert.alert(response.data, "You are now logged in.");

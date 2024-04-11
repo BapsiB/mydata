@@ -111,7 +111,6 @@ class DataManager {
              });
        
             return promise;
-
         };
 
         /*

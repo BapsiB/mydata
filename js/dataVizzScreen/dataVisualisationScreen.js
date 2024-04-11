@@ -94,7 +94,7 @@ const DataVisualisationAll = (props) => {
 
     return (
       <View style={{flex:1}}>
-      <SafeAreaView style={styles.container}>
+      {/* <SafeAreaView style={styles.container}>
         <ScrollView ref={scrollRef} contentOffset={{x:300, y:0}} persistentScrollbar={true} horizontal={true}  style={{width:400, height:200}} width={400} height={200}>
         <View style={{width:Dimensions.get('window').width * 2, height:1200}}>
         <VictoryChart width={Dimensions.get('window').width * 2} theme={VictoryTheme.material}   containerComponent={
@@ -115,7 +115,7 @@ const DataVisualisationAll = (props) => {
         </VictoryChart>
         </View>
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaView> */}
 
       <QuestionVizzList  changeCallback={questionUpdate} navigation={props.navigation}/>
 

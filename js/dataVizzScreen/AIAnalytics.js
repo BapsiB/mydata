@@ -1,7 +1,9 @@
 import React, {useRef, useEffect} from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
 import SharedConstants from '../sharedConstants.js';
 import axios from 'axios';
+import DataManager from '../dataManager.js';
+import { jsonToCSV } from 'react-native-csv'
 
 const AIAnalyticScreen = () => {
 
@@ -12,16 +14,22 @@ const AIAnalyticScreen = () => {
     const question = questionAI;
 
     try {
-      const response = await axios.post('http://10.0.2.2:3000/api', {
-        question:question
+      const obj = DataManager.getQuestionsDataLinear();
+      const objStr = JSON.stringify(obj);
+      const text = jsonToCSV(objStr);
+      
+      const response = await axios.post('http://lebaptiste.com/testApp/api', {
+        question: question,
+        jsonData: text
       });
       // Handle success by navigating or saving the token
       // Example: navigation.navigate('Home');
       setGPTResponse(response.data.message);
-      // Alert.alert("response", response.message);
+      
     } catch (error) {
       Alert.alert("Login Failed", "Check your credentials.");
     }
+
   }
 
   return (
@@ -36,8 +44,9 @@ const AIAnalyticScreen = () => {
       <TouchableOpacity style={[styles.buttonSend, {}]} onPress={askChatGpt}>
         <Text style={{color:"black"}}>send</Text>
       </TouchableOpacity>
-
-      <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10 }}>{GPTresponse}</Text>
+      <ScrollView>
+        <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10 }}>{GPTresponse}</Text>
+      </ScrollView>
     </View>
   );
 }

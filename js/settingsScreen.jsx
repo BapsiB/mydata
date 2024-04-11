@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image, Modal, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import DataManager from './dataManager.js';
-
 
 const SettingsScreen = (props) => {
 
@@ -37,7 +34,6 @@ const SettingsScreen = (props) => {
         <MaterialIcons color={"#555"} size={20} name={'bug-report'} style={styles.icon} />
         <Text style={styles.text}>Debug</Text>
       </TouchableOpacity>
-
     </View >
   )
 }

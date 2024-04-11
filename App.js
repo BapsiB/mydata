@@ -60,7 +60,7 @@ function ManageStackScreen() {
 
 function SettingsStackScreen() {
     return (
-      <SettingsStack.Navigator initialRouteName="SettingsScreen">
+      <SettingsStack.Navigator initialRouteName="Settings">
         <SettingsStack.Screen name="Account" component={Account} options={{ headerShown:true }}/>
       <SettingsStack.Screen name="Settings" component={SettingsScreen} options={{ headerShown:true }}/>
       <SettingsStack.Screen name="Restore" component={Backup.restoreView} options={{ headerShown:true }}/>
