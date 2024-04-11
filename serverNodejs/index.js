@@ -3,55 +3,56 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 // Assuming you have a User model (define according to your DB schema)
-const User = require('./models/User');
 const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
+const mysql = require('mysql2/promise'); // Import mysql2/promise for async/await usage
 const flash = require('connect-flash');
 const axios = require('axios');
+const http = require('http');
 
 const OpenAI = require('openai').default;
 const openaiApiKey = 'REMOVED_OPENAI_KEY';
 const openai = new OpenAI({ apiKey: openaiApiKey });
+const rootUrl = '/testApp'
 
-// MongoDB connection string
-const mongoDB = 'mongodb://localhost/userDB';
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', function() {
-  console.log("Connected successfully to MongoDB");
-});
+// Replace mongoose and User model with MySQL connection setup
+const dbConfig = {
+  host: 'localhost',
+  user: 'lebaptis_my_data',
+  password: 'REMOVED',
+  database: 'lebaptis_my_data'
+};
 
 const app = express();
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: true }));
+app.use(session({ secret: 'REMOVED', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(flash());
 
-// Define the local strategy for Passport
-passport.use(new LocalStrategy(
-  async function(username, password, done) {
-    try {
-      const user = await User.findOne({ username: username });
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) throw err;
-        if (isMatch) {
-          return done(null, user);
-        } else {
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-      });
-    } catch (err) {
-      return done(err);
+// Adapted LocalStrategy to use mysql2
+passport.use(new LocalStrategy(async (username, password, done) => {
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+    const [rows] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
+    
+    if (rows.length === 0) {
+      return done(null, false, { message: 'Incorrect username.' });
     }
+    
+    const user = rows[0];
+    
+    const match = await bcrypt.compare(password, user.password);
+    if (match) {
+      return done(null, user);
+    } else {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+  } catch (err) {
+    return done(err);
   }
-));
+}));
+
 
 // Serialize and deserialize user instances to and from the session.
 passport.serializeUser(function(user, done) {
@@ -65,38 +66,43 @@ passport.deserializeUser(function(id, done) {
 });
 
 // Routes
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '/success',
-  failureRedirect:'/failure',
+app.post(rootUrl + '/login', passport.authenticate('local', {
+  successRedirect: rootUrl + '/success',
+  failureRedirect:rootUrl + '/failure',
   failureFlash: true,
 }));
 
-app.post('/register', async (req, res) => {
+app.post(rootUrl + '/register', async (req, res) => {
   const { username, password } = req.body;
+
   try {
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).send('Username is already taken.');
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
+    const connection = await mysql.createConnection(dbConfig);
+    // Check if username already exists
+    const [users] = await connection.execute('SELECT * FROM users WHERE username = ?', [username]);
+
+    if (users.length > 0) {
+      res.status(400).send('Username is already taken.');
+      return;
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      username,
-      password: hashedPassword,
-    });
-    await newUser.save();
-    res.redirect('/login');
+
+    // Insert new user
+    await connection.execute('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+
+    res.redirect(rootUrl + '/login'); // Redirect to login page after successful registration
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).send("Error registering new user.");
   }
 });
 
-app.get('/success', (req, res) => {
+app.get(rootUrl + '/success', (req, res) => {
   console.log("login success");
   res.send(`success`);
 });
 
-app.get('/test', (req, res) => {
+app.get(rootUrl + '/test', (req, res) => {
   if (req.isAuthenticated()) {
     res.send('is Authenticated');
   }
@@ -105,16 +111,16 @@ app.get('/test', (req, res) => {
   }
 });
 
-app.get('/failure', (req, res) => {
+app.get(rootUrl + '/failure', (req, res) => {
   res.send(`failure`);
 });
 
-app.get('/login', (req, res) => {
+app.get(rootUrl + '/login', (req, res) => {
   const messages = req.flash('error');
   res.send(`
     <h2>Login</h2>
     ${messages.length ? `<p style="color: red;">${messages}</p>` : ''}
-    <form action="/login" method="post">
+    <form action="/testApp/login" method="post">
       <div>
         <label>Username:</label>
         <input type="text" name="username" required />
@@ -130,10 +136,10 @@ app.get('/login', (req, res) => {
   `);
 });
 
-app.get('/signup', (req, res) => {
+app.get(rootUrl + '/signup', (req, res) => {
   res.send(`
     <h2>Sign Up</h2>
-    <form action="/register" method="post">
+    <form action="/testApp/register" method="post">
       <div>
         <label>Username:</label>
         <input type="text" name="username" required />
@@ -149,39 +155,25 @@ app.get('/signup', (req, res) => {
   `);
 });
 
-app.post('/api', async (req, res) => {
+app.post(rootUrl + '/api', async (req, res) => {
   if (req.isAuthenticated()) {
     // User is authenticated, proceed with the API response
     const question = req.body.question;
-
+    const jsonData = req.body.jsonData;
 
     const completion = await openai.chat.completions.create({
-        messages: [{ role: "system", content: "You are a helpful assistant." }, {"role": "user", "content": question}],
-        model: "gpt-3.5-turbo",
+        messages: [{ role: "system", content: "You are a helpful data analysist assistant. i will send you data that are from a number journal. a question will follow. the response should be based only on the correlation and analysis of the data, not on any pre-knowledge. v stands for value. here comes the data:" }, {"role": "system", "content": jsonData}, {"role": "user", "content": "based on the data you just received, help me with : " + question}],
+        model: "gpt-4",
+        temperature: 0.3, // Lower for more deterministic outputs
+        max_tokens: 200, // Adjust based on the expected length of the reply
+        top_p: 1.0,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0,
+        stop: ["\n"],
       });
 
       res.json({ message: completion.choices[0].message.content });
       console.log(completion.choices[0].message.content);
-
-
-    // axios.post('https://api.openai.com/v1/engines/davinci/completions', {
-    //   prompt: question,
-    //   max_tokens: 50
-    // }, {
-    //   headers: {
-    //     'Authorization': `Bearer ${openaiApiKey}`
-    //   }
-    // })
-    // .then(response => {
-    //   res.json({ message: "response: " + response.data.choices[0].text });
-    //   console.log(response.data.choices[0].text);
-    // })
-    // .catch(error => {
-    //   res.json({ message: "error: " + error });
-    //   console.error(error)
-    // });
-
-
     
   } else {
     // User is not authenticated
@@ -189,17 +181,15 @@ app.post('/api', async (req, res) => {
   }
 });
 
-
-app.get('/logout', function(req, res){
+app.get(rootUrl + '/logout', function(req, res){
   req.logout();
-  res.redirect('/');
+  res.redirect(rootUrl + '/');
 });
 
-app.get('/', (req, res) => {
+app.get(rootUrl + '/', (req, res) => {
   res.send('Hello World!');
 });
 
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
-});
+const server = http.createServer(app);
+
+server.listen();
