@@ -4,6 +4,7 @@ import SharedConstants from '../sharedConstants.js';
 import axios from 'axios';
 import DataManager from '../dataManager.js';
 import { jsonToCSV } from 'react-native-csv'
+import { color } from "react-native-reanimated";
 
 const AIAnalyticScreen = () => {
 
@@ -34,7 +35,7 @@ const AIAnalyticScreen = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <Text style={{fontFamily:"Montserrat-Regular", marginBottom:10}}>ask a question about your data to ChatGPT:</Text>
+      <Text style={{fontFamily:"Montserrat-Regular", marginBottom:10, color:"#444"}}>ask a question about your data to ChatGPT:</Text>
       <TextInput
           style={[styles.input, {}]}
           onChangeText={setQuestionAI}
@@ -45,7 +46,7 @@ const AIAnalyticScreen = () => {
         <Text style={{color:"black"}}>send</Text>
       </TouchableOpacity>
       <ScrollView>
-        <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10 }}>{GPTresponse}</Text>
+        <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10, color:"#444" }}>{GPTresponse}</Text>
       </ScrollView>
     </View>
   );

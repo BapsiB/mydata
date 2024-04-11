@@ -34,8 +34,8 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View>
-      <TextInput placeholder="Username" value={username} onChangeText={setUsername} />
-      <TextInput placeholder="Password" value={password} secureTextEntry onChangeText={setPassword} />
+      <TextInput placeholder="Username" value={username} onChangeText={setUsername} style={{color:"#444"}} />
+      <TextInput placeholder="Password" value={password} secureTextEntry onChangeText={setPassword} style={{color:"#444"}} />
       <Button title="Log In" onPress={handleLogin} />
       <Button title="Test" onPress={testLogin} />
     </View>
