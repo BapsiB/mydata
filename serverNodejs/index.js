@@ -9,6 +9,10 @@ const flash = require('connect-flash');
 const axios = require('axios');
 const http = require('http');
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid'); // For generating unique identifiers
+
 const util = require('util');
 const OpenAI = require('openai').default;
 
@@ -167,6 +171,11 @@ app.get(rootUrl + '/signup', (req, res) => {
   `);
 });
 
+// Global variable to hold the Assistant and Thread ID
+let globalAssistant = null;
+let globalThreadId = null;
+
+
 app.post(rootUrl + '/api', async (req, res) => {
   if (req.isAuthenticated()) {
     // User is authenticated, proceed with the API response
@@ -174,28 +183,59 @@ app.post(rootUrl + '/api', async (req, res) => {
     const jsonData = req.body.jsonData;
 
     outputLog.write(util.format(question) + '\n' + util.format(jsonData) + '\n');
+    
+    // Check if the Assistant has been initialized; if not, initialize it
+    if (!globalAssistant) {
+      globalAssistant = await openai.beta.assistants.create({
+        instructions: "You are a personal math tutor. When asked a math question, write and run code to answer the question.",
+        model: "gpt-4-turbo-preview",
+        tools: [{"type": "code_interpreter"}]
+      });
+      console.log("Assistant ID: " + globalAssistant.id);
+    }
 
-    const assistant = await openai.beta.assistants.create({
-      instructions: "You are a personal math tutor. When asked a math question, write and run code to answer the question.",
-      model: "gpt-4-turbo-preview",
-      tools: [{"type": "code_interpreter"}]
-    });
+    // Check if the Thread has been initialized; if not, initialize it
+    if (!globalThreadId) {
+      const thread = await openai.beta.threads.create();
+      globalThreadId = {};
+      globalThreadId.id = thread.id;
 
-    const thread = await openai.beta.threads.create();
+      // Example usage
+      const dataString = jsonData; // Replace with actual data string
+      const userId = "exampleUser123"; // Replace with actual user/session ID
+      uploadDataAsFile(dataString, userId)
+        .then(file => {
+          console.log("Upload successful:", file);
+          globalThreadId.file = file;
+          addQuestionToThread(req, res, question);
+        })
+        .catch(error => console.error("Upload failed:", error));
+    }
+    else {
+      addQuestionToThread(req, res, question);
+    }
+  }
+  else {
+    // User is not authenticated
+    res.status(401).json({ message: "Unauthorized" });
+  }
+});
 
-    const message = await openai.beta.threads.messages.create(
-      thread.id,
+async function addQuestionToThread(req, res, question) {
+      const message = await openai.beta.threads.messages.create(
+      globalThreadId.id,
       {
         role: "user",
-        content: question
+        content: question,
+        file_ids: [globalThreadId.file.id]
       }
     );
 
     let run = await openai.beta.threads.runs.createAndPoll(
-      thread.id,
+      globalThreadId.id,
       { 
-        assistant_id: assistant.id,
-        instructions: "Please address the user as Jane Doe. The user has a premium account."
+        assistant_id: globalAssistant.id,
+        instructions: "Please answer the user question doing the appropriate analysis of the file."
       }
     );
 
@@ -229,11 +269,35 @@ app.post(rootUrl + '/api', async (req, res) => {
       res.json({ message: returnMessage });
       console.log(returnMessage);
     
-  } else {
-    // User is not authenticated
-    res.status(401).json({ message: "Unauthorized" });
+
+}
+
+// Function to upload data as a file
+async function uploadDataAsFile(dataString, userId) {
+  // Generate a unique filename using the user's ID and a UUID
+  const uniqueFilename = `upload_${userId}_${uuidv4()}.csv`;
+  const tempFilePath = path.join(os.tmpdir(), uniqueFilename);
+
+  try {
+    // Write the data string to a temporary file
+    fs.writeFileSync(tempFilePath, dataString);
+
+    // Upload the file
+    const file = await openai.files.create({
+      file: fs.createReadStream(tempFilePath),
+      purpose: "assistants",
+    });
+
+    console.log(`File uploaded successfully: ${file.id}`);
+    return file; // Or return some indication of success
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw error; // Or handle the error appropriately
+  } finally {
+    // Cleanup: Delete the temporary file
+    fs.unlinkSync(tempFilePath);
   }
-});
+}
 
 app.get(rootUrl + '/api', (req, res) => {
   res.sendFile(__dirname + '/public/api.html');
