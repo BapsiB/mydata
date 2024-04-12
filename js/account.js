@@ -20,7 +20,7 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert("Login Failed", "Check your credentials.");
     }
   };
-
+https://platform.openai.com/docs/assistants/tools/knowledge-retrieval
   const testLogin = async () => {
     try {
       const response = await axios.get('http://lebaptiste.com/testApp/test');

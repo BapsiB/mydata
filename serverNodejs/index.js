@@ -8,14 +8,26 @@ const mysql = require('mysql2/promise'); // Import mysql2/promise for async/awai
 const flash = require('connect-flash');
 const axios = require('axios');
 const http = require('http');
-
+const fs = require('fs');
+const util = require('util');
 const OpenAI = require('openai').default;
+
+
+const outputLog = fs.createWriteStream('./outputLog.log');
+
 const openaiApiKey = 'REMOVED_OPENAI_KEY';
 const openai = new OpenAI({ apiKey: openaiApiKey });
-const rootUrl = '/testApp'
+const IS_LOCAL = true;
+const rootUrl = IS_LOCAL ? '' : '/testApp';
 
 // Replace mongoose and User model with MySQL connection setup
-const dbConfig = {
+const dbConfig = IS_LOCAL ? {
+  host: 'localhost',
+  user: 'root',
+  password: 'REMOVED',
+  database: 'my_data_db'
+} :
+  {
   host: 'localhost',
   user: 'lebaptis_my_data',
   password: 'REMOVED',
@@ -29,6 +41,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(flash());
+app.use(express.static('public'));
 
 // Adapted LocalStrategy to use mysql2
 passport.use(new LocalStrategy(async (username, password, done) => {
@@ -53,7 +66,6 @@ passport.use(new LocalStrategy(async (username, password, done) => {
   }
 }));
 
-
 // Serialize and deserialize user instances to and from the session.
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -67,7 +79,7 @@ passport.deserializeUser(function(id, done) {
 
 // Routes
 app.post(rootUrl + '/login', passport.authenticate('local', {
-  successRedirect: rootUrl + '/success',
+  successRedirect: rootUrl + '/api',
   failureRedirect:rootUrl + '/failure',
   failureFlash: true,
 }));
@@ -120,7 +132,7 @@ app.get(rootUrl + '/login', (req, res) => {
   res.send(`
     <h2>Login</h2>
     ${messages.length ? `<p style="color: red;">${messages}</p>` : ''}
-    <form action="/testApp/login" method="post">
+    <form action="` + rootUrl + `/login" method="post">
       <div>
         <label>Username:</label>
         <input type="text" name="username" required />
@@ -139,7 +151,7 @@ app.get(rootUrl + '/login', (req, res) => {
 app.get(rootUrl + '/signup', (req, res) => {
   res.send(`
     <h2>Sign Up</h2>
-    <form action="/testApp/register" method="post">
+    <form action="` + rootUrl + `/register" method="post">
       <div>
         <label>Username:</label>
         <input type="text" name="username" required />
@@ -161,24 +173,70 @@ app.post(rootUrl + '/api', async (req, res) => {
     const question = req.body.question;
     const jsonData = req.body.jsonData;
 
-    const completion = await openai.chat.completions.create({
-        messages: [{ role: "system", content: "You are a helpful data analysist assistant. i will send you data that are from a number journal. a question will follow. the response should be based only on the correlation and analysis of the data, not on any pre-knowledge. v stands for value. here comes the data:" }, {"role": "system", "content": jsonData}, {"role": "user", "content": "based on the data you just received, help me with : " + question}],
-        model: "gpt-4",
-        temperature: 0.3, // Lower for more deterministic outputs
-        max_tokens: 200, // Adjust based on the expected length of the reply
-        top_p: 1.0,
-        frequency_penalty: 0.0,
-        presence_penalty: 0.0,
-        stop: ["\n"],
-      });
+    outputLog.write(util.format(question) + '\n' + util.format(jsonData) + '\n');
 
-      res.json({ message: completion.choices[0].message.content });
-      console.log(completion.choices[0].message.content);
+    const assistant = await openai.beta.assistants.create({
+      instructions: "You are a personal math tutor. When asked a math question, write and run code to answer the question.",
+      model: "gpt-4-turbo-preview",
+      tools: [{"type": "code_interpreter"}]
+    });
+
+    const thread = await openai.beta.threads.create();
+
+    const message = await openai.beta.threads.messages.create(
+      thread.id,
+      {
+        role: "user",
+        content: question
+      }
+    );
+
+    let run = await openai.beta.threads.runs.createAndPoll(
+      thread.id,
+      { 
+        assistant_id: assistant.id,
+        instructions: "Please address the user as Jane Doe. The user has a premium account."
+      }
+    );
+
+    let returnMessage = "";
+    if (run.status === 'completed') {
+      const messages = await openai.beta.threads.messages.list(
+        run.thread_id
+      );
+      for (const message of messages.data.reverse()) {
+        console.log(`${message.role} > ${message.content[0].text.value}`);
+        returnMessage += "\n" + message.content[0].text.value;
+      }
+    } else {
+      console.log(run.status);
+    }
+
+    console.log("returnMessage : " + returnMessage);
+
+    // const completion = await openai.chat.completions.create({
+    //     messages: [{ role: "system", content: "You are a helpful data analysist assistant. i will send you data that are from a number journal. a question will follow. the response should be based only on the correlation and analysis of the data, not on any pre-knowledge. v stands for value. here comes the data:" }, {"role": "system", "content": jsonData}, {"role": "user", "content": "based on the data you just received, help me with : " + question}],
+    //     model: "gpt-4-turbo-preview",
+    //     tools: [{"type": "code_interpreter"}],
+    //     temperature: 0.3, // Lower for more deterministic outputs
+    //     max_tokens: 200, // Adjust based on the expected length of the reply
+    //     top_p: 1.0,
+    //     frequency_penalty: 0.0,
+    //     presence_penalty: 0.0,
+    //     stop: ["\n"],
+    //   });
+
+      res.json({ message: returnMessage });
+      console.log(returnMessage);
     
   } else {
     // User is not authenticated
     res.status(401).json({ message: "Unauthorized" });
   }
+});
+
+app.get(rootUrl + '/api', (req, res) => {
+  res.sendFile(__dirname + '/public/api.html');
 });
 
 app.get(rootUrl + '/logout', function(req, res){
@@ -192,4 +250,8 @@ app.get(rootUrl + '/', (req, res) => {
 
 const server = http.createServer(app);
 
-server.listen();
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server listening at http://localhost:${port}`);
+});
+
