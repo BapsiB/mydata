@@ -1,55 +1,77 @@
 import React, {useRef, useEffect} from "react";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 import SharedConstants from '../sharedConstants.js';
 import axios from 'axios';
 import DataManager from '../dataManager.js';
 import { jsonToCSV } from 'react-native-csv'
 import { color } from "react-native-reanimated";
+import sharedConstants from "../sharedConstants.js";
 
 const AIAnalyticScreen = () => {
 
   const [questionAI, setQuestionAI] = React.useState("");
   const [GPTresponse, setGPTResponse] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [areDataSent, setAreDataSent] = React.useState(false);
 
-  const askChatGpt = async () => {
+
+  const askChatGpt = async (forceSendData) => {
     const question = questionAI;
 
     try {
+      setIsLoading(true); // Start loading
       const obj = DataManager.getQuestionsDataLinear();
       const objStr = JSON.stringify(obj);
-      const text = jsonToCSV(objStr);
-      
-      const response = await axios.post('http://lebaptiste.com/testApp/api', {
+      const text = (areDataSent && !forceSendData) ? "" : jsonToCSV(objStr);
+
+      const response = await axios.post(sharedConstants.apiRoot + '/api', {
         question: question,
         jsonData: text
       });
-      // Handle success by navigating or saving the token
-      // Example: navigation.navigate('Home');
-      setGPTResponse(response.data.message);
-      
+
+      if (response.data == "Nodata") {
+        setAreDataSent(false);
+        askChatGpt(true);
+        return;
+      }
+      setGPTResponse(GPTresponse + "\n" + response.data.message);
+      setAreDataSent(true);
+      setIsLoading(false); // Stop loading after the response is received
+
     } catch (error) {
-      Alert.alert("Login Failed", "Check your credentials.");
+      Alert.alert("Request Failed", "Check your network.");
+      setIsLoading(false); // Stop loading in case of error
+      
     }
+}
 
-  }
 
-  return (
+return (
     <View style={styles.mainContainer}>
-      <Text style={{fontFamily:"Montserrat-Regular", marginBottom:10, color:"#444"}}>ask a question about your data to ChatGPT:</Text>
+      <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10, color: "#444" }}>
+        Ask a question about your data to ChatGPT:
+      </Text>
       <TextInput
-          style={[styles.input, {}]}
-          onChangeText={setQuestionAI}
-          multiline={true}
-          maxLength={100}
-        />
-      <TouchableOpacity style={[styles.buttonSend, {}]} onPress={askChatGpt}>
-        <Text style={{color:"black"}}>send</Text>
+        style={styles.input}
+        onChangeText={setQuestionAI}
+        multiline={true}
+        maxLength={200}
+      />
+      <TouchableOpacity style={styles.buttonSend} onPress={askChatGpt}>
+        <Text style={{ color: "black" }}>Send</Text>
       </TouchableOpacity>
-      <ScrollView>
-        <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10, color:"#444" }}>{GPTresponse}</Text>
-      </ScrollView>
+      {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+          <ScrollView>
+            <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10, color: "#444" }}>
+              {GPTresponse}
+            </Text>
+          </ScrollView>
+      )}
     </View>
-  );
+);
+
 }
 
 const styles = StyleSheet.create({

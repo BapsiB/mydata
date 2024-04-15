@@ -9,7 +9,7 @@ const DataVisuRoute = () => (
   <DataVisualisationScreen></DataVisualisationScreen>
 );
 
-const AIRoute = () => (
+const AIRoute = (props) => (
   <AIAnalyticScreen></AIAnalyticScreen>
 );
 

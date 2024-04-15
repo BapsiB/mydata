@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import axios from 'axios';
+import sharedConstants from './sharedConstants';
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -9,7 +10,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://lebaptiste.com/testApp/login', {
+      const response = await axios.post(sharedConstants.apiRoot + '/login', {
         username,
         password,
       });
@@ -20,10 +21,10 @@ const LoginScreen = ({ navigation }) => {
       Alert.alert("Login Failed", "Check your credentials.");
     }
   };
-https://platform.openai.com/docs/assistants/tools/knowledge-retrieval
+
   const testLogin = async () => {
     try {
-      const response = await axios.get('http://lebaptiste.com/testApp/test');
+      const response = await axios.get(sharedConstants.apiRoot + '/test');
       // Handle success by navigating or saving the token
       // Example: navigation.navigate('Home');
       Alert.alert(response.data, "You are now logged in.");

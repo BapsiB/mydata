@@ -60,7 +60,10 @@ class SharedConstants {
         '#C0EAD7',
         '#FF7F50', 
         '#B0E0E6',
-        '#F4C2C2'];
+           '#F4C2C2'];
+        
+        // this.apiRoot = "http://lebaptiste.com/testApp";
+        this.apiRoot = "http://10.0.2.2:3000";
 
        this.getIndexOfColour = function(colour) {
         function isColour(c) {

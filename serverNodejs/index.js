@@ -173,8 +173,12 @@ app.get(rootUrl + '/signup', (req, res) => {
 
 // Global variable to hold the Assistant and Thread ID
 let globalAssistant = null;
-let globalThreadId = null;
 
+// app.post(rootUrl + '/hasFile', async (req, res) => {
+//   if (req.isAuthenticated()) {
+
+//   }
+// }
 
 app.post(rootUrl + '/api', async (req, res) => {
   if (req.isAuthenticated()) {
@@ -187,7 +191,7 @@ app.post(rootUrl + '/api', async (req, res) => {
     // Check if the Assistant has been initialized; if not, initialize it
     if (!globalAssistant) {
       globalAssistant = await openai.beta.assistants.create({
-        instructions: "You are a personal math tutor. When asked a math question, write and run code to answer the question.",
+        instructions: "You are a personal data analyst. The user will ask you questions from an app. This app is like a journal where the user write themselves a series of questions they reply everyday. The question will be about the data collected. Write and run code to answer the question if relevant, to extract relevant informations from the given data.",
         model: "gpt-4-turbo-preview",
         tools: [{"type": "code_interpreter"}]
       });
@@ -195,10 +199,14 @@ app.post(rootUrl + '/api', async (req, res) => {
     }
 
     // Check if the Thread has been initialized; if not, initialize it
-    if (!globalThreadId) {
+    if (!req.session.thread) {
+      if (!jsonData.length) {
+        res.send('Nodata');
+        return;
+      }
+
       const thread = await openai.beta.threads.create();
-      globalThreadId = {};
-      globalThreadId.id = thread.id;
+      req.session.thread = thread.id;
 
       // Example usage
       const dataString = jsonData; // Replace with actual data string
@@ -206,7 +214,7 @@ app.post(rootUrl + '/api', async (req, res) => {
       uploadDataAsFile(dataString, userId)
         .then(file => {
           console.log("Upload successful:", file);
-          globalThreadId.file = file;
+          req.session.file = file;
           addQuestionToThread(req, res, question);
         })
         .catch(error => console.error("Upload failed:", error));
@@ -223,16 +231,16 @@ app.post(rootUrl + '/api', async (req, res) => {
 
 async function addQuestionToThread(req, res, question) {
       const message = await openai.beta.threads.messages.create(
-      globalThreadId.id,
+      req.session.thread,
       {
         role: "user",
         content: question,
-        file_ids: [globalThreadId.file.id]
+        file_ids: [req.session.file.id]
       }
     );
 
     let run = await openai.beta.threads.runs.createAndPoll(
-      globalThreadId.id,
+      req.session.thread,
       { 
         assistant_id: globalAssistant.id,
         instructions: "Please answer the user question doing the appropriate analysis of the file."
@@ -244,32 +252,23 @@ async function addQuestionToThread(req, res, question) {
       const messages = await openai.beta.threads.messages.list(
         run.thread_id
       );
+
       for (const message of messages.data.reverse()) {
         console.log(`${message.role} > ${message.content[0].text.value}`);
-        returnMessage += "\n" + message.content[0].text.value;
+        // returnMessage += "\n" + message.content[0].text.value;
       }
+      
+      returnMessage = messages.data[messages.data.length - 1].content[0].text.value;
+      console.log(returnMessage);
     } else {
+      console.log("run.status");
       console.log(run.status);
     }
 
     console.log("returnMessage : " + returnMessage);
 
-    // const completion = await openai.chat.completions.create({
-    //     messages: [{ role: "system", content: "You are a helpful data analysist assistant. i will send you data that are from a number journal. a question will follow. the response should be based only on the correlation and analysis of the data, not on any pre-knowledge. v stands for value. here comes the data:" }, {"role": "system", "content": jsonData}, {"role": "user", "content": "based on the data you just received, help me with : " + question}],
-    //     model: "gpt-4-turbo-preview",
-    //     tools: [{"type": "code_interpreter"}],
-    //     temperature: 0.3, // Lower for more deterministic outputs
-    //     max_tokens: 200, // Adjust based on the expected length of the reply
-    //     top_p: 1.0,
-    //     frequency_penalty: 0.0,
-    //     presence_penalty: 0.0,
-    //     stop: ["\n"],
-    //   });
-
-      res.json({ message: returnMessage });
-      console.log(returnMessage);
-    
-
+    res.json({ message: returnMessage });
+    console.log(returnMessage);
 }
 
 // Function to upload data as a file
@@ -281,6 +280,8 @@ async function uploadDataAsFile(dataString, userId) {
   try {
     // Write the data string to a temporary file
     fs.writeFileSync(tempFilePath, dataString);
+
+    console.log("write file " + tempFilePath);
 
     // Upload the file
     const file = await openai.files.create({
@@ -295,7 +296,7 @@ async function uploadDataAsFile(dataString, userId) {
     throw error; // Or handle the error appropriately
   } finally {
     // Cleanup: Delete the temporary file
-    fs.unlinkSync(tempFilePath);
+    // fs.unlinkSync(tempFilePath);
   }
 }
 
