@@ -45,7 +45,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(flash());
-app.use(express.static('public'));
+app.set('view engine', 'ejs');
+const viewspath = path.join(__dirname, 'views');
+app.set('views', viewspath);
+// app.use(express.static('public'));
 
 // Adapted LocalStrategy to use mysql2
 passport.use(new LocalStrategy(async (username, password, done) => {
@@ -181,6 +184,7 @@ let globalAssistant = null;
 // }
 
 app.post(rootUrl + '/api', async (req, res) => {
+  console.log("/api");
   if (req.isAuthenticated()) {
     // User is authenticated, proceed with the API response
     const question = req.body.question;
@@ -237,39 +241,50 @@ async function addQuestionToThread(req, res, question) {
         content: question,
         file_ids: [req.session.file.id]
       }
-    );
-
-    let run = await openai.beta.threads.runs.createAndPoll(
-      req.session.thread,
-      { 
-        assistant_id: globalAssistant.id,
-        instructions: "Please answer the user question doing the appropriate analysis of the file."
-      }
-    );
-
-    let returnMessage = "";
-    if (run.status === 'completed') {
-      const messages = await openai.beta.threads.messages.list(
-        run.thread_id
       );
-
-      for (const message of messages.data.reverse()) {
-        console.log(`${message.role} > ${message.content[0].text.value}`);
-        // returnMessage += "\n" + message.content[0].text.value;
-      }
-      
-      returnMessage = messages.data[messages.data.length - 1].content[0].text.value;
-      console.log(returnMessage);
-    } else {
-      console.log("run.status");
-      console.log(run.status);
-    }
-
-    console.log("returnMessage : " + returnMessage);
-
-    res.json({ message: returnMessage });
-    console.log(returnMessage);
+  
+      res.json({ message: "ok" });
 }
+
+app.get('/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  const run = openai.beta.threads.runs.stream(req.session.thread, {
+    assistant_id: globalAssistant.id,
+  })
+    .on('textCreated', (text) => {
+      res.write(`data: ${JSON.stringify({ message: "<br><b>assistant > </b>" })}\n\n`);
+    })
+    .on('textDelta', (textDelta, snapshot) => {
+      res.write(`data: ${JSON.stringify({ message: textDelta.value })}\n\n`);
+      process.stdout.write(textDelta.value)
+    })
+    .on('end', () => {
+      res.end();
+    })
+  req.on('close', () => {
+    // run.cancel(); // Assume there is a way to cancel the stream
+    res.end();
+  })
+    .on('toolCallCreated', (toolCall) => process.stdout.write(`\nassistant > ${toolCall.type}\n\n`))
+    .on('toolCallDelta', (toolCallDelta, snapshot) => {
+      if (toolCallDelta.type === 'code_interpreter') {
+        if (toolCallDelta.code_interpreter.input) {
+          process.stdout.write(toolCallDelta.code_interpreter.input);
+        }
+        if (toolCallDelta.code_interpreter.outputs) {
+          process.stdout.write("\noutput >\n");
+          toolCallDelta.code_interpreter.outputs.forEach(output => {
+            if (output.type === "logs") {
+              process.stdout.write(`\n${output.logs}\n`);
+            }
+          });
+        }
+      }
+    });
+});
 
 // Function to upload data as a file
 async function uploadDataAsFile(dataString, userId) {
@@ -301,7 +316,9 @@ async function uploadDataAsFile(dataString, userId) {
 }
 
 app.get(rootUrl + '/api', (req, res) => {
-  res.sendFile(__dirname + '/public/api.html');
+  res.render('api', {
+        apiPath: rootUrl + '/api'
+    });
 });
 
 app.get(rootUrl + '/logout', function(req, res){
@@ -319,4 +336,5 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
+
 

@@ -10,14 +10,33 @@
             const jsonData = document.getElementById('jsonData').value;
             document.getElementById('response').innerText = 'Loading...';
 
-            const response = await fetch('/testApp/api', {
+            const response = await fetch("<%= apiPath %>", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ question, jsonData })
             });
             const data = await response.json();
-            document.getElementById('response').innerText = data.message;
+            if (data.message == "ok") {
+                document.getElementById('response').innerText = '';
+
+                const eventSource = new EventSource('/stream');
+                eventSource.onmessage = function (event) {
+                    const data = JSON.parse(event.data);
+                    const outputDiv = document.getElementById('response');
+                    outputDiv.innerHTML += `${data.message}`; // Append new messages
+                };
+                eventSource.onerror = function (error) {
+                    console.log('EventSource failed:', error);
+                    eventSource.close();
+                };
+
+            }
+            else {
+                document.getElementById('response').innerText = 'error';
+            }
         }
+
+
     </script>
 </head>
 
@@ -36,7 +55,10 @@
         <br><br>
         <input type="submit" value="Submit">
     </form>
-    <p id="response"></p>
+    <p id="response" style="
+        width: 50%;
+        font-size: large;
+    "></p>
 </body>
 
 </html>
