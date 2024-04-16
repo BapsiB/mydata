@@ -10,7 +10,7 @@
             const jsonData = document.getElementById('jsonData').value;
             document.getElementById('response').innerText = 'Loading...';
 
-            const response = await fetch('/api', {
+            const response = await fetch('/testApp/api', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ question, jsonData })
