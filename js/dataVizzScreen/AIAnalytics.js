@@ -4,19 +4,52 @@ import SharedConstants from '../sharedConstants.js';
 import axios from 'axios';
 import DataManager from '../dataManager.js';
 import { jsonToCSV } from 'react-native-csv'
-import { color } from "react-native-reanimated";
+import EventSource from 'react-native-event-source';
 import sharedConstants from "../sharedConstants.js";
 
 const AIAnalyticScreen = () => {
 
   const [questionAI, setQuestionAI] = React.useState("");
-  const [GPTresponse, setGPTResponse] = React.useState("");
+  const [GPTresponse, setGPTResponse] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [areDataSent, setAreDataSent] = React.useState(false);
 
+  const listenToAnswerStreaming = () => {
+    console.log("go to listenToAnswerStreaming");
+    const eventSource = new EventSource(sharedConstants.apiRoot + '/stream');
+    
+    eventSource.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data);
 
-  const askChatGpt = async (forceSendData) => {
-    const question = questionAI;
+      let lastGPTResponse = GPTresponse;
+      const parsedText = data.message.replace(/<br>/g, '\n').split(/<\/?b>/g); // Process bold tags and breaks
+      for (var i = 0; i < parsedText.length; i++) {
+        const part = parsedText[i];
+        const obj = i % 2 === 1 ? ({ text: part, style: styles.bold }) : ({ text: part, style: {} });
+        lastGPTResponse.push(obj);
+      }
+      setGPTResponse(lastGPTResponse);
+
+      setIsLoading(false);
+    });
+
+    eventSource.addEventListener('error', (error) => {
+      console.error('EventSource failed:', error);
+      setIsLoading(false);
+      eventSource.close();
+    });
+
+    return () => {
+      eventSource.close();
+    };
+  };
+
+  const initChatGpt = async (forceSendData) => {
+    debugger;
+    console.log("initChatGpt");
+    if (areDataSent) {
+      return;
+    }
 
     try {
       setIsLoading(true); // Start loading
@@ -25,16 +58,22 @@ const AIAnalyticScreen = () => {
       const text = (areDataSent && !forceSendData) ? "" : jsonToCSV(objStr);
 
       const response = await axios.post(sharedConstants.apiRoot + '/api', {
-        question: question,
         jsonData: text
       });
-
+      debugger;
+      console.log("response");
+      console.log(response);
       if (response.data == "Nodata") {
         setAreDataSent(false);
-        askChatGpt(true);
         return;
       }
-      setGPTResponse(GPTresponse + "\n" + response.data.message);
+
+      if (response.data.message == "ok") {
+        debugger;
+        listenToAnswerStreaming();
+      }
+
+      // setGPTResponse(GPTresponse + "\n" + response.data.message);
       setAreDataSent(true);
       setIsLoading(false); // Stop loading after the response is received
 
@@ -44,7 +83,16 @@ const AIAnalyticScreen = () => {
       
     }
 }
+  
+const askChatGpt = async () => {
+  await initChatGpt()
 
+  debugger;
+  const question = questionAI;
+  const response = axios.post(sharedConstants.apiRoot + '/addUserQuestion', {
+    question: question,
+  });
+}
 
 return (
     <View style={styles.mainContainer}>
@@ -63,9 +111,11 @@ return (
       {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-          <ScrollView>
-            <Text style={{ fontFamily: "Montserrat-Regular", marginBottom: 10, color: "#444" }}>
-              {GPTresponse}
+        <ScrollView>
+          <Text>
+          {GPTresponse.map((item, index) => (
+            <Text key={index} style={item.style}>{item.text}</Text>
+          ))}
             </Text>
           </ScrollView>
       )}
@@ -108,6 +158,10 @@ const styles = StyleSheet.create({
     margin: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  bold: {
+    fontWeight: 'bold',
   },
 });
 

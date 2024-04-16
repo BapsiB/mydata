@@ -183,14 +183,20 @@ let globalAssistant = null;
 //   }
 // }
 
+app.post(rootUrl + '/addUserQuestion', async (req, res) => {
+  if (req.isAuthenticated()) {
+    const question = req.body.question;
+    addQuestionToThread(req, res, question);
+  }
+})
+
 app.post(rootUrl + '/api', async (req, res) => {
   console.log("/api");
   if (req.isAuthenticated()) {
     // User is authenticated, proceed with the API response
-    const question = req.body.question;
     const jsonData = req.body.jsonData;
 
-    outputLog.write(util.format(question) + '\n' + util.format(jsonData) + '\n');
+    outputLog.write('\n' + util.format(jsonData) + '\n');
     
     // Check if the Assistant has been initialized; if not, initialize it
     if (!globalAssistant) {
@@ -210,6 +216,7 @@ app.post(rootUrl + '/api', async (req, res) => {
       }
 
       const thread = await openai.beta.threads.create();
+      console.log("create thread.")
       req.session.thread = thread.id;
 
       // Example usage
@@ -219,15 +226,13 @@ app.post(rootUrl + '/api', async (req, res) => {
         .then(file => {
           console.log("Upload successful:", file);
           req.session.file = file;
-          addQuestionToThread(req, res, question);
+          res.json({ message: "ok" });
         })
         .catch(error => console.error("Upload failed:", error));
     }
-    else {
-      addQuestionToThread(req, res, question);
-    }
   }
   else {
+    console.log("Unauthorized");
     // User is not authenticated
     res.status(401).json({ message: "Unauthorized" });
   }
@@ -242,48 +247,59 @@ async function addQuestionToThread(req, res, question) {
         file_ids: [req.session.file.id]
       }
       );
-  
-      res.json({ message: "ok" });
 }
 
 app.get('/stream', (req, res) => {
+  console.log("!!! ask stream !!! \n");
+  console.log(req);
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
 
+  if (req.session.run) {
+    console.log("error: run already created");
+    return;
+  }
+
   const run = openai.beta.threads.runs.stream(req.session.thread, {
     assistant_id: globalAssistant.id,
   })
-    .on('textCreated', (text) => {
-      res.write(`data: ${JSON.stringify({ message: "<br><b>assistant > </b>" })}\n\n`);
-    })
-    .on('textDelta', (textDelta, snapshot) => {
-      res.write(`data: ${JSON.stringify({ message: textDelta.value })}\n\n`);
-      process.stdout.write(textDelta.value)
-    })
-    .on('end', () => {
-      res.end();
-    })
+  .on('textCreated', (text) => {
+    res.write(`data: ${JSON.stringify({ message: "<br><b>assistant > </b>" })}\n\n`);
+    process.stdout.write("\n<br><b>assistant > </b>");
+  })
+  .on('textDelta', (textDelta, snapshot) => {
+    res.write(`data: ${JSON.stringify({ message: textDelta.value })}\n\n`);
+    process.stdout.write(textDelta.value)
+  })
+  .on('end', () => {
+    res.end();
+  })
+
+  console.log("run created");
+  req.session.run = run;
+    
   req.on('close', () => {
+    console.log("try to close run.");
     // run.cancel(); // Assume there is a way to cancel the stream
     res.end();
   })
-    .on('toolCallCreated', (toolCall) => process.stdout.write(`\nassistant > ${toolCall.type}\n\n`))
-    .on('toolCallDelta', (toolCallDelta, snapshot) => {
-      if (toolCallDelta.type === 'code_interpreter') {
-        if (toolCallDelta.code_interpreter.input) {
-          process.stdout.write(toolCallDelta.code_interpreter.input);
-        }
-        if (toolCallDelta.code_interpreter.outputs) {
-          process.stdout.write("\noutput >\n");
-          toolCallDelta.code_interpreter.outputs.forEach(output => {
-            if (output.type === "logs") {
-              process.stdout.write(`\n${output.logs}\n`);
-            }
-          });
-        }
+  .on('toolCallCreated', (toolCall) => process.stdout.write(`\nassistant > ${toolCall.type}\n\n`))
+  .on('toolCallDelta', (toolCallDelta, snapshot) => {
+    if (toolCallDelta.type === 'code_interpreter') {
+      if (toolCallDelta.code_interpreter.input) {
+        process.stdout.write(toolCallDelta.code_interpreter.input);
       }
-    });
+      if (toolCallDelta.code_interpreter.outputs) {
+        process.stdout.write("\noutput >\n");
+        toolCallDelta.code_interpreter.outputs.forEach(output => {
+          if (output.type === "logs") {
+            process.stdout.write(`\n${output.logs}\n`);
+          }
+        });
+      }
+    }
+  });
 });
 
 // Function to upload data as a file
