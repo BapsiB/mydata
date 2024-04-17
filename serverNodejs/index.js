@@ -251,6 +251,12 @@ app.get('/stream', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
 
+  if (!globalAssistant) {
+    res.write(`data: ${JSON.stringify({ theEnd: true })}\n\n`);
+    // res.end();
+    return;
+  }
+
   const run = openai.beta.threads.runs.stream(req.session.thread, {
     assistant_id: globalAssistant.id,
   })
@@ -262,6 +268,7 @@ app.get('/stream', (req, res) => {
       process.stdout.write(textDelta.value)
     })
     .on('end', () => {
+      res.write(`data: ${JSON.stringify({ theEnd: true })}\n\n`);
       res.end();
     })
   req.on('close', () => {
