@@ -12,6 +12,9 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid'); // For generating unique identifiers
+const WebSocket = require('ws');
+
+const wpServer = new WebSocket.Server({ port: 8080 });
 
 const util = require('util');
 const OpenAI = require('openai').default;
@@ -185,6 +188,7 @@ let globalAssistant = null;
 
 app.post(rootUrl + '/api', async (req, res) => {
   console.log("/api");
+
   if (req.isAuthenticated()) {
     // User is authenticated, proceed with the API response
     const question = req.body.question;
@@ -243,10 +247,62 @@ async function addQuestionToThread(req, res, question) {
       }
       );
   
-      res.json({ message: "ok" });
+      res.json({ threadId: req.session.thread });
 }
 
+let dcount = 0;
+wpServer.on('connection', (socket, req) => {
+
+  const threadId = new URL(req.url, `http://${req.headers.host}`).searchParams.get('threadId');
+
+  console.log("wp connection. threadId: " + threadId);
+
+  if (!globalAssistant) {
+    console.log("no globalAssistant");
+    socket.send(`${JSON.stringify({ theEnd: true })}\n\n`);
+    // res.end();
+    return;
+  }
+
+  const run = openai.beta.threads.runs.stream(threadId, {
+    assistant_id: globalAssistant.id,
+  })
+    .on('textCreated', (text) => {
+      socket.send(`${JSON.stringify({ message: "<br><b>assistant > </b>" })}\n\n`);
+    })
+    .on('textDelta', (textDelta, snapshot) => {
+      socket.send(`${JSON.stringify({ message: textDelta.value })}\n\n`);
+      process.stdout.write(textDelta.value)
+    })
+    .on('end', () => {
+      socket.send(`${JSON.stringify({ theEnd: true })}\n\n`);
+      socket.close(1000, 'Normal Closure');
+    })
+    
+  req.on('close', () => {
+    // run.cancel(); // Assume there is a way to cancel the stream
+    socket.close(1000, 'Normal Closure');
+  })
+    .on('toolCallCreated', (toolCall) => process.stdout.write(`\nassistant > ${toolCall.type}\n\n`))
+    .on('toolCallDelta', (toolCallDelta, snapshot) => {
+      if (toolCallDelta.type === 'code_interpreter') {
+        if (toolCallDelta.code_interpreter.input) {
+          process.stdout.write(toolCallDelta.code_interpreter.input);
+        }
+        if (toolCallDelta.code_interpreter.outputs) {
+          process.stdout.write("\noutput >\n");
+          toolCallDelta.code_interpreter.outputs.forEach(output => {
+            if (output.type === "logs") {
+              process.stdout.write(`\n${output.logs}\n`);
+            }
+          });
+        }
+      }
+    });
+});
+
 app.get('/stream', (req, res) => {
+  console.log("in stream");
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');

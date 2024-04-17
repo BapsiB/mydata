@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from "react";
+import React, {useRef, useEffect, useState} from "react";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 import SharedConstants from '../sharedConstants.js';
 import axios from 'axios';
@@ -14,47 +14,55 @@ const AIAnalyticScreen = () => {
   const [GPTresponse, setGPTResponse] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [areDataSent, setAreDataSent] = React.useState(false);
+  const [ws, setWs] = useState(null);
 
-  const listenToAnswerStreaming = () => {
-    console.log("go to listenToAnswerStreaming");
-    const eventSource = new EventSource(sharedConstants.apiRoot + '/stream');
-    
-    eventSource.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data);
-      if (data.theEnd) {
-        console.log("close stream");
-        eventSource.close();
-      }
-      else {
-        console.log(data.message);
-        const parsedText = data.message.replace(/<br>/g, '\n').split(/<\/?b>/g); // Process bold tags and breaks
-        const newParts = parsedText.map((part, index) => ({
-          text: part,
-          style: index % 2 === 1 ? styles.bold : {}
-        }));
+  const listenToAnswerStreaming = (threadId) => {
 
-        setGPTResponse(currentGPTResponse => [...currentGPTResponse, ...newParts]);
+      const websocket = new WebSocket('ws://10.0.2.2:8080' + '?threadId=' + threadId);
+      websocket.onopen = () => {
+          console.log('WebSocket Connected');
+          websocket.send('Hello Server!');
+      };
+      websocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.theEnd) {
+          console.log("close stream");
+          websocket.close();
+        }
+        else {
+          console.log(data.message);
+          addMessage(data.message);
       }
 
       setIsLoading(false);
-    });
-
-    eventSource.addEventListener('error', (error) => {
-      console.error('EventSource failed:', error);
-      setIsLoading(false);
-      eventSource.close();
-    });
-
-    eventSource.addEventListener('close', (event) => {
-      console.error('EventSource close');
-      setIsLoading(false);
-      eventSource.close();
-    });
-
-    return () => {
-      eventSource.close();
     };
+    
+    websocket.onerror = (e) => {
+        setIsLoading(false);
+          console.log('WebSocket Error ', e.message);
+      };
+    websocket.onclose = (e) => {
+        setIsLoading(false);
+          console.log('WebSocket Disconnected', e.code, e.reason);
+      };
+
+      setWs(websocket);
+
+      // Cleanup on component unmount
+      return () => {
+          websocket.close();
+      };
   };
+
+  const addMessage = (message) => {
+    const parsedText = message.replace(/<br>/g, '\n').split(/<\/?b>/g); // Process bold tags and breaks
+    const newParts = parsedText.map((part, index) => ({
+        text: part,
+        style: index % 2 === 1 ? styles.bold : {}
+    }));
+
+    setGPTResponse(currentGPTResponse => [...currentGPTResponse, ...newParts]);
+  }
 
   const initChatGpt = async (forceSendData) => {
 
@@ -81,13 +89,14 @@ const AIAnalyticScreen = () => {
         return;
       }
 
-      if (response.data.message == "ok") {
-        listenToAnswerStreaming();
+      if (response.data.threadId) {
+        listenToAnswerStreaming(response.data.threadId);
       }
 
       // setGPTResponse(GPTresponse + "\n" + response.data.message);
       setAreDataSent(true);
       setIsLoading(false); // Stop loading after the response is received
+      setQuestionAI("");
 
     } catch (error) {
       Alert.alert("Request Failed", "Check your network.");
@@ -97,6 +106,8 @@ const AIAnalyticScreen = () => {
 }
   
 const askChatGpt = async () => {
+  addMessage("<br><b>user > </b>");
+  addMessage(questionAI);
   await initChatGpt()
 }
 
@@ -108,6 +119,7 @@ return (
       <TextInput
         style={styles.input}
         onChangeText={setQuestionAI}
+        value={questionAI}
         multiline={true}
         maxLength={200}
       />
@@ -117,7 +129,7 @@ return (
       {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <ScrollView>
+        <ScrollView style={{flex:9}}>
           <Text>
           {GPTresponse.map((item, index) => (
             <Text key={index} style={item.style}>{item.text}</Text>
@@ -142,8 +154,8 @@ const styles = StyleSheet.create({
       fontSize:17,
       color: "#333",
       backgroundColor: "white",
-    fontFamily: "Montserrat-Regular",
-
+      fontFamily: "Montserrat-Regular",
+      height:"10%"
   },
   
   mainContainer: {
@@ -151,6 +163,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Regular",
     justifyContent: 'center',
     alignItems: 'center',
+    flex:1
   },
 
   buttonSend: {
@@ -164,6 +177,7 @@ const styles = StyleSheet.create({
     margin: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    height:30
   },
 
   bold: {
