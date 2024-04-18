@@ -14,7 +14,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid'); // For generating unique identifiers
 const WebSocket = require('ws');
 
-const wpServer = new WebSocket.Server({ port: 8080 });
+const wpServer = new WebSocket.Server({ port: 3001 });
 
 const util = require('util');
 const OpenAI = require('openai').default;
@@ -24,7 +24,7 @@ const outputLog = fs.createWriteStream('./outputLog.log');
 
 const openaiApiKey = 'REMOVED_OPENAI_KEY';
 const openai = new OpenAI({ apiKey: openaiApiKey });
-const IS_LOCAL = true;
+const IS_LOCAL = false;
 const rootUrl = IS_LOCAL ? '' : '/testApp';
 
 // Replace mongoose and User model with MySQL connection setup

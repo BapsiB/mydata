@@ -18,7 +18,7 @@ const AIAnalyticScreen = () => {
 
   const listenToAnswerStreaming = (threadId) => {
 
-      const websocket = new WebSocket('ws://10.0.2.2:8080' + '?threadId=' + threadId);
+      const websocket = new WebSocket(sharedConstants.apiRootWs + '?threadId=' + threadId);
       websocket.onopen = () => {
           console.log('WebSocket Connected');
           websocket.send('Hello Server!');
