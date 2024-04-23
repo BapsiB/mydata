@@ -69,7 +69,7 @@ eventSource.addEventListener('message', (event) => {
       }
 
       if (response.data.message == "ok") {
-        listenToAnswerStreaming();
+        return;
       }
 
       // setGPTResponse(GPTresponse + "\n" + response.data.message);
@@ -84,13 +84,14 @@ eventSource.addEventListener('message', (event) => {
 }
   
   const askChatGpt = async () => {
-    setGPTResponse([]);
-    listenToAnswerStreaming();
+    await initChatGpt();
 
-  // const question = questionAI;
-  // const response = axios.post(sharedConstants.apiRoot + '/addUserQuestion', {
-  //   question: question,
-  // });
+    // listenToAnswerStreaming();
+
+  const question = questionAI;
+  const response = axios.post(sharedConstants.apiRoot + '/addUserQuestion', {
+    question: question,
+  });
 }
 
 return (

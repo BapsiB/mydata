@@ -192,8 +192,8 @@ app.post(rootUrl + '/addUserQuestion', async (req, res) => {
 
 app.post(rootUrl + '/api', async (req, res) => {
   console.log("/api");
-  res.json({ message: "ok" });
-  return;
+  // res.json({ message: "ok" });
+  // return;
   
   if (req.isAuthenticated()) {
     // User is authenticated, proceed with the API response
@@ -258,28 +258,23 @@ app.get('/stream', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  var indexSend = 0;
-  if (idInterval > -1) {
-    clearInterval(idInterval);
-  }
-  idInterval = setInterval(function () {
-    const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
-    res.write(data);
-    process.stdout.write(data);
-    indexSend++;
-    if (indexSend > 5) {
-      clearInterval(idInterval);
-      res.end();
-    }
+  // var indexSend = 0;
+  // if (idInterval > -1) {
+  //   clearInterval(idInterval);
+  // }
+  // idInterval = setInterval(function () {
+  //   const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
+  //   res.write(data);
+  //   process.stdout.write(data);
+  //   indexSend++;
+  //   if (indexSend > 5) {
+  //     clearInterval(idInterval);
+  //     res.end();
+  //   }
 
-  }, 1000);
+  // }, 1000);
 
-  return;
-
-  if (req.session.run) {
-    console.log("error: run already created");
-    return;
-  }
+  // return;
 
   const run = openai.beta.threads.runs.stream(req.session.thread, {
     assistant_id: globalAssistant.id,
