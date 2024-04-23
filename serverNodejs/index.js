@@ -192,6 +192,9 @@ app.post(rootUrl + '/addUserQuestion', async (req, res) => {
 
 app.post(rootUrl + '/api', async (req, res) => {
   console.log("/api");
+  res.json({ message: "ok" });
+  return;
+  
   if (req.isAuthenticated()) {
     // User is authenticated, proceed with the API response
     const jsonData = req.body.jsonData;
@@ -248,13 +251,30 @@ async function addQuestionToThread(req, res, question) {
       }
       );
 }
-
+let idInterval = -1;
 app.get('/stream', (req, res) => {
   console.log("!!! ask stream !!! \n");
   console.log(req);
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
+  var indexSend = 0;
+  if (idInterval > -1) {
+    clearInterval(idInterval);
+  }
+  idInterval = setInterval(function () {
+    const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
+    res.write(data);
+    process.stdout.write(data);
+    indexSend++;
+    if (indexSend > 5) {
+      clearInterval(idInterval);
+      res.end();
+    }
+
+  }, 1000);
+
+  return;
 
   if (req.session.run) {
     console.log("error: run already created");

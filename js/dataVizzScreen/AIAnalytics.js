@@ -4,7 +4,7 @@ import SharedConstants from '../sharedConstants.js';
 import axios from 'axios';
 import DataManager from '../dataManager.js';
 import { jsonToCSV } from 'react-native-csv'
-import EventSource from 'react-native-event-source';
+import EventSource from "react-native-sse";
 import sharedConstants from "../sharedConstants.js";
 
 const AIAnalyticScreen = () => {
@@ -29,6 +29,7 @@ const AIAnalyticScreen = () => {
         lastGPTResponse.push(obj);
       }
       setGPTResponse(lastGPTResponse);
+      console.log("lastGPTResponse.length " + lastGPTResponse.length);
 
       setIsLoading(false);
     });
@@ -45,7 +46,7 @@ const AIAnalyticScreen = () => {
   };
 
   const initChatGpt = async (forceSendData) => {
-    debugger;
+
     console.log("initChatGpt");
     if (areDataSent) {
       return;
@@ -60,7 +61,7 @@ const AIAnalyticScreen = () => {
       const response = await axios.post(sharedConstants.apiRoot + '/api', {
         jsonData: text
       });
-      debugger;
+
       console.log("response");
       console.log(response);
       if (response.data == "Nodata") {
@@ -69,7 +70,6 @@ const AIAnalyticScreen = () => {
       }
 
       if (response.data.message == "ok") {
-        debugger;
         listenToAnswerStreaming();
       }
 
@@ -84,14 +84,14 @@ const AIAnalyticScreen = () => {
     }
 }
   
-const askChatGpt = async () => {
-  await initChatGpt()
+  const askChatGpt = async () => {
+    setGPTResponse([]);
+    listenToAnswerStreaming();
 
-  debugger;
-  const question = questionAI;
-  const response = axios.post(sharedConstants.apiRoot + '/addUserQuestion', {
-    question: question,
-  });
+  // const question = questionAI;
+  // const response = axios.post(sharedConstants.apiRoot + '/addUserQuestion', {
+  //   question: question,
+  // });
 }
 
 return (
