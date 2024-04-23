@@ -16,13 +16,12 @@ const { v4: uuidv4 } = require('uuid'); // For generating unique identifiers
 const util = require('util');
 const OpenAI = require('openai').default;
 
-
 const outputLog = fs.createWriteStream('./outputLog.log');
 
 const openaiApiKey = 'REMOVED_OPENAI_KEY';
 const openai = new OpenAI({ apiKey: openaiApiKey });
 const IS_LOCAL = true;
-const rootUrl = IS_LOCAL ? '' : '/testApp';
+const rootUrl = IS_LOCAL ? '' : '/my-data-2';
 
 // Replace mongoose and User model with MySQL connection setup
 const dbConfig = IS_LOCAL ? {
@@ -187,12 +186,15 @@ app.post(rootUrl + '/addUserQuestion', async (req, res) => {
   if (req.isAuthenticated()) {
     const question = req.body.question;
     addQuestionToThread(req, res, question);
+    res.json({ message: "question added" });  
   }
 })
 
 app.post(rootUrl + '/api', async (req, res) => {
   console.log("/api");
-  // res.json({ message: "ok" });
+  if (req.session.thread) {
+    res.json({ message: "ok" });  
+  }
   // return;
   
   if (req.isAuthenticated()) {
@@ -349,7 +351,7 @@ async function uploadDataAsFile(dataString, userId) {
 
 app.get(rootUrl + '/api', (req, res) => {
   res.render('api', {
-        apiPath: rootUrl + '/api'
+        apiPath: rootUrl
     });
 });
 
