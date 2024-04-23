@@ -20,7 +20,9 @@ const outputLog = fs.createWriteStream('./outputLog.log');
 
 const openaiApiKey = 'REMOVED_OPENAI_KEY';
 const openai = new OpenAI({ apiKey: openaiApiKey });
-const IS_LOCAL = true;
+console.log("is local " + process.env.IS_LOCAL);
+const IS_LOCAL = false; //(process.env.IS_LOCAL === undefined) ? false : process.env.IS_LOCAL;
+
 const rootUrl = IS_LOCAL ? '' : '/my-data-2';
 
 // Replace mongoose and User model with MySQL connection setup
@@ -47,7 +49,8 @@ app.use(flash());
 app.set('view engine', 'ejs');
 const viewspath = path.join(__dirname, 'views');
 app.set('views', viewspath);
-// app.use(express.static('public'));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Adapted LocalStrategy to use mysql2
 passport.use(new LocalStrategy(async (username, password, done) => {
@@ -255,29 +258,29 @@ async function addQuestionToThread(req, res, question) {
 }
 
 let idInterval = -1;
-app.get('/stream', (req, res) => {
+app.get(rootUrl + '/stream', (req, res) => {
   console.log("!!! ask stream !!! \n");
   console.log(req);
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  // var indexSend = 0;
-  // if (idInterval > -1) {
-  //   clearInterval(idInterval);
-  // }
-  // idInterval = setInterval(function () {
-  //   const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
-  //   res.write(data);
-  //   process.stdout.write(data);
-  //   indexSend++;
-  //   if (indexSend > 5) {
-  //     clearInterval(idInterval);
-  //     res.end();
-  //   }
+  var indexSend = 0;
+  if (idInterval > -1) {
+    clearInterval(idInterval);
+  }
+  idInterval = setInterval(function () {
+    const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
+    res.write(data);
+    process.stdout.write(data);
+    indexSend++;
+    if (indexSend > 5) {
+      clearInterval(idInterval);
+      res.end();
+    }
 
-  // }, 1000);
+  }, 1000);
 
-  // return;
+  return;
 
   const run = openai.beta.threads.runs.stream(req.session.thread, {
     assistant_id: globalAssistant.id,

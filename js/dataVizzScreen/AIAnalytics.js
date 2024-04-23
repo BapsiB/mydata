@@ -84,10 +84,8 @@ eventSource.addEventListener('message', (event) => {
     }
 }
   
-  const askChatGpt = async () => {
+  const askChatGptell = async () => {
     await initChatGpt();
-
-    
 
   const question = questionAI;
   const response = axios.post(sharedConstants.apiRoot + '/addUserQuestion', {
