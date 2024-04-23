@@ -251,6 +251,7 @@ async function addQuestionToThread(req, res, question) {
       }
       );
 }
+
 let idInterval = -1;
 app.get('/stream', (req, res) => {
   console.log("!!! ask stream !!! \n");

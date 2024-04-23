@@ -16,7 +16,7 @@ const AIAnalyticScreen = () => {
 
   const listenToAnswerStreaming = () => {
     console.log("go to listenToAnswerStreaming");
-    const eventSource = new EventSource(sharedConstants.apiRoot + '/stream');
+    const eventSource = new EventSource(sharedConstants.apiRoot + '/stream', {pollingInterval: 0});
     
 eventSource.addEventListener('message', (event) => {
   const data = JSON.parse(event.data);
@@ -69,12 +69,13 @@ eventSource.addEventListener('message', (event) => {
       }
 
       if (response.data.message == "ok") {
+        setAreDataSent(true);
+        setIsLoading(false); // Stop loading after the response is received
         return;
       }
 
       // setGPTResponse(GPTresponse + "\n" + response.data.message);
-      setAreDataSent(true);
-      setIsLoading(false); // Stop loading after the response is received
+
 
     } catch (error) {
       Alert.alert("Request Failed", "Check your network.");
@@ -86,12 +87,14 @@ eventSource.addEventListener('message', (event) => {
   const askChatGpt = async () => {
     await initChatGpt();
 
-    // listenToAnswerStreaming();
+    
 
   const question = questionAI;
   const response = axios.post(sharedConstants.apiRoot + '/addUserQuestion', {
     question: question,
   });
+    
+  listenToAnswerStreaming();
 }
 
 return (
