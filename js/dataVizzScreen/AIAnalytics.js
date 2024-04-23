@@ -18,21 +18,20 @@ const AIAnalyticScreen = () => {
     console.log("go to listenToAnswerStreaming");
     const eventSource = new EventSource(sharedConstants.apiRoot + '/stream');
     
-    eventSource.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data);
-
-      let lastGPTResponse = GPTresponse;
-      const parsedText = data.message.replace(/<br>/g, '\n').split(/<\/?b>/g); // Process bold tags and breaks
-      for (var i = 0; i < parsedText.length; i++) {
-        const part = parsedText[i];
-        const obj = i % 2 === 1 ? ({ text: part, style: styles.bold }) : ({ text: part, style: {} });
-        lastGPTResponse.push(obj);
-      }
-      setGPTResponse(lastGPTResponse);
-      console.log("lastGPTResponse.length " + lastGPTResponse.length);
-
-      setIsLoading(false);
+eventSource.addEventListener('message', (event) => {
+  const data = JSON.parse(event.data);
+  const parsedText = data.message.replace(/<br>/g, '\n').split(/<\/?b>/g); // Process bold tags and breaks
+  setGPTResponse(GPTResponsePrev => {
+    // This starts with the current state and builds on it, preserving previous messages
+    const updatedGPTResponse = [...GPTResponsePrev];
+    parsedText.forEach((part, i) => {
+      const obj = i % 2 === 1 ? { text: part, style: styles.bold } : { text: part, style: {} };
+      updatedGPTResponse.push(obj);
     });
+    return updatedGPTResponse;
+  });
+  setIsLoading(false);
+});
 
     eventSource.addEventListener('error', (error) => {
       console.error('EventSource failed:', error);
