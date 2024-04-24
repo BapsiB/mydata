@@ -25,7 +25,7 @@ eventSource.addEventListener('message', (event) => {
     // This starts with the current state and builds on it, preserving previous messages
     const updatedGPTResponse = [...GPTResponsePrev];
     parsedText.forEach((part, i) => {
-      const obj = i % 2 === 1 ? { text: part, style: styles.bold } : { text: part, style: {} };
+      const obj = i % 2 === 1 ? { text: part, style: styles.bold } : { text: part, style: styles.regular };
       updatedGPTResponse.push(obj);
     });
     return updatedGPTResponse;
@@ -84,7 +84,7 @@ eventSource.addEventListener('message', (event) => {
     }
 }
   
-  const askChatGptell = async () => {
+  const askChatGpt = async () => {
     await initChatGpt();
 
   const question = questionAI;
@@ -163,6 +163,11 @@ const styles = StyleSheet.create({
 
   bold: {
     fontWeight: 'bold',
+    color:'#333'
+  },
+
+  regular: {
+    color:'#333'
   },
 });
 
