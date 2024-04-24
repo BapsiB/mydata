@@ -290,23 +290,23 @@ app.get(rootUrl + '/stream', (req, res) => {
   //   res.write(`data: ${JSON.stringify({ message: "<br><b>error</b> not authenticated >" })}\n\n`);
   //   return;
   // }
-  var indexSend = 0;
-  if (idInterval > -1) {
-    clearInterval(idInterval);
-  }
-  idInterval = setInterval(function () {
-    const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
-    res.write(data);
-    console.log(data);
-    indexSend++;
-    if (indexSend > 5) {
-      clearInterval(idInterval);
-      res.end();
-    }
+  // var indexSend = 0;
+  // if (idInterval > -1) {
+  //   clearInterval(idInterval);
+  // }
+  // idInterval = setInterval(function () {
+  //   const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
+  //   res.write(data);
+  //   console.log(data);
+  //   indexSend++;
+  //   if (indexSend > 5) {
+  //     clearInterval(idInterval);
+  //     res.end();
+  //   }
 
-  }, 1000);
+  // }, 1000);
 
-  return;
+  // return;
 
   const run = openai.beta.threads.runs.stream(req.session.thread, {
     assistant_id: globalAssistant.id,
@@ -394,7 +394,7 @@ app.get(rootUrl + '/', (req, res) => {
     const htmlContent = `
         <body>
             <h1>Hello World!</h1>
-            <button onclick="window.location.href="` + rootUrl + `/login">Go to Login</button>
+            <button onclick="window.location.href='${rootUrl}/login'">Go to Login</button>
         </body>
         </html>
     `;
