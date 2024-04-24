@@ -13,7 +13,7 @@ async function sendData(event, apiPath) {
     const data = await response.json();
     if (data.message == "ok") {
 
-        const response2 = await fetch(apiPath + '/addUserQuestion', {
+        await fetch(apiPath + '/addUserQuestion', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question })

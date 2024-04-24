@@ -21,7 +21,21 @@ const outputLog = fs.createWriteStream('./outputLog.log');
 const openaiApiKey = 'REMOVED_OPENAI_KEY';
 const openai = new OpenAI({ apiKey: openaiApiKey });
 console.log("is local " + process.env.IS_LOCAL);
-const IS_LOCAL = false; //(process.env.IS_LOCAL === undefined) ? false : process.env.IS_LOCAL;
+const IS_LOCAL = process.env.IS_LOCAL != "false";
+
+if (!IS_LOCAL) {
+  // Override the console.log function to write to the log file
+  const originalConsoleLog = console.log;
+  console.log = function(...args) {
+      const logMessage = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ');
+      outputLog.write(`${new Date().toISOString()} [INFO] ${logMessage}\n`);
+      originalConsoleLog.apply(console, args);
+  };
+}
+
+
+outputLog.write('\n env process.env.IS_LOCAL ' + process.env.IS_LOCAL + '\n');
+outputLog.write("is local 2" + IS_LOCAL + '\n');
 
 const rootUrl = IS_LOCAL ? '' : '/my-data-2';
 
@@ -188,7 +202,7 @@ let globalAssistant = null;
 app.post(rootUrl + '/addUserQuestion', async (req, res) => {
   if (req.isAuthenticated()) {
     const question = req.body.question;
-    addQuestionToThread(req, res, question);
+    await addQuestionToThread(req, res, question);
     res.json({ message: "question added" });  
   }
 })
@@ -247,47 +261,59 @@ app.post(rootUrl + '/api', async (req, res) => {
 });
 
 async function addQuestionToThread(req, res, question) {
+  console.log("addQuestionToThread : " + question);
+  console.log("req.session.file.id : " + req.session.file.id);
+  console.log("req.session.thread : " + req.session.thread);
       const message = await openai.beta.threads.messages.create(
       req.session.thread,
       {
         role: "user",
         content: question,
-        file_ids: [req.session.file.id]
+        attachments: [
+        { file_id: req.session.file.id, tools: [{type: "code_interpreter"}] }
+      ]
       }
       );
+  
+      console.log("done : " + question);
 }
 
 let idInterval = -1;
-app.get(rootUrl + '/stream', (req, res) => {
+app.get('/stream', (req, res) => {
   console.log("!!! ask stream !!! \n");
-  console.log(req);
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  var indexSend = 0;
-  if (idInterval > -1) {
-    clearInterval(idInterval);
+
+  if (!req.isAuthenticated()) {
+    consolelog("!req.isAuthenticated");
+    res.write(`data: ${JSON.stringify({ message: "<br><b>error</b> not authenticated >" })}\n\n`);
+    return;
   }
-  idInterval = setInterval(function () {
-    const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
-    res.write(data);
-    process.stdout.write(data);
-    indexSend++;
-    if (indexSend > 5) {
-      clearInterval(idInterval);
-      res.end();
-    }
+  // var indexSend = 0;
+  // if (idInterval > -1) {
+  //   clearInterval(idInterval);
+  // }
+  // idInterval = setInterval(function () {
+  //   const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
+  //   res.write(data);
+  //   process.stdout.write(data);
+  //   indexSend++;
+  //   if (indexSend > 5) {
+  //     clearInterval(idInterval);
+  //     res.end();
+  //   }
 
-  }, 1000);
+  // }, 1000);
 
-  return;
+  // return;
 
   const run = openai.beta.threads.runs.stream(req.session.thread, {
     assistant_id: globalAssistant.id,
   })
   .on('textCreated', (text) => {
     res.write(`data: ${JSON.stringify({ message: "<br><b>assistant > </b>" })}\n\n`);
-    process.stdout.write("\n<br><b>assistant > </b>");
+    console.log("\n<br><b>assistant > </b>");
   })
   .on('textDelta', (textDelta, snapshot) => {
     res.write(`data: ${JSON.stringify({ message: textDelta.value })}\n\n`);
@@ -305,22 +331,22 @@ app.get(rootUrl + '/stream', (req, res) => {
     // run.cancel(); // Assume there is a way to cancel the stream
     res.end();
   })
-  .on('toolCallCreated', (toolCall) => process.stdout.write(`\nassistant > ${toolCall.type}\n\n`))
-  .on('toolCallDelta', (toolCallDelta, snapshot) => {
-    if (toolCallDelta.type === 'code_interpreter') {
-      if (toolCallDelta.code_interpreter.input) {
-        process.stdout.write(toolCallDelta.code_interpreter.input);
-      }
-      if (toolCallDelta.code_interpreter.outputs) {
-        process.stdout.write("\noutput >\n");
-        toolCallDelta.code_interpreter.outputs.forEach(output => {
-          if (output.type === "logs") {
-            process.stdout.write(`\n${output.logs}\n`);
-          }
-        });
-      }
-    }
-  });
+  // .on('toolCallCreated', (toolCall) => process.stdout.write(`\nassistant > ${toolCall.type}\n\n`))
+  // .on('toolCallDelta', (toolCallDelta, snapshot) => {
+  //   if (toolCallDelta.type === 'code_interpreter') {
+  //     if (toolCallDelta.code_interpreter.input) {
+  //       process.stdout.write(toolCallDelta.code_interpreter.input);
+  //     }
+  //     if (toolCallDelta.code_interpreter.outputs) {
+  //       process.stdout.write("\noutput >\n");
+  //       toolCallDelta.code_interpreter.outputs.forEach(output => {
+  //         if (output.type === "logs") {
+  //           process.stdout.write(`\n${output.logs}\n`);
+  //         }
+  //       });
+  //     }
+  //   }
+  // });
 });
 
 // Function to upload data as a file
