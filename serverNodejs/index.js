@@ -279,34 +279,34 @@ async function addQuestionToThread(req, res, question) {
 }
 
 let idInterval = -1;
-app.get('/stream', (req, res) => {
+app.get(rootUrl + '/stream', (req, res) => {
   console.log("!!! ask stream !!! \n");
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
 
-  if (!req.isAuthenticated()) {
-    consolelog("!req.isAuthenticated");
-    res.write(`data: ${JSON.stringify({ message: "<br><b>error</b> not authenticated >" })}\n\n`);
-    return;
-  }
-  // var indexSend = 0;
-  // if (idInterval > -1) {
-  //   clearInterval(idInterval);
+  // if (!req.isAuthenticated()) {
+  //   consolelog("!req.isAuthenticated");
+  //   res.write(`data: ${JSON.stringify({ message: "<br><b>error</b> not authenticated >" })}\n\n`);
+  //   return;
   // }
-  // idInterval = setInterval(function () {
-  //   const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
-  //   res.write(data);
-  //   process.stdout.write(data);
-  //   indexSend++;
-  //   if (indexSend > 5) {
-  //     clearInterval(idInterval);
-  //     res.end();
-  //   }
+  var indexSend = 0;
+  if (idInterval > -1) {
+    clearInterval(idInterval);
+  }
+  idInterval = setInterval(function () {
+    const data = `data: ${JSON.stringify({ message: "<br><b>assistant > </b>" + indexSend })}\n\n`;
+    res.write(data);
+    console.log(data);
+    indexSend++;
+    if (indexSend > 5) {
+      clearInterval(idInterval);
+      res.end();
+    }
 
-  // }, 1000);
+  }, 1000);
 
-  // return;
+  return;
 
   const run = openai.beta.threads.runs.stream(req.session.thread, {
     assistant_id: globalAssistant.id,
@@ -390,7 +390,17 @@ app.get(rootUrl + '/logout', function(req, res){
 });
 
 app.get(rootUrl + '/', (req, res) => {
-  res.send('Hello World!');
+    // Creating a simple HTML page with a button that redirects to /login
+    const htmlContent = `
+        <body>
+            <h1>Hello World!</h1>
+            <button onclick="window.location.href=` + rootUrl + `'/login'">Go to Login</button>
+        </body>
+        </html>
+    `;
+
+    // Sending the HTML content as the response
+    res.send(htmlContent);
 });
 
 const server = http.createServer(app);
