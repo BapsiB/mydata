@@ -394,7 +394,7 @@ app.get(rootUrl + '/', (req, res) => {
     const htmlContent = `
         <body>
             <h1>Hello World!</h1>
-            <button onclick="window.location.href=` + rootUrl + `'/login'">Go to Login</button>
+            <button onclick="window.location.href="` + rootUrl + `/login">Go to Login</button>
         </body>
         </html>
     `;
