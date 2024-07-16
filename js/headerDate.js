@@ -2,8 +2,6 @@ import React, { useState, useRef } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Modal, Dimensions, Animated } from 'react-native';
 import SharedConstants from './sharedConstants.js';
 import CalendarComponent from './timeline/CalendarComponent';
-import { Background } from 'victory-native';
-import { navigate } from './Utils/NavigationService';
 
 class HeaderDate {
 
@@ -27,6 +25,11 @@ class HeaderDate {
 
     this.setDate = function(date) {
         this.date = date;
+
+        if (that.updateComponentDate) {
+            that.updateComponentDate(date);
+        }
+
         for (let i in this.changeCallbacks) {
             this.changeCallbacks[i]();
         }
@@ -34,6 +37,7 @@ class HeaderDate {
 
     function setDate(date) {
         that.setDate(date);
+
     }
 
    function incrementDate(dateInput,increment) {
@@ -55,8 +59,12 @@ class HeaderDate {
                 setCurrentDate(that.getDate());
             }
 
-            function setDate(date) {
+            const setDate = function(date) {
                 that.setDate(date);
+                setCurrentDate(date);
+            }
+
+            that.updateComponentDate = function(date) {
                 setCurrentDate(date);
             }
 
