@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, Modal, Dimensions, Animated } from 'react-native';
 import SharedConstants from './sharedConstants.js';
 import CalendarComponent from './timeline/CalendarComponent';
 import { Background } from 'victory-native';
+import { navigate } from './Utils/NavigationService';
 
 class HeaderDate {
 
@@ -10,8 +11,13 @@ class HeaderDate {
     this.date = new Date();
     const that = this;
     this.changeCallbacks = [];
+    this.navigation = null;
 
     this.getDate = function() {
+        return this.date;
+    }
+        
+    this.setNavigation = function() {
         return this.date;
     }
 
@@ -36,52 +42,82 @@ class HeaderDate {
        return increasedDate;
    }
 
-    this.getHeader = function() {
-        const [currentDate, setCurrentDate] = React.useState(that.getDate());
-        const [calendarVisible, setCalendarVisible] = useState(false);
+        this.getHeader = function () {
+        
+            const { height } = Dimensions.get('window');
 
-        if(SharedConstants.getDateString(currentDate) != SharedConstants.getDateString(that.getDate())) {
-            setCurrentDate(that.getDate());
-        }
+            const [currentDate, setCurrentDate] = React.useState(that.getDate());
+            const [calendarVisible, setCalendarVisible] = useState(false);
+            const slideAnim = useRef(new Animated.Value(height)).current;
 
-        function setDate(date) {
-            that.setDate(date);
-            setCurrentDate(date);
-        }
 
-        function showModal() {
-            setCalendarVisible(true)
-        }
+            if (SharedConstants.getDateString(currentDate) != SharedConstants.getDateString(that.getDate())) {
+                setCurrentDate(that.getDate());
+            }
 
-        return (
-            <View style={{ position: "absolute", height: 45, width: "90%", marginLeft: "5%", flexDirection: "row", marginVertical: 0, marginBottom: 0, elevation: 3, zIndex: 3 }}>
-                <View style={{flex:1, marginLeft:0}}>
-                    <TouchableOpacity style={{width:50, height:60, paddingTop:20}} onPress={()=>{setDate(incrementDate(this.date, -1));}}>
-                        <Text style={styles.dateText}>{"<"}</Text>
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity onPress={() => { showModal(); }}>
-                <View style={{ flex: 10, marginRight:-20, height:60, paddingTop:20}}>
-                    <Text style={styles.dateText}>{SharedConstants.getDateString(that.date)}</Text>
+            function setDate(date) {
+                that.setDate(date);
+                setCurrentDate(date);
+            }
+
+            function showModal() {
+                if (calendarVisible) {
+                // Slide up
+                Animated.timing(slideAnim, {
+                    toValue: -height,
+                    duration: 300,
+                    useNativeDriver: true,
+                }).start(() => {
+                    setCalendarVisible(false);
+                });
+                } else {
+                setCalendarVisible(true);
+                // Slide down
+                Animated.timing(slideAnim, {
+                    toValue: 60,
+                    duration: 300,
+                    useNativeDriver: true,
+                }).start();
+                }
+            }
+
+            return (
+            <View style={{height:calendarVisible ? "100%" : 60, position: "absolute", width: "100%", zIndex: 3}}>
+                <View style={{height: 60, marginLeft: "0%", width: "100%", flexDirection: "row", marginVertical: 0, marginBottom: 0, elevation: 3, backgroundColor:"white", zIndex: 3 }}>
+                    <View style={{ flex: 1, marginLeft: 0 }}>
+                        <TouchableOpacity style={{ width: 50, height: 60, paddingTop: 20 }} onPress={() => { setDate(incrementDate(this.date, -1)); }}>
+                            <Text style={styles.dateText}>{"<"}</Text>
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
-                <View style={{flex:1}}>
-                    <TouchableOpacity style={{width:50, height:60, paddingLeft:20, paddingTop:20, marginLeft:-15}} onPress={()=>{setDate(incrementDate(this.date, 1));}}>
-                        {/* <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/> */}
-                        <Text style={styles.dateText}></Text>
+                    <TouchableOpacity onPress={() => { showModal(); }}>
+                        <View style={{ flex: 10, marginRight: -20, height: 60, paddingTop: 20 }}>
+                            <Text style={styles.dateText}>{SharedConstants.getDateString(that.date)}</Text>
+                        </View>
                     </TouchableOpacity>
+                    <View style={{ flex: 1 }}>
+                        <TouchableOpacity style={{ width: 50, height: 60, paddingLeft: 20, paddingTop: 20, marginLeft: -15 }} onPress={() => { setDate(incrementDate(this.date, 1)); }}>
+                            {/* <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/> */}
+                            <Text style={styles.dateText}></Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <Modal
-                    transparent={true}
-                    visible={calendarVisible}
-                    animationType="slide"
+                {
+                calendarVisible && (
+                <Animated.View
+                    style={{
+                    position: 'absolute',
+                    height: height - 45,
+                            marginTop: 0,
+                    zIndex:-10,
+                    transform: [{ translateY: slideAnim }],
+                    }}
                 >
-                    <View style={{ flex:1 }}>
-                        <CalendarComponent></CalendarComponent>    
-                    </View>
-                    
-                </Modal>
+                    <CalendarComponent />
+                </Animated.View>
+                )
+                }
             </View>
+            
         );
     }
 

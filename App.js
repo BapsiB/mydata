@@ -9,11 +9,13 @@ import TimelineView from './js/timeline/timelineView'
 import Intro from './js/Intro.js'
 import DebugScreen from './js/debugScreen'
 import QuestionsListView from './js/questionsListView.js'
+import CalendarComponent from './js/timeline/CalendarComponent'
 
 import Utils from './js/utils.js'
 import DataManager from './js/dataManager'
 import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { navigationRef } from './js/Utils/NavigationService';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -40,7 +42,8 @@ function JournalStackScreen() {
           component={MainView}
           options={{ headerShown:false }}
       />
-      <JournalStack.Screen name="Timeline" component={TimelineView} options={{ headerShown:false }}/>
+      <JournalStack.Screen name="Timeline" component={TimelineView} options={{ headerShown: false }} />
+      {/* <JournalStack.Screen name="Calendar" component={CalendarComponent} options={{ headerShown: false }} /> */}
       <JournalStack.Screen name="Question Editor" component={QuestionEditor} options={{ headerShown:false }}/>
       <JournalStack.Screen name="Answer Screen" component={AnswerScreen} options={{ headerShown:false, unmountOnBlur: true}}/>
       {getStackNavigator()}
@@ -98,7 +101,7 @@ const MyStack = () => {
     <View style={{height:"100%", width:"100%"}}>
     {!questionLoaded && <Image style={{resizeMode: 'cover', width:"100%", height:"100%"}} source={require("./resources/splash.jpg")}></Image>}
     {questionLoaded &&
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
           <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="Journal">
             <Tab.Screen
               name="Journal"
@@ -165,7 +168,7 @@ function getStackNavigator() {
   optionsForth.headerShown = false;
   const listItemsforth = listQuestions.map((d) => <JournalStack.Screen name={d.id + "vizz"} component={DataVisualisationSingleQuestion} options={{headerShown:false}} key={d.id} initialParams={{ questionId: d.id }} />);
   // basically because i didn't find a better way, we put twice the screens with different animation.
-  return listItemsforth;//.concat(listItemsback);
+  return listItemsforth;
 }
 
 function CustomDrawerContent(props) {

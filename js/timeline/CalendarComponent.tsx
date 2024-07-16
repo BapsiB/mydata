@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { CalendarList, AgendaEntry, AgendaSchedule } from 'react-native-calendars';
+import HeaderDate from '../headerDate.js';
 
 interface CalendarComponentProps {
     events: AgendaSchedule;
@@ -36,6 +37,12 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ events }) => {
                 scrollEnabled={true}
                 // Enable or disable vertical scroll indicator. Default = false
                 showScrollIndicator={true}
+
+                onDayPress={(date: DateData) => {
+                    console.log("hello")
+                    let lDate = new Date(date.year, date.month - 1, date.day);
+                    HeaderDate.setDate(lDate);
+                }}
             />
         </View>
     );
