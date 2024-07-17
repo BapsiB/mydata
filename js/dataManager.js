@@ -114,6 +114,24 @@ class DataManager {
         };
 
         /*
+         * return the list of dates which have all questions replied.
+         */
+        this.getFilledDates = function () {
+            const lAllData = this.daysData.getAllData();
+            for (let dayData in lAllData) {
+                const dataDataDate = dayData.date;
+                const dayDataValues = dayData.values;
+            }
+        }
+
+        /*
+         * return the list of dates which have at least one question replied.
+         */
+        this.getPartiallyFilledDates = function () {
+            
+        }
+
+        /*
         * return the datas as arrays ordered with time.
         * this is to use in a csv generation.
         */

@@ -1,28 +1,20 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { CalendarList, AgendaEntry, AgendaSchedule } from 'react-native-calendars';
+import { CalendarList, AgendaSchedule } from 'react-native-calendars';
 import HeaderDate from '../headerDate.js';
+import DataManager from '../dataManager.js';
 
 interface CalendarComponentProps {
     events: AgendaSchedule;
 }
 
 const CalendarComponent: React.FC<CalendarComponentProps> = ({ events }) => {
-    const renderItem = (item: AgendaEntry, firstItemInDay: boolean) => {
-        return (
-            <View style={styles.item}>
-                <Text>{item.name}</Text>
-            </View>
-        );
-    };
 
-    const renderEmptyDate = () => {
-        return (
-            <View style={styles.emptyDate}>
-                <Text>This is an empty date!</Text>
-            </View>
-        );
-    };
+    // const [currentDate, setCurrentDate] = React.useState(HeaderDate.getDate());
+    const [selected, setSelected] = React.useState('');
+
+    // Define the marking style for the highlighted day
+    const markedDates = DataManager.getFilledDates();
 
     return (
         <View style={styles.viewContainer}>
@@ -38,8 +30,38 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ events }) => {
                 // Enable or disable vertical scroll indicator. Default = false
                 showScrollIndicator={true}
 
+                // Pass the markedDates prop to the Calendar component
+                markedDates={markedDates}
+
+                // Custom day component to control the text color of selected day
+                dayComponent={({ date, state }) => {
+                    const isSelected = date.dateString === selected;
+                    return (
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: state === 'disabled' ? 'gray' : 'black',
+                                    backgroundColor: isSelected ? '#bee' : 'transparent',
+                                    padding: 10,
+                                    borderRadius: 20,
+                                    width: 40
+                                }}
+                                onPress={() => {
+                                    setSelected(date.dateString);
+                                    let lDate = new Date(date.year, date.month - 1, date.day);
+                                    HeaderDate.setDate(lDate);
+                                }
+                                }
+                            >
+                                {date.day}
+                            </Text>
+                        </View>
+                    );
+                }}
+
+
                 onDayPress={(date: DateData) => {
-                    console.log("hello")
                     let lDate = new Date(date.year, date.month - 1, date.day);
                     HeaderDate.setDate(lDate);
                 }}

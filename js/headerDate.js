@@ -52,7 +52,7 @@ class HeaderDate {
 
             const [currentDate, setCurrentDate] = React.useState(that.getDate());
             const [calendarVisible, setCalendarVisible] = useState(false);
-            const slideAnim = useRef(new Animated.Value(height)).current;
+            const slideAnim = useRef(new Animated.Value(-height)).current;
 
 
             if (SharedConstants.getDateString(currentDate) != SharedConstants.getDateString(that.getDate())) {
