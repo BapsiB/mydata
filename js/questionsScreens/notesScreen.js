@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, Image, StyleSheet, View, TouchableOpacity, Button, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import Draggable from 'react-native-draggable';
 import Utils from '../utils.js'
 import HeaderDate from '../headerDate.js';

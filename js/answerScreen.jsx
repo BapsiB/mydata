@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image, Modal, Pressable } from 'react-native';
 import SharedConstants from './sharedConstants.js';
-import DataManager from './dataManager.js';
+import DataManager from './dataManager.tsx';
 import AnswerYesNo from './answerComponents/answerYesNo.js';
 import AnswerSlider from './answerComponents/answerSlider.js';
 import AnswerNote from './answerComponents/answerNote.js';

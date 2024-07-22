@@ -2,7 +2,7 @@ import React, {useRef, useEffect} from "react";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 import SharedConstants from '../sharedConstants.js';
 import axios from 'axios';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import { jsonToCSV } from 'react-native-csv'
 import EventSource from "react-native-sse";
 import sharedConstants from "../sharedConstants.js";

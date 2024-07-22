@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { StyleSheet, View, Dimensions, ScrollView, Text } from "react-native";
 
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import RepartitionGraph from './repartitionGraph.js'
 import RepartitionGraphColours from './repartitionGraphColours'
 import TextDataExtraction from './textDataExtraction'

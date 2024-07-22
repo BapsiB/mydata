@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import HeaderDate from '../headerDate.js';
 import QuestionButton from '../questionButton'
 import { SwipeProvider } from 'react-native-swipe-item';

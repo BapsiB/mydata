@@ -1,9 +1,9 @@
-import DataManager from './dataManager.js'
+import DataManager from './dataManager.tsx'
 
 type Data = {
     initialised: boolean;
     introVersion: number;
-  };
+};
 
 class AppState {
 
@@ -11,13 +11,13 @@ class AppState {
 
     public constructor() {
         this.data = {
-            initialised:false,
-            introVersion:-1
+            initialised: false,
+            introVersion: -1
         }
     }
 
     public async getAppInfo() {
-        if(this.data.initialised) {
+        if (this.data.initialised) {
             return this.data;
         }
         else {
@@ -27,8 +27,8 @@ class AppState {
 
     private async collectAppInfo() {
         const promise = DataManager.getAppInfo();
-        promise.then((data:Data) => {
-            if(data) {
+        promise.then((data: Data) => {
+            if (data) {
                 this.data = data;
             }
         })
@@ -39,7 +39,7 @@ class AppState {
         DataManager.saveAppInfo(this.data);
     }
 
-    public setIntroVersion(aVersion:number) {
+    public setIntroVersion(aVersion: number) {
         this.data.introVersion = aVersion;
         this.save();
     }

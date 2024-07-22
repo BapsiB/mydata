@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, StyleSheet } from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import LinearGradient from 'react-native-linear-gradient';
 import Utils from '../utils.js';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, TouchableOpacity, Image, View, Animated } from 'react-native';
 import { useRef, useState, useEffect } from 'react';
 import { SwipeItem, SwipeButtonsContainer } from 'react-native-swipe-item';
-import DataManager from './dataManager.js';
+import DataManager from './dataManager.tsx';
 import SharedConstants from './sharedConstants.js';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderDate from './headerDate';

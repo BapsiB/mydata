@@ -3,7 +3,7 @@ import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 // import Slider from '@react-native-community/slider';
 import ColorPicker from 'react-native-wheel-color-picker'
 import SharedConstants from '../sharedConstants.js';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 
 /*
 * Component showing the slider for both numbered and intensity type of questions.

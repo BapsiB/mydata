@@ -3,7 +3,7 @@ import { StyleSheet, View, Dimensions, Animated } from "react-native";
 import ChartVsDropdownPicker from './chartVSDropdownPicker.js'
 import { VictoryArea, VictoryLabel, VictoryScatter, VictoryBar, VictoryLine, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import {Defs, LinearGradient, Stop} from "react-native-svg";
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import SharedConstants from '../sharedConstants.js'
 
 const SngleQuestionTimeGraph = (props) => {

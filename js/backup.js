@@ -1,5 +1,5 @@
 import SharedConstants from './sharedConstants.js';
-import DataManager from './dataManager.js';
+import DataManager from './dataManager.tsx';
 import { SafeAreaView, TextInput, Text, Pressable, Modal, View, StyleSheet, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import React, {useState} from "react";

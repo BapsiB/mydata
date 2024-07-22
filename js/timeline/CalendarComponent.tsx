@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { CalendarList, AgendaSchedule } from 'react-native-calendars';
-import HeaderDate from '../headerDate.js';
-import DataManager from '../dataManager.js';
+// import HeaderDate from '../headerDate.js';
+import DataManager from '../dataManager.tsx';
 
 interface CalendarComponentProps {
     events: AgendaSchedule;
 }
 
-const CalendarComponent: React.FC<CalendarComponentProps> = ({ events }) => {
+const CalendarComponent: React.FC<CalendarComponentProps> = ({ headerDate }) => {
 
     // const [currentDate, setCurrentDate] = React.useState(HeaderDate.getDate());
     const [selected, setSelected] = React.useState('');
@@ -50,7 +50,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ events }) => {
                                 onPress={() => {
                                     setSelected(date.dateString);
                                     let lDate = new Date(date.year, date.month - 1, date.day);
-                                    HeaderDate.setDate(lDate);
+                                    headerDate.setDate(lDate);
                                 }
                                 }
                             >

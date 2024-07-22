@@ -1,14 +1,14 @@
 import React, {useRef, useEffect} from "react";
 import { StyleSheet, View, Dimensions, ScrollView, SafeAreaView, Text } from "react-native";
 import { VictoryArea, VictoryChart, VictoryAxis, VictoryTheme, VictoryZoomContainer } from "victory-native";
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import SharedConstants from '../sharedConstants.js';
 import QuestionVizzList from './questionVizzList.js';
 import DataVisualisationSingleQuestion from './dataVisualisationSingleQuestion'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Utils from '../utils.js'
-import dataManager from "../dataManager.js";
+import dataManager from "../dataManager.tsx";
 
 const DataVisualisationScreen = () => {
 

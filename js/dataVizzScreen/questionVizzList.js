@@ -1,7 +1,7 @@
 import { Text, StyleSheet, TouchableOpacity, ScrollView, View, SafeAreaView } from 'react-native';
 import React, { useEffect } from 'react';
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import SharedConstants from '../sharedConstants.js';
 import QuestionButtonVizz from './questionButton.js';
 

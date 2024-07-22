@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Text, StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import HeaderDate from '../headerDate.js';
 import QuestionEditor from '../questionEditor/questionEditor.js';
 import {QuestionButtonEdit} from '../questionButton'

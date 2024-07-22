@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import HeaderDate from '../headerDate.js';
 
 class AnswerYesNo extends React.Component {

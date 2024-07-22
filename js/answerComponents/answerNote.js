@@ -3,7 +3,7 @@ import { SafeAreaView, TextInput, Text, View, StyleSheet, TouchableOpacity } fro
 import { useFocusEffect } from '@react-navigation/native';
 
 import SharedConstants from '../sharedConstants.js';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 
 /*
 * Component showing the slider for both numbered and intensity type of questions.

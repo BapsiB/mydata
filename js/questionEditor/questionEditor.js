@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, Image, TextInput, StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import QuestionType from './questionEditorType';
 import QuestionOptions from './questionEditorOptions';
 import QuestionColour from './questionEditorColour';

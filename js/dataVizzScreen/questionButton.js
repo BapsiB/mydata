@@ -1,7 +1,7 @@
 import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
 import React, { useState } from 'react';
 import { SwipeItem, SwipeButtonsContainer, SwipeProvider } from 'react-native-swipe-item';
-import DataManager from '../dataManager.js';
+import DataManager from '../dataManager.tsx';
 import SharedConstants from '../sharedConstants.js';
 
 export default QuestionButtonVizz = (props) => {
