@@ -17,7 +17,7 @@ interface LinearDataContainer {
     data: any[][];
 }
 
-class DataManager { comprendre pourquoi le premier ecran ne disparait pas.
+class DataManager {
     NOTE_QUESTION_ID: string;
     questionsLoaded: boolean;
     listQuestions: Question[];
@@ -34,6 +34,8 @@ class DataManager { comprendre pourquoi le premier ecran ne disparait pas.
         this.daysData = new Datas(this);
         this.questionCallback = {};
         this.answersUpdateCallback = null;
+
+        this.init();
     }
 
     clearAll = async (): Promise<void> => {
@@ -74,6 +76,9 @@ class DataManager { comprendre pourquoi le premier ecran ne disparait pas.
                 }
                 this.updateQuestionsOrder();
             }
+
+            this.questionsLoaded = true;
+            this.callQuestionsCallbacks();
         });
 
         AsyncStorage.getAllKeys().then((stringArray) => {

@@ -9,7 +9,6 @@ import TimelineView from './js/timeline/timelineView'
 import Intro from './js/Intro.js'
 import DebugScreen from './js/debugScreen'
 import QuestionsListView from './js/questionsListView.js'
-import CalendarComponent from './js/timeline/CalendarComponent'
 
 import Utils from './js/utils.js'
 import DataManager from './js/dataManager'

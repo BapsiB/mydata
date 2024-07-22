@@ -93,19 +93,19 @@ class HeaderDate {
             <View style={{height:calendarVisible ? "100%" : 60, position: "absolute", width: "100%", zIndex: 3}}>
                 <View style={{height: 60, marginLeft: "0%", width: "100%", flexDirection: "row", marginVertical: 0, marginBottom: 0, elevation: 3, backgroundColor:"white", zIndex: 3 }}>
                     <View style={{ flex: 1, marginLeft: 0 }}>
-                        <TouchableOpacity style={{ width: 50, height: 60, paddingTop: 20 }} onPress={() => { setDate(incrementDate(this.date, -1)); }}>
+                        <TouchableOpacity style={{ height: 60, paddingTop: 20 }} onPress={() => { setDate(incrementDate(this.date, -1)); }}>
                             <Text style={styles.dateText}>{"<"}</Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => { showModal(); }}>
-                        <View style={{ flex: 10, marginRight: -20, height: 60, paddingTop: 20 }}>
+                    <TouchableOpacity style={{flex: 10}} onPress={() => { showModal(); }}>
+                        <View style={{ marginRight: -20, height: 60, paddingTop: 20 }}>
                             <Text style={styles.dateText}>{SharedConstants.getDateString(that.date)}</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={{ flex: 1 }}>
-                        <TouchableOpacity style={{ width: 50, height: 60, paddingLeft: 20, paddingTop: 20, marginLeft: -15 }} onPress={() => { setDate(incrementDate(this.date, 1)); }}>
+                        <TouchableOpacity style={{ height: 60, paddingTop: 20, marginLeft: 0}} onPress={() => { setDate(incrementDate(this.date, 1)); }}>
                             {/* <Image style={{ width:30, height:30,  resizeMode: 'stretch' }} source={require("../resources/arrowR.png")}/> */}
-                            <Text style={styles.dateText}></Text>
+                            <Text style={styles.dateText}>{">"}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
