@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { CalendarList, AgendaSchedule } from 'react-native-calendars';
+import { CalendarList } from 'react-native-calendars';
 import DataManager from '../dataManager';
 
 interface CalendarComponentProps {
@@ -10,50 +11,84 @@ interface CalendarComponentProps {
     };
 }
 
+const MemoizedDayComponent = React.memo(({ date, state, onPress, isSelected, isFilled }: {
+    date: { dateString: string; day: number };
+    state: 'selected' | 'disabled' | 'today';
+    onPress: () => void;
+    isSelected: boolean;
+    isFilled: boolean;
+}) => (
+    <TouchableOpacity onPress={onPress} style={styles.dayContainer}>
+        <View style={[styles.dayContent, isSelected && styles.selectedDay]}>
+            <Text
+                style={[
+                    styles.dayText,
+                    {
+                        color: isSelected ? 'white' : state === 'disabled' ? 'gray' : 'black',
+                    }
+                ]}
+            >
+                {date.day}
+            </Text>
+            {isFilled && <View style={styles.dot} />}
+        </View>
+    </TouchableOpacity>
+));
+
 const CalendarComponent: React.FC<CalendarComponentProps> = ({ headerDate }) => {
     const [selected, setSelected] = useState('');
-    const [datesState, setDatesState] = useState<Record<string, { filled: boolean }>>({}); // Assuming DateState has a 'filled' property
+    const [datesState, setDatesState] = useState<Record<string, { filled: boolean }>>({});
 
-    // Fetch filled dates only once when the component mounts
     useEffect(() => {
         const filledDates = DataManager.getFilledDates();
         setDatesState(filledDates);
+        updateSelected();
     }, []);
 
+    const updateSelected = () => {
+        const date = headerDate.getDate();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const str = `${year}-${month}-${day}`;
+        setSelected(str);
+    }
+
     const dateChange = useCallback(() => {
-        const newDateStr = headerDate.getDate().toISOString().split('T')[0];
-        setSelected(newDateStr);
+        updateSelected();
     }, [headerDate]);
 
     useEffect(() => {
         headerDate.addChangeCallback("CalendarComponent", dateChange);
-        // Clean up the callback when the component unmounts
         return () => {
-            // Assuming there's a method to remove the callback
-            // headerDate.removeChangeCallback("CalendarComponent");
+            // Cleanup logic here if needed
         };
     }, [headerDate, dateChange]);
 
-    const dayComponent = useCallback(({ date, state }: { date: { dateString: string; day: number }; state: 'selected' | 'disabled' | 'today' }) => {
+    const markedDates = useMemo(() => {
+        const marked: Record<string, { selected: boolean; filled: boolean }> = {};
+        Object.keys(datesState).forEach(date => {
+            marked[date] = { selected: date === selected, filled: datesState[date].filled };
+        });
+        return marked;
+    }, [datesState, selected]);
+
+    const renderDay = useCallback(({ date, state }: { date: { dateString: string; day: number }; state: 'selected' | 'disabled' | 'today' }) => {
         const isSelected = date.dateString === selected;
         const isFilled = datesState[date.dateString]?.filled;
 
         return (
-            <TouchableOpacity onPress={() => setSelected(date.dateString)} style={styles.dayContainer}>
-                <View style={[styles.dayContent, isSelected && styles.selectedDay]}>
-                    <Text
-                        style={[
-                            styles.dayText,
-                            {
-                                color: isSelected ? 'white' : state === 'disabled' ? 'gray' : 'black',
-                            }
-                        ]}
-                    >
-                        {date.day}
-                    </Text>
-                    {isFilled && <View style={styles.dot} />}
-                </View>
-            </TouchableOpacity>
+            <MemoizedDayComponent
+                date={date}
+                state={state}
+                onPress={() => {
+                    let lDate = new Date(date.year, date.month - 1, date.day);
+                    headerDate.setDate(lDate);
+                    // setSelected(date.dateString);
+                }}
+                isSelected={isSelected}
+                isFilled={isFilled}
+            />
         );
     }, [selected, datesState]);
 
@@ -73,11 +108,18 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ headerDate }) => 
                 scrollEnabled={true}
                 showScrollIndicator={true}
                 theme={calendarTheme}
-                dayComponent={dayComponent}
+                dayComponent={renderDay}
+                markedDates={markedDates}
+                onDayPress={(date) => {
+                    let lDate = new Date(date.year, date.month - 1, date.day);
+                    headerDate.setDate(lDate);
+                    // setSelected(date.dateString);
+                }}
             />
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -118,4 +160,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CalendarComponent;
+export default React.memo(CalendarComponent);
