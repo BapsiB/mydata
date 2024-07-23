@@ -17,6 +17,10 @@ interface LinearDataContainer {
     data: any[][];
 }
 
+interface DateState {
+    filled: boolean;
+}
+
 class DataManager {
     NOTE_QUESTION_ID: string;
     questionsLoaded: boolean;
@@ -130,13 +134,31 @@ class DataManager {
         });
     };
 
-    getFilledDates = (): void => {
+    getFilledDates = (): Record<string, DateState> => {
+        const convertDateFormat = (dateString: string): string => {
+            return `${dateString.substring(0, 4)}-${dateString.substring(4, 6)}-${dateString.substring(6)}`;
+        };
+
         const lAllData = this.daysData.getAllData();
-        for (let dayData in lAllData) {
-            const dataDataDate = dayData;
-            const dayDataValues = lAllData[dayData];
-            // Implementation needed
+        let filledDates: Record<string, DateState> = {};
+
+        for (let dayIndex in lAllData) {
+            const dataDataDate = lAllData[dayIndex];
+
+            let hasQuestionUnanswered = false;
+            for (let valuesIndex in dataDataDate.values) {
+                const lQuestionsValues = dataDataDate.values[valuesIndex];
+                if (lQuestionsValues.v === undefined) {
+                    hasQuestionUnanswered = true;
+                    break;
+                }
+            }
+            if (!hasQuestionUnanswered) {
+                const properdateFormat = String(convertDateFormat(dataDataDate.date));
+                filledDates[properdateFormat] = { filled: true };
+            }
         }
+        return filledDates;
     };
 
     getPartiallyFilledDates = (): void => {

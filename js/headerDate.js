@@ -120,7 +120,7 @@ class HeaderDate {
                     transform: [{ translateY: slideAnim }],
                     }}
                 >
-                    <CalendarComponent headerDate={that} />
+                    <CalendarComponent headerDate={that} currentDate={currentDate} />
                 </Animated.View>
                 )
                 }
