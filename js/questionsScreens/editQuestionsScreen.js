@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, View, ScrollView, Dimensions } from 'react-native';
+import { Text, StyleSheet, View, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import SharedConstants from '../sharedConstants.js';
 import DataManager from '../dataManager.tsx';
 import HeaderDate from '../headerDate.js';
@@ -9,6 +9,7 @@ import {
   createStackNavigator
 } from '@react-navigation/stack';
 import { DragSortableView } from 'react-native-drag-sort'
+import { color } from 'react-native-reanimated';
 
 const EditQuestionsScreen = ({navigation}) => {
   const StackIn = createStackNavigator();
@@ -26,7 +27,7 @@ const EditQuestionsScreen = ({navigation}) => {
 const {width} = Dimensions.get('window')
 
 const parentWidth = width
-const childrenWidth = width
+const childrenWidth = width -20
 const childrenHeight = 70
 
 const EditQuestionsList = ({navigation}) => {
@@ -55,6 +56,11 @@ const EditQuestionsList = ({navigation}) => {
     navigation.navigate("Question Editor 2", {questionID:questionId});
   }
 
+  // New function to handle adding a question
+  const handleAddQuestion = () => {
+    navigation.navigate("Question Editor", { startType: SharedConstants.questionTypes.QUESTION_TYPE_YES_NO });
+  }
+
   function getTextEmptyQuestion() {
     if(!arrayQuestions.length) {
       return (      
@@ -71,10 +77,6 @@ const EditQuestionsList = ({navigation}) => {
   const [arrayQuestions, setArrayQuestions] = React.useState([]);
   const [arrayNotes, setArrayNotes] = React.useState([]);
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
-
-  // const listItems = arrayQuestions.map((d) => <QuestionButtonEdit title={d.text} questionId={d.id} key={d.id} navigation={navigation} changeCallback={updateQuestions} editCallback={editQuestion}></QuestionButtonEdit>);
-
-
 
   const renderItem = (item,index) => {
     return (
@@ -93,20 +95,22 @@ const EditQuestionsList = ({navigation}) => {
     <ScrollView style={{marginBottom:0}} scrollEnabled={scrollEnabled}>
       
       <View style={{height:15, width:parentWidth}}/>
+      
+      {/* New Add Question Button */}
+      <TouchableOpacity style={styles.addButton} onPress={handleAddQuestion}>
+        <Text style={styles.addButtonText}>+ Add Question</Text>
+        </TouchableOpacity>
+      <View style={styles.questionsContainer}>
+      <Text style={styles.headerQuestions}>YOUR QUESTIONS</Text>
       <DragSortableView
                     dataSource={arrayQuestions}
-
                     parentWidth={parentWidth}
-
                     childrenWidth= {childrenWidth}
                     childrenHeight={childrenHeight}
-
                     scaleStatus={'scaleY'}
-
                     onClickItem={() => {
                       console.log("click item");
                     }}
-
                     onDragStart={(startIndex,endIndex)=>{
                       console.log("start");
                       setScrollEnabled(false);
@@ -124,32 +128,27 @@ const EditQuestionsList = ({navigation}) => {
                     }}
                     keyExtractor={(item, index) => {
                       return item.id
-                    }
-                      
-                    }
+                    }}
                     onClickItem={(data,item,index)=>{
 
                     }}
                     renderItem={(item,index)=>{
                         return renderItem(item,index)
                     }}
-        />
+          />
+          </View>
         <View style={{ height: 15 }} />
-        <Text>NOTES</Text>
+        <View style={styles.questionsContainer}>
+        <Text style={styles.headerQuestions}>NOTES</Text>
         <DragSortableView
               dataSource={arrayNotes}
-
               parentWidth={parentWidth}
-
               childrenWidth= {childrenWidth}
               childrenHeight={childrenHeight}
-
               scaleStatus={'scaleY'}
-
               onClickItem={() => {
                 console.log("click item");
               }}
-
               onDragStart={(startIndex,endIndex)=>{
                 console.log("start");
                 setScrollEnabled(false);
@@ -167,9 +166,7 @@ const EditQuestionsList = ({navigation}) => {
               }}
               keyExtractor={(item, index) => {
                 return item.id
-              }
-                
-              }
+              }}
               onClickItem={(data,item,index)=>{
 
               }}
@@ -178,7 +175,8 @@ const EditQuestionsList = ({navigation}) => {
               }}
           />
 
-      <View style={{height:15}}/>
+          <View style={{ height: 15 }} />
+          </View>
     </ScrollView>
     </View>
   )
@@ -205,7 +203,36 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 4,
-},
+  },
+
+  // New styles for the Add Question button
+  addButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    alignSelf: 'center',
+    borderBottomWidth: 1,
+  },
+  addButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+  },
+
+  headerQuestions: {
+    marginTop: 10,
+    fontSize: 15,
+    color:"black",
+    textAlign:'center'
+  },
+
+  questionsContainer: {
+    backgroundColor: "#fff",
+    margin: 0,
+    borderWidth: 1,
+    borderRadius:10,
+    borderColor:"#ddd"
+  }
 });
 
 export default EditQuestionsScreen;

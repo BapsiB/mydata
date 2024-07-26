@@ -101,7 +101,6 @@ const QuestionsListView = ({ navigation }) => {
             {HeaderDate.getHeader()}
             <UpdateManager/>
             <View style={{height:0}}></View>
-            {/* <View style={[{marginLeft:"5%", width:"90%", height:"85%", marginTop:"5%", borderRadius:0}, styles.shadowFrame]}> */}
               <StackIn.Navigator screenOptions={Utils.horizontalScreenAnimation} >
                 <StackIn.Screen
                   name="Measures"

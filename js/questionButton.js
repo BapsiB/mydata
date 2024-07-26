@@ -274,14 +274,14 @@ const QuestionButtonEdit = (props) => {
   
   return (
     <View style={[{marginVertical:0, height:50, flexDirection:"row"}, styles.questionsButtonsEdit, styles.alreadyAnswered]}>
-      <IconCommunity name="drag-vertical" size={40} color="#777" style={{width:30, height:40, position:"absolute", left:-5}}/>
-      <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"85%", flexDirection:"row"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
+      {/* <IconCommunity name="drag-vertical" size={40} color="#777" style={{width:30, height:40, position:"absolute", left:-5}}/> */}
+      <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"70%", flexDirection:"row"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
         <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center', fontFamily: 'Montserrat-SemiBold'}}>
             {props.title}
         </Text>
-        <View style={[styles.shadowView, {width:30, right:0, textAlign: 'right', position:'absolute'}]}>
+        {/* <View style={[styles.shadowView, {width:30, right:0, textAlign: 'right', position:'absolute'}]}>
           <Icon name="edit" size={20} color="#444"  style={{width:20, height:20}}/>
-        </View>
+        </View> */}
     </TouchableOpacity>
   </View>
   )
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
     marginLeft:20,
     marginRight:10,
     paddingHorizontal:3,
-    borderWidth:0,
-    borderRadius:15,
+    borderWidth:1,
+    borderRadius:5,
     height:50,
     flex:1,
     borderColor:"black",
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 0,
-    elevation:6
+    elevation:2
   },
 
   circleAnswered: {

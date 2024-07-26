@@ -43,6 +43,10 @@ function onColourChange(newColour) {
 function onPressDelete() {
   setModalVisible(true);
 }
+  
+function onPressReturn() {
+  props.navigation.goBack();
+}
 
 function requestClosePopup() {
   setModalVisible(false);
@@ -114,9 +118,12 @@ const lDisableAddButton = questionText.length == 0;
       </View>
         <View style={{height:50, bottom:10, alignItems: 'center', flexDirection:'row'}}>
           <View width="50%" style={{alignItems: 'center'}}>
-        {fromQuestion && <TouchableOpacity disabled={lDisableAddButton} key="delete" style={[styles.addButtonStyle, {backgroundColor: "red"}]} onPress={onPressDelete}>
-            <Text style={{color:"white", fontWeight:"bold"}}>DELETE</Text>
-        </TouchableOpacity>}
+          {fromQuestion && <TouchableOpacity disabled={lDisableAddButton} key="delete" style={[styles.addButtonStyle, { backgroundColor: "red"}]} onPress={onPressDelete}>
+            <Text style={{ color: "white" }}>DELETE</Text>
+          </TouchableOpacity>}
+          {!fromQuestion && <TouchableOpacity style={[styles.addButtonStyle, { backgroundColor: "white" }]} onPress={onPressReturn}>
+            <Text style={{ color: "black" }}>BACK</Text>
+          </TouchableOpacity>}
         </View>
         <View width="50%" style={{alignItems: 'center'}}>
         <TouchableOpacity disabled={lDisableAddButton} style={[styles.addButtonStyle, {opacity: lDisableAddButton ? 0.3 : 1}]} onPress={()=>{onPressAddQuestion();}}>
