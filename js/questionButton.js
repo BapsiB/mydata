@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, TouchableOpacity, Image, View, Animated } from 'react-native';
 import { useRef, useState, useEffect } from 'react';
 import { SwipeItem, SwipeButtonsContainer } from 'react-native-swipe-item';
-import DataManager from './dataManager.tsx';
+import DataManager from './dataManager';
 import SharedConstants from './sharedConstants.js';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderDate from './headerDate';
@@ -28,7 +28,7 @@ const colourTextAnswered = '#333';
 const colourButtonBack = '#fff';
 let colourButtonBackAnswered = '#fff9f9';
 
-export default QuestionButton = (props) => {
+export default QuestionButton = ({title, navigation, questionId, changeCallback, editCallback, isEditMode, onDragStart, isBeingDragged}) => {
 
     const itemRef = useRef(true);
     const valueAnim = useRef(new Animated.Value(0)).current;
@@ -44,8 +44,8 @@ export default QuestionButton = (props) => {
     }
 
     useEffect(() => {
-      HeaderDate.addChangeCallback("QuestionButton" + props.questionID, dateChange);
-      const lQuestion = DataManager.getQuestionWithId(props.questionId);
+      HeaderDate.addChangeCallback("QuestionButton" + questionId, dateChange);
+      const lQuestion = DataManager.getQuestionWithId(questionId);
       setQuestion(lQuestion);
       dateChange();
     })
@@ -54,12 +54,12 @@ export default QuestionButton = (props) => {
       
       const date = HeaderDate.getDate();
       if(date !== undefined) {
-        const answer = DataManager.getAnswerForQuestion(props.questionId, date);
+        const answer = DataManager.getAnswerForQuestion(questionId, date);
         const lIsAnswered = (answer != null) && (answer !== undefined);
         setIsAnswered(lIsAnswered);
         
         if(lIsAnswered) {
-          const question = DataManager.getQuestionWithId(props.questionId);
+          const question = DataManager.getQuestionWithId(questionId);
           let lAnswerNorm = question.normalizeValue(answer);
           setAnswerNorm(lAnswerNorm);
 
@@ -80,7 +80,7 @@ export default QuestionButton = (props) => {
             duration: 400,
             useNativeDriver: true,
           }).start();
-          setAnswerText(SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(props.questionId)));
+          setAnswerText(SharedConstants.getAnswerText(answer, DataManager.getQuestionWithId(questionId)));
         }
         else {
           setColourMarker(colourCircleNOTAnswered);
@@ -103,22 +103,22 @@ export default QuestionButton = (props) => {
 
 
   const openQuestionVisu = () => {
-    props.navigation.navigate(question.id + "vizz")
+    navigation.navigate(question.id + "vizz")
   }
 
   const goToQuestion = () => {
-    props.navigation.navigate("Answer Screen", { id: props.questionId, onlyTakeUnanswered: false, automaticNextQuestion:false });
+    navigation.navigate("Answer Screen", { id: questionId, onlyTakeUnanswered: false, automaticNextQuestion:false });
   }
 
   const requestDelete = () => {
-    if(DataManager.deleteQuestion(props.questionId)) {
-        props.changeCallback();
+    if(DataManager.deleteQuestion(questionId)) {
+        changeCallback();
         itemRef.current.close();
     }   
   }
 
   const requestEdit = () => {
-    props.editCallback(props.questionId);
+    editCallback(questionId);
     itemRef.current.close();
   }
 
@@ -245,10 +245,18 @@ function displayMarkers() {
         {/* <TouchableOpacity style={{ width: "10%", height: "100%", position: "absolute", left: 0, zIndex:1, textAlign: 'center', justifyContent: 'center', borderWidth: 0 }} onPress={() => { openQuestionVisu(); }}>
           <IconCommunity name="eye-outline" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
         </TouchableOpacity> */}
-        <TouchableOpacity style={{ height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', flexDirection: "row", flex: 1, flexWrap: 'wrap', }} onPress={() => { goToQuestion(); }}>
+        <TouchableOpacity
+          style={{ height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', flexDirection: "row", flex: 1, flexWrap: 'wrap', }}
+          onPress={() => { goToQuestion(); }}
+          onLongPress={isEditMode ? onDragStart : null}
+
+        >
+          {isEditMode && (
+            <SimpleLineIcons name="menu" size={20} color="#555" style={styles.dragHandle} />
+          )}
           <View style={{marginLeft:20, width:"70%", height:"100%", flexDirection: "column", flex: 1, flexWrap: 'wrap'}}>
             <Text style={{fontSize: 13, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', textAlignVertical: 'center', fontFamily: 'Montserrat-Regular', backgroundColor:"transparent", flex:3}}>
-            {props.title}
+            {title}
             </Text>
             <View style={{ flexDirection: "row", flexWrap: 'wrap', height: 40, alignItems:"center"}}>
                 <View style={isAnswered ? styles.circleAnswered : styles.circleNotAnswered}></View>
@@ -266,10 +274,10 @@ function displayMarkers() {
   );
 }
 
-const QuestionButtonEdit = (props) => {
+const QuestionButtonEdit = ({title}) => {
 
   const editQuestion = () => {
-    props.editCallback(props.questionId);
+    editCallback(questionId);
   }
   
   return (
@@ -277,7 +285,7 @@ const QuestionButtonEdit = (props) => {
       {/* <IconCommunity name="drag-vertical" size={40} color="#777" style={{width:30, height:40, position:"absolute", left:-5}}/> */}
       <TouchableOpacity style={[{height:50, marginLeft:"15%", width:"70%", flexDirection:"row"}, {alignItems: 'center', justifyContent: 'center'}]} onPress={()=>{editQuestion();}}>
         <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center', fontFamily: 'Montserrat-SemiBold'}}>
-            {props.title}
+            {title}
         </Text>
         {/* <View style={[styles.shadowView, {width:30, right:0, textAlign: 'right', position:'absolute'}]}>
           <Icon name="edit" size={20} color="#444"  style={{width:20, height:20}}/>
