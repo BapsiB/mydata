@@ -446,6 +446,10 @@ class DataManager {
         this.questionCallback[stringId] = callback;
     };
 
+    removeQuestionsListener = (stringId: string): void => {
+        this.questionCallback[stringId] = () => { };
+    };
+
     setAnswersUpdateListener = (callback: () => void): void => {
         this.answersUpdateCallback = callback;
     };

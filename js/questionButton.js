@@ -14,10 +14,6 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import QuestionButtonViz from './dataVizzScreen/questionButtonViz';
 import Svg, { Path } from 'react-native-svg';
 
-// const colourAnswered = "#DECCF1";
-// const colourButtonBack = '#FDD7C2';
-// const colourText = '#666';
-
 const colourCircleAnswered = "#fff";
 const colourCircleNOTAnswered = "#fff";
 const colourTextCircleNOTAnswered = "#aaa";
@@ -25,8 +21,8 @@ const colourTextCircleAnswered = "#444";
 const colourText = '#555';
 const colourTextAnswered = '#333';
 // const colourButtonBack = '#fff3f3';
-const colourButtonBack = '#fff';
-let colourButtonBackAnswered = '#fff9f9';
+const colourButtonBack = '#f7f7f7';
+let colourButtonBackAnswered = '#fff';
 
 export default QuestionButton = ({title, navigation, questionId, changeCallback, editCallback, isEditMode, onDragStart, isBeingDragged}) => {
 
@@ -107,19 +103,23 @@ export default QuestionButton = ({title, navigation, questionId, changeCallback,
   }
 
   const goToQuestion = () => {
-    navigation.navigate("Answer Screen", { id: questionId, onlyTakeUnanswered: false, automaticNextQuestion:false });
+    if (isEditMode) {
+      requestEdit();
+    }
+    else {
+        navigation.navigate("Answer Screen", { id: questionId, onlyTakeUnanswered: false, automaticNextQuestion:false });
+    }
+    
   }
 
   const requestDelete = () => {
     if(DataManager.deleteQuestion(questionId)) {
         changeCallback();
-        itemRef.current.close();
     }   
   }
 
   const requestEdit = () => {
     editCallback(questionId);
-    itemRef.current.close();
   }
 
 function getTextAnswer() {
@@ -215,58 +215,41 @@ function displayMarkers() {
 // {backgroundColor:utils.increase_brightness(question.colour, 90)}
   const styleAns = isAnswered ? [styles.alreadyAnswered] : styles.notAlreadyAnswered;
 
-  const leftButton = (
-    <SwipeButtonsContainer
-        style={{
-            textAlign:"center",
-            flexDirection: 'column',
-            backgroundColor:"#f66",
-            height:50,
-            width:60,
-            paddingLeft:5,
-            paddingTop:2,
-            borderRadius: 9,
-            borderColor: 'black',
-            borderWidth:0
-        }}
-    >
-        <TouchableOpacity
-            onPress={() => {requestDelete();}}
-        >
-            <Image style={{ width:46, height:46,  resizeMode: 'stretch' }} source={require("../resources/delete.png")}/>
-        </TouchableOpacity>
-    </SwipeButtonsContainer>
-);
-
   return (
   <View style={{marginVertical:0, flexBasis: '50%', height:110}}>
 
-      <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, { width: "90%", marginLeft: "5%" }]}>
-        {/* <TouchableOpacity style={{ width: "10%", height: "100%", position: "absolute", left: 0, zIndex:1, textAlign: 'center', justifyContent: 'center', borderWidth: 0 }} onPress={() => { openQuestionVisu(); }}>
-          <IconCommunity name="eye-outline" size={20} color="#bbb" style={{ width: 30, height: 20, position: "absolute", left: 5 }} />
-        </TouchableOpacity> */}
+      <View style={[styles.questionsButtons, styles.swipeContentContainerStyle, styleAns, { width: "90%", marginLeft: "5%" }, isEditMode && styles.editModeContainer,]}>
         <TouchableOpacity
-          style={{ height: "100%", width: "100%", textAlign: 'center', justifyContent: 'center', flexDirection: "row", flex: 1, flexWrap: 'wrap', }}
+          style={[
+            styles.container,
+            isBeingDragged && styles.draggingContainer,
+          ]}
+
           onPress={() => { goToQuestion(); }}
           onLongPress={isEditMode ? onDragStart : null}
 
         >
-          {isEditMode && (
-            <SimpleLineIcons name="menu" size={20} color="#555" style={styles.dragHandle} />
-          )}
-          <View style={{marginLeft:20, width:"70%", height:"100%", flexDirection: "column", flex: 1, flexWrap: 'wrap'}}>
+
+          <View style={[{ marginLeft: 20, width: "70%", height: "100%", flexDirection: "column", flex: 1, flexWrap: 'wrap' },
+            
+          ]}>
             <Text style={{fontSize: 13, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', textAlignVertical: 'center', fontFamily: 'Montserrat-Regular', backgroundColor:"transparent", flex:3}}>
             {title}
             </Text>
             <View style={{ flexDirection: "row", flexWrap: 'wrap', height: 40, alignItems:"center"}}>
-                <View style={isAnswered ? styles.circleAnswered : styles.circleNotAnswered}></View>
-                <View style={{ width: 200, marginLeft:5 }}> 
-                  {getRightResultView()}
-                </View>
-              </View>
+              {!isEditMode && (<View style={isAnswered ? styles.circleAnswered : styles.circleNotAnswered}></View>)}
+              {!isEditMode && (<View style={{ width: 200, marginLeft: 5 }}>
+                {getRightResultView()}
+              </View>)}
+            </View>
           </View>
+          {isEditMode && (
+            <View style={styles.dragHandleContainer}>
+              <SimpleLineIcons name="menu" size={20} color="#bbb" style={styles.dragHandle} />
+            </View>
+          )}
           <View style={{height:"100%", justifyContent:"center"}}>
-            {question && <QuestionButtonViz style={{ height: 0, flex: 2, backgroundColor: "transparent" }} questionId={question.id}></QuestionButtonViz>}
+            {question && !isEditMode && <QuestionButtonViz style={{ height: 0, flex: 2, backgroundColor: "transparent" }} questionId={question.id}></QuestionButtonViz>}
           </View>
         </TouchableOpacity>
         </View>
@@ -287,9 +270,6 @@ const QuestionButtonEdit = ({title}) => {
         <Text style={{fontSize: 16, color:colourTextAnswered, textAlign: 'center', justifyContent: 'center', fontFamily: 'Montserrat-SemiBold'}}>
             {title}
         </Text>
-        {/* <View style={[styles.shadowView, {width:30, right:0, textAlign: 'right', position:'absolute'}]}>
-          <Icon name="edit" size={20} color="#444"  style={{width:20, height:20}}/>
-        </View> */}
     </TouchableOpacity>
   </View>
   )
@@ -318,6 +298,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 0,
     elevation:6
+  },
+
+  container: {
+    height: "100%",
+    width: "100%",
+    textAlign: 'center',
+    justifyContent: 'center',
+    flexDirection: "row",
+    flex: 1,
+    flexWrap: 'wrap'
   },
 
     questionsButtonsEdit: {
@@ -380,29 +370,6 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
   },
 
-  animatedContainerAnswered: {
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15,
-    width:30,
-    marginLeft:10,
-    marginTop:10,
-    borderColor:"#999",
-    borderWidth:1,
-    overflow: 'hidden',
-  },
-
-  shadowView: {
-    // width:30,
-    // position:"absolute",
-    // right:20,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 0,
-  },
-
   swipeContentContainerStyle: {
       justifyContent: 'center',
       borderRadius:25,
@@ -421,7 +388,27 @@ const styles = StyleSheet.create({
   
       elevation: 8,
       backgroundColor: colourButtonBack,
-    },
+  },
+    
+  draggingContainer: {
+    opacity: 0.7,
+    transform: [{ scale: 1.05 }],
+  },
+
+    editModeContainer: {
+      backgroundColor: '#fffbfc',
+  },
+
+  dragHandleContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    alignSelf: 'stretch',
+  },
+    
+  dragHandle: {
+    marginRight: 10,
+  },
 
     alreadyAnswered: {
       borderWidth:1,
