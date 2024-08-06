@@ -103,20 +103,6 @@ const MyStack = () => {
     <NavigationContainer ref={navigationRef}>
           <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="Journal">
             <Tab.Screen
-              name="Journal"
-              component={JournalStackScreen}
-              options={{
-                tabBarIcon: ({ focused, color, size }) => (
-                  <Image
-
-                    source={focused ? require('./resources/notesbuttonFocused.png') : require('./resources/notesbutton.png')}
-                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor: focused ? colourFocused : "#9aa"}}
-                  />
-                ),
-                tabBarLabel: () => null,
-              }}
-            />
-            <Tab.Screen
               name="Analyse"
               component={AnalyseStackScreen}
               options={{
@@ -130,7 +116,21 @@ const MyStack = () => {
               }}
 
             />
-            <Tab.Screen name="Manage" component={ManageStackScreen}
+            <Tab.Screen
+              name="Journal"
+              component={JournalStackScreen}
+              options={{
+                tabBarIcon: ({ focused, color, size }) => (
+                  <Image
+
+                    source={focused ? require('./resources/notesbuttonFocused.png') : require('./resources/notesbutton.png')}
+                    style={{ width: size * 1.3, height: size * 1.3, elevation:focused ? 1 : 0, tintColor: focused ? colourFocused : "#9aa"}}
+                  />
+                ),
+                tabBarLabel: () => null,
+              }}
+            />
+            {/* <Tab.Screen name="Manage" component={ManageStackScreen}
               options={{
                 tabBarIcon: ({ focused, color, size }) => (
                   <Image
@@ -139,7 +139,7 @@ const MyStack = () => {
                   />
                  ),
                  tabBarLabel: () => null,
-              }} />
+              }} /> */}
             <Tab.Screen name="SettingsTab" component={SettingsStackScreen}
               options={{
                 tabBarIcon: ({ focused, color, size }) => (

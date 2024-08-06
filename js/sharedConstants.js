@@ -29,7 +29,13 @@ class SharedConstants {
             colour5:"#f3e2da",
         }
 
-        this.colours = this.coloursiforgot;
+        this.coloursPeachy = {
+            colourBrightOne:"#e3e0b5", //Soft Peach
+            colourBrightTwo:"#A0E0E0", // Soft Teal
+            colourDarker:"#3A2A1A", // rich brown
+        }
+
+        this.coloursTheme = this.coloursPeachy;
  
 
        this.questionTypes = {
@@ -71,7 +77,29 @@ class SharedConstants {
         }
         const returnValue = this.coloursSet.findIndex(isColour);
         return returnValue;
-      }
+       }
+        
+        this.getQuestionTypeText = (questionType) => {
+            let lTextTop;
+            switch(questionType) {
+                case this.questionTypes.QUESTION_TYPE_YES_NO:
+                    lTextTop = "yes/no";
+                    break;
+                case this.questionTypes.QUESTION_TYPE_NUMBER:
+                    lTextTop = "quantity";
+                    break;
+                case this.questionTypes.QUESTION_TYPE_INTENSITY:
+                    lTextTop = "intensity";
+                    break;
+                case this.questionTypes.QUESTION_TYPE_COLOUR:
+                    lTextTop = "colour";
+                    break;
+                case this.questionTypes.QUESTION_TYPE_NOTE:
+                    lTextTop = "notes";
+                    break;
+            }
+            return lTextTop;
+        }
 
        this.getAnswerText = function(answerValue, question) {
             switch(+question.type) {

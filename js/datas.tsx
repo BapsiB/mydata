@@ -1,5 +1,3 @@
-import { supported32BitAbis } from "react-native-device-info";
-
 type QuestionValue = {
     id:String;
     v:String;

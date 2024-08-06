@@ -7,10 +7,8 @@ import SharedConstants from './sharedConstants.js';
 import LinearGradient from 'react-native-linear-gradient';
 import HeaderDate from './headerDate';
 import Utils from './utils'
-import utils from './utils';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import IconCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import QuestionButtonViz from './dataVizzScreen/questionButtonViz';
 import Svg, { Path } from 'react-native-svg';
 
@@ -18,8 +16,8 @@ const colourCircleAnswered = "#fff";
 const colourCircleNOTAnswered = "#fff";
 const colourTextCircleNOTAnswered = "#aaa";
 const colourTextCircleAnswered = "#444";
-const colourText = '#555';
-const colourTextAnswered = '#333';
+const colourText = '#333';
+const colourTextAnswered = '#000';
 // const colourButtonBack = '#fff3f3';
 const colourButtonBack = '#f7f7f7';
 let colourButtonBackAnswered = '#fff';
@@ -212,7 +210,7 @@ function displayMarkers() {
     }
   }
 
-// {backgroundColor:utils.increase_brightness(question.colour, 90)}
+  const colourTextEdit = Utils.increase_brightness(SharedConstants.coloursTheme.colourDarker, 50);
   const styleAns = isAnswered ? [styles.alreadyAnswered] : styles.notAlreadyAnswered;
 
   return (
@@ -227,19 +225,45 @@ function displayMarkers() {
 
           onPress={() => { goToQuestion(); }}
           onLongPress={isEditMode ? onDragStart : null}
-
+          delayLongPress={100}
         >
 
           <View style={[{ marginLeft: 20, width: "70%", height: "100%", flexDirection: "column", flex: 1, flexWrap: 'wrap' },
             
           ]}>
-            <Text style={{fontSize: 13, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', textAlignVertical: 'center', fontFamily: 'Montserrat-Regular', backgroundColor:"transparent", flex:3}}>
+            <Text style={{fontSize: 14, color:isAnswered ? colourTextAnswered : colourText, textAlign: 'left', justifyContent: 'center', textAlignVertical: 'center', fontFamily: 'Montserrat-Regular', backgroundColor:"transparent", flex:3}}>
             {title}
             </Text>
             <View style={{ flexDirection: "row", flexWrap: 'wrap', height: 40, alignItems:"center"}}>
               {!isEditMode && (<View style={isAnswered ? styles.circleAnswered : styles.circleNotAnswered}></View>)}
               {!isEditMode && (<View style={{ width: 200, marginLeft: 5 }}>
                 {getRightResultView()}
+              </View>)}
+              {isEditMode && (<View style={{ width: 200, marginLeft: 5 }}>
+               <View style={{ flexDirection: "row", alignItems: "center", marginTop:-5 }}>
+                <SimpleLineIcons 
+                  name="tag" 
+                  size={14} 
+                  color={colourTextEdit}
+                />
+                  {question && <Text style={{ marginLeft: 5, textAlign: 'left', fontFamily: 'Montserrat', justifyContent: 'center', fontSize: 13, textAlignVertical: 'center', color: colourTextEdit }}>
+                    {SharedConstants.getQuestionTypeText(question.type)}
+                  </Text >}
+
+                  {/* {question && <View style={{ flexDirection: "row", marginLeft: 40 }}>
+                   <Text style={{ marginLeft: 5, textAlign: 'left', justifyContent: 'center', fontSize: 13, textAlignVertical: 'center', color: SharedConstants.coloursTheme.colourDarker}}>
+                    {"color"}
+                    </Text >
+                    <View style={[styles.circleAnswered, { backgroundColor: question.getColour(), marginTop:5, marginLeft:5 }]}></View>
+                  </View>} */}
+                 </View>
+                <View style={{ flexDirection: "row", alignItems: "center", marginTop:2 }}>
+                  <SimpleLineIcons name="clock" size={14} color={colourTextEdit} />
+                  <Text style={{ marginLeft: 5, textAlign: 'left', justifyContent: 'center', fontSize: 13, textAlignVertical: 'center', color: colourTextEdit}}>
+                    {"every day"}
+                  </Text >
+                </View>
+
               </View>)}
             </View>
           </View>

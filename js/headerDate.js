@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Modal, Dimensions, Animated } from 'react-native';
 import SharedConstants from './sharedConstants.js';
+import Utils from './utils'
 import CalendarComponent from './timeline/CalendarComponent';
 
 class HeaderDate {
@@ -91,7 +92,7 @@ class HeaderDate {
 
             return (
             <View style={{height:calendarVisible ? "100%" : 60, position: "absolute", width: "100%", zIndex: 3}}>
-                <View style={{height: 60, marginLeft: "0%", width: "100%", flexDirection: "row", marginVertical: 0, marginBottom: 0, elevation: 3, backgroundColor:"white", zIndex: 3 }}>
+                <View style={{height: 60, marginLeft: "0%", width: "100%", flexDirection: "row", marginVertical: 0, marginBottom: 0, elevation: 3, backgroundColor:Utils.increase_brightness(SharedConstants.coloursTheme.colourBrightOne, 60), zIndex: 3 }}>
                     <View style={{ flex: 1, marginLeft: 0 }}>
                         <TouchableOpacity style={{ height: 60, paddingTop: 20 }} onPress={() => { setDate(incrementDate(this.date, -1)); }}>
                             <Text style={styles.dateText}>{"<"}</Text>

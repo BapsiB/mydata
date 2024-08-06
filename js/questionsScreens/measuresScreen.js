@@ -6,6 +6,8 @@ import HeaderDate from '../headerDate.js';
 import QuestionButton from '../questionButton';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import LinearGradient from 'react-native-linear-gradient';
+import Utils from '../utils'
 
 const MeasuresScreen = ({ navigation, date }) => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -76,9 +78,9 @@ const MeasuresScreen = ({ navigation, date }) => {
       <View style={{ height: 65, marginTop: 20 }} />
       <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginBottom: 15 }}>
         <TouchableOpacity onPress={replyAllQuestions} style={{ flexDirection: "row", alignItems: 'center', marginRight: 20 }}>
-          {!allQuestionsAnswered && <SimpleLineIcons name="loop" size={20} color={"#555"} />}
+          {!allQuestionsAnswered && !isEditMode && <SimpleLineIcons name="loop" size={20} color={"#555"} />}
           <Text style={{ fontSize: 16, color: "#000", marginLeft: 5, fontFamily: 'Montserrat-Regular' }}>
-            {!allQuestionsAnswered ? "answer all" : ""}
+            {(!allQuestionsAnswered  && !isEditMode) ? "answer all" : ""}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleEditMode} style={{ flexDirection: "row", alignItems: 'center' }}>
@@ -88,6 +90,7 @@ const MeasuresScreen = ({ navigation, date }) => {
           </Text>
         </TouchableOpacity>
       </View>
+
     </>
   ), [allQuestionsAnswered, isEditMode, replyAllQuestions, toggleEditMode]);
 
@@ -126,7 +129,12 @@ const MeasuresScreen = ({ navigation, date }) => {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.backgroundImage} source={require("../../resources/background.jpg")} />
+      <LinearGradient
+        colors={[Utils.increase_brightness(SharedConstants.coloursTheme.colourBrightOne, 50), Utils.increase_brightness(SharedConstants.coloursTheme.colourBrightOne, 30)]}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={styles.backgroundGradient}
+      />
       <View style={styles.headerBackground} />
       {isEditMode ? (
         <DraggableFlatList
@@ -158,11 +166,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  backgroundImage: {
-    resizeMode: 'cover',
-    width: "100%",
-    height: "100%",
-    position: "absolute"
+  backgroundGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   },
   headerBackground: {
     position: "absolute",

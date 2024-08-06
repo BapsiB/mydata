@@ -96,7 +96,7 @@ const AnswerSlider = (props) => {
              style={{width:300}}
              minimumValue={+minValue}
              maximumValue={+maxValue}
-             trackColour={SharedConstants.colours.colour3}
+             trackColour={SharedConstants.coloursTheme.colourBrightOne}
              step={maxValue - minValue + 1}
              value={+answer}
              onSlidingComplete={onSetValue}
@@ -105,7 +105,7 @@ const AnswerSlider = (props) => {
        </View>
        <View style={{alignItems: 'center', top:"25%", marginLeft:10 }}>
             <TouchableOpacity style={{justifyContent: 'center', width:"100%", bottom:0, alignItems:'center', height:50 }} onPress={()=>{onPressRemoveData();}}>
-                <Image style={{ width:50, height:50,  resizeMode: 'stretch', tintColor: SharedConstants.colours.colour3 }} source={require("../../resources/idontknow.png")}/>
+                <Image style={{ width:50, height:50,  resizeMode: 'stretch', tintColor: SharedConstants.coloursTheme.colourBrightOne }} source={require("../../resources/idontknow.png")}/>
             </TouchableOpacity>
         </View>
     </View>
